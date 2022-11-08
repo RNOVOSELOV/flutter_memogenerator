@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:memogenerator/blocs/main_bloc.dart';
-import 'package:memogenerator/resources/memogenerator_colors.dart';
+import 'package:memogenerator/pages/create_meme_page.dart';
+import 'package:memogenerator/resources/app_colors.dart';
 import 'package:provider/provider.dart';
 
 class MainPage extends StatefulWidget {
-
   MainPage({Key? key}) : super(key: key);
 
   @override
@@ -24,8 +25,33 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Provider.value(
       value: bloc,
-      child: const Scaffold(
-        backgroundColor: MemogeneratorColors.backgroundColor,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: AppColors.backgroundAppbar,
+          foregroundColor: AppColors.foregroundAppBar,
+          title: Text(
+            "Мемогенератор",
+            style: GoogleFonts.seymourOne(fontSize: 24),
+          ),
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+             return  CreateMemePage();
+            }));
+          },
+          icon: const Icon(
+            Icons.add,
+            color: AppColors.white,
+          ),
+          backgroundColor: AppColors.fabColor,
+          label: const Text(
+            "Создать",
+            style: TextStyle(color: AppColors.white),
+          ),
+        ),
+        backgroundColor: AppColors.backgroundColor,
         body: SafeArea(
           child: MainPageContent(),
         ),
@@ -49,6 +75,6 @@ class MainPageContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
 
-    return Center(child: Text("CENTERED"),);
+    return Container();
   }
 }
