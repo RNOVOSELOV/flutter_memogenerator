@@ -157,27 +157,30 @@ class _MemeCanvasWidget extends StatelessWidget {
       alignment: Alignment.topCenter,
       child: AspectRatio(
         aspectRatio: 1,
-        child: Container(
-          color: AppColors.backgroundColor,
-          child: StreamBuilder<List<MemeText>>(
-            initialData: const <MemeText>[],
-            stream: bloc.observeMemeTexts(),
-            builder: (context, snapshot) {
-              final memeTexts =
-                  snapshot.hasData ? snapshot.data! : const <MemeText>[];
-              return LayoutBuilder(
-                builder: (BuildContext, BoxConstraints constraints) {
-                  return Stack(
-                    children: memeTexts.map((memeText) {
-                      return DraggableMemeText(
-                        memeText: memeText,
-                        parentConstraints: constraints,
-                      );
-                    }).toList(),
-                  );
-                },
-              );
-            },
+        child: GestureDetector(
+          onTap: () => bloc.selectMemeText(null),
+          child: Container(
+            color: AppColors.backgroundColor,
+            child: StreamBuilder<List<MemeText>>(
+              initialData: const <MemeText>[],
+              stream: bloc.observeMemeTexts(),
+              builder: (context, snapshot) {
+                final memeTexts =
+                    snapshot.hasData ? snapshot.data! : const <MemeText>[];
+                return LayoutBuilder(
+                  builder: (BuildContext, BoxConstraints constraints) {
+                    return Stack(
+                      children: memeTexts.map((memeText) {
+                        return DraggableMemeText(
+                          memeText: memeText,
+                          parentConstraints: constraints,
+                        );
+                      }).toList(),
+                    );
+                  },
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -216,9 +219,9 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
           setState(() {
             left = calculateLeft(details);
             top = calculateTop(details);
+            bloc.selectMemeText(widget.memeText.id);
           });
         },
-        onTap: () => bloc.selectMemeText(widget.memeText.id),
         child: Container(
           constraints: BoxConstraints(
             maxWidth: widget.parentConstraints.maxWidth,

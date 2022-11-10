@@ -23,9 +23,11 @@ class CreateMemeBloc {
     memeTextsSubject.add(copiedList);
   }
 
-  void selectMemeText(final String id) {
-    final foundMemeText =
-        memeTextsSubject.value.firstWhereOrNull((element) => element.id == id);
+  void selectMemeText(final String? id) {
+    final foundMemeText = (id == null)
+        ? null
+        : memeTextsSubject.value
+            .firstWhereOrNull((element) => element.id == id);
     selectedMemeTextSubject.add(foundMemeText);
   }
 
