@@ -226,7 +226,7 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
           initialData: null,
           stream: bloc.observeSelectedMemeText(),
           builder: (context, snapshot) {
-            final selectedText = snapshot.hasData ? snapshot.data! : null;
+            final selectedTextId = snapshot.hasData ? snapshot.data!.id : "";
             return Container(
               constraints: BoxConstraints(
                 maxWidth: widget.parentConstraints.maxWidth,
@@ -236,11 +236,11 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
               decoration: BoxDecoration(
                 border: Border.all(
                   width: 1,
-                  color: (selectedText == widget.memeText)
+                  color: (selectedTextId == widget.memeText.id)
                       ? AppColors.fuchsia
                       : Colors.transparent,
                 ),
-                color: (selectedText == widget.memeText)
+                color: (selectedTextId == widget.memeText.id)
                     ? AppColors.darkGrey6
                     : Colors.transparent,
               ),
