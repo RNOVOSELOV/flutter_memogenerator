@@ -222,18 +222,35 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
             bloc.selectMemeText(widget.memeText.id);
           });
         },
-        child: Container(
-          constraints: BoxConstraints(
-            maxWidth: widget.parentConstraints.maxWidth,
-            maxHeight: widget.parentConstraints.maxHeight,
-          ),
-          padding: EdgeInsets.all(padding),
-          color: AppColors.darkGrey6,
-          child: Text(
-            widget.memeText.text,
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.black, fontSize: 24),
-          ),
+        child: StreamBuilder<MemeText?>(
+          initialData: null,
+          stream: bloc.observeSelectedMemeText(),
+          builder: (context, snapshot) {
+            final selectedText = snapshot.hasData ? snapshot.data! : null;
+            return Container(
+              constraints: BoxConstraints(
+                maxWidth: widget.parentConstraints.maxWidth,
+                maxHeight: widget.parentConstraints.maxHeight,
+              ),
+              padding: EdgeInsets.all(padding),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 1,
+                  color: (selectedText == widget.memeText)
+                      ? AppColors.fuchsia
+                      : Colors.transparent,
+                ),
+                color: (selectedText == widget.memeText)
+                    ? AppColors.darkGrey6
+                    : Colors.transparent,
+              ),
+              child: Text(
+                widget.memeText.text,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.black, fontSize: 24),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -241,7 +258,7 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
 
   double calculateTop(DragUpdateDetails details) {
     final rawTop = top + details.delta.dy;
-    if (rawTop < 0){
+    if (rawTop < 0) {
       return 0;
     }
     if (rawTop > widget.parentConstraints.maxHeight - padding * 2 - 30) {
@@ -252,7 +269,7 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
 
   double calculateLeft(DragUpdateDetails details) {
     final rawLeft = left + details.delta.dx;
-    if (rawLeft < 0 ) {
+    if (rawLeft < 0) {
       return 0;
     }
     if (rawLeft > widget.parentConstraints.maxWidth - padding * 2 - 10) {
