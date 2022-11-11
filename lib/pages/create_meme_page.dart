@@ -87,9 +87,30 @@ class _EditTextBarState extends State<_EditTextBar> {
                 }
               },
               onEditingComplete: () => bloc.deselectMemeText(),
+              cursorColor: AppColors.fuchsia,
               decoration: InputDecoration(
+                hintText: selectedMemeText != null ? "Ввести текст" : "",
+                hintStyle: TextStyle(fontSize: 16, color: AppColors.darkGrey38),
                 filled: true,
-                fillColor: AppColors.darkGrey6,
+                fillColor: selectedMemeText == null
+                    ? AppColors.darkGrey6
+                    : AppColors.fuchsia16,
+                border: UnderlineInputBorder(
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(4),
+                      topRight: Radius.circular(4)),
+                  borderSide: BorderSide(
+                      width: 1,
+                      color: selectedMemeText == null
+                          ? AppColors.darkGrey38
+                          : AppColors.fuchsia38),
+                ),
+                focusedBorder: const UnderlineInputBorder(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(4),
+                      topRight: Radius.circular(4)),
+                  borderSide: BorderSide(width: 2, color: AppColors.fuchsia),
+                ),
               ),
             );
           }),
@@ -117,7 +138,7 @@ class _CreateMemePageContentState extends State<_CreateMemePageContent> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Expanded(
+        const Expanded(
           flex: 2,
           child: _MemeCanvasWidget(),
         ),
@@ -131,9 +152,9 @@ class _CreateMemePageContentState extends State<_CreateMemePageContent> {
           child: Container(
             color: AppColors.backgroundColor,
             child: ListView(
-              children: [
-                const SizedBox(height: 12),
-                const _AddNewMemeTextButton(),
+              children: const [
+                SizedBox(height: 12),
+                _AddNewMemeTextButton(),
               ],
             ),
           ),
