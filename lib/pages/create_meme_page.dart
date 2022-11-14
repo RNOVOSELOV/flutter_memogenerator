@@ -101,9 +101,15 @@ class _EditTextBarState extends State<_EditTextBar> {
                       topRight: Radius.circular(4)),
                   borderSide: BorderSide(
                       width: 1,
-                      color: selectedMemeText == null
-                          ? AppColors.darkGrey38
-                          : AppColors.fuchsia38),
+                      color: AppColors.fuchsia38),
+                ),
+                disabledBorder: UnderlineInputBorder (
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(4),
+                      topRight: Radius.circular(4)),
+                  borderSide: BorderSide(
+                      width: 1,
+                      color: AppColors.darkGrey38),
                 ),
                 focusedBorder: const UnderlineInputBorder(
                   borderRadius: BorderRadius.only(
