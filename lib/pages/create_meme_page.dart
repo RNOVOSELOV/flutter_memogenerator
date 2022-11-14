@@ -178,17 +178,32 @@ class _CreateMemePageContentState extends State<_CreateMemePageContent> {
                         ],
                       );
                     } else {
-                      return Container(
-                        height: 48,
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          memeTexts.elementAt(index - 1).text,
-                          style: GoogleFonts.roboto(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16,
-                              color: AppColors.darkGrey),
-                        ),
+                      return StreamBuilder<MemeText?>(
+                        initialData: null,
+                        stream: bloc.observeSelectedMemeText(),
+                        builder: (context, snapshot) {
+                          final selectedText =
+                              snapshot.hasData ? snapshot.data! : null;
+                          final elementMemeText =
+                              memeTexts.elementAt(index - 1);
+                          Color backgroundCardColor = (selectedText != null) &&
+                                  (selectedText.id == elementMemeText.id)
+                              ? AppColors.darkGrey16
+                              : Colors.transparent;
+                          return Container(
+                            height: 48,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            alignment: Alignment.centerLeft,
+                            color: backgroundCardColor,
+                            child: Text(
+                              elementMemeText.text,
+                              style: GoogleFonts.roboto(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 16,
+                                  color: AppColors.darkGrey),
+                            ),
+                          );
+                        },
                       );
                     }
                   },
@@ -300,7 +315,7 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
                       : Colors.transparent,
                 ),
                 color: (selectedTextId == widget.memeText.id)
-                    ? AppColors.darkGrey6
+                    ? AppColors.darkGrey16
                     : Colors.transparent,
               ),
               child: Text(
