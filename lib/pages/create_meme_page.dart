@@ -282,6 +282,13 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
   final double padding = 8;
 
   @override
+  void initState() {
+    top = widget.parentConstraints.maxHeight / 2 - padding - 15;
+    left = widget.parentConstraints.maxWidth / 3;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
     return Positioned(
