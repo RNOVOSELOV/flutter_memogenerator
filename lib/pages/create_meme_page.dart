@@ -99,17 +99,13 @@ class _EditTextBarState extends State<_EditTextBar> {
                   borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(4),
                       topRight: Radius.circular(4)),
-                  borderSide: BorderSide(
-                      width: 1,
-                      color: AppColors.fuchsia38),
+                  borderSide: BorderSide(width: 1, color: AppColors.fuchsia38),
                 ),
-                disabledBorder: UnderlineInputBorder (
+                disabledBorder: UnderlineInputBorder(
                   borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(4),
                       topRight: Radius.circular(4)),
-                  borderSide: BorderSide(
-                      width: 1,
-                      color: AppColors.darkGrey38),
+                  borderSide: BorderSide(width: 1, color: AppColors.darkGrey38),
                 ),
                 focusedBorder: const UnderlineInputBorder(
                   borderRadius: BorderRadius.only(
@@ -142,6 +138,7 @@ class _CreateMemePageContent extends StatefulWidget {
 class _CreateMemePageContentState extends State<_CreateMemePageContent> {
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
     return Column(
       children: [
         const Expanded(
@@ -157,11 +154,46 @@ class _CreateMemePageContentState extends State<_CreateMemePageContent> {
           flex: 1,
           child: Container(
             color: AppColors.backgroundColor,
-            child: ListView(
-              children: const [
-                SizedBox(height: 12),
-                _AddNewMemeTextButton(),
-              ],
+            child: StreamBuilder<List<MemeText>>(
+              initialData: const <MemeText>[],
+              stream: bloc.observeMemeTexts(),
+              builder: (context, snapshot) {
+                final memeTexts =
+                    snapshot.hasData ? snapshot.data! : const <MemeText>[];
+                return ListView.separated(
+                  itemCount: memeTexts.length + 1,
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 16),
+                      height: index == 0 ? 0 : 1,
+                      color: AppColors.darkGrey,
+                    );
+                  },
+                  itemBuilder: (BuildContext context, int index) {
+                    if (index == 0) {
+                      return Column(
+                        children: const [
+                          SizedBox(height: 12),
+                          _AddNewMemeTextButton(),
+                        ],
+                      );
+                    } else {
+                      return Container(
+                        height: 48,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          memeTexts.elementAt(index - 1).text,
+                          style: GoogleFonts.roboto(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 16,
+                              color: AppColors.darkGrey),
+                        ),
+                      );
+                    }
+                  },
+                );
+              },
             ),
           ),
         )
