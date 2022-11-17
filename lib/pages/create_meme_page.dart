@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:memogenerator/blocs/create_meme_bloc.dart';
 import 'package:memogenerator/resources/app_colors.dart';
 import 'package:provider/provider.dart';
+import 'dart:ui';
 
 class CreateMemePage extends StatefulWidget {
   CreateMemePage({Key? key}) : super(key: key);
@@ -163,6 +164,9 @@ class _CreateMemePageContentState extends State<_CreateMemePageContent> {
                 return ListView.separated(
                   itemCount: memeTexts.length + 1,
                   separatorBuilder: (BuildContext context, int index) {
+                    if (index == 0) {
+                      return SizedBox(height: 0,);
+                    }
                     return Container(
                       margin: const EdgeInsets.symmetric(horizontal: 16),
                       height: index == 0 ? 0 : 1,

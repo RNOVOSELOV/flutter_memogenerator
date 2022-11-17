@@ -8,8 +8,8 @@ import 'lesson_1/task_5.dart';
 
 void main() async {
   group("l09h01", () => runTestLesson1Task1());
-  // group("l09h02", () => runTestLesson1Task2());
-  // group("l09h03", () => runTestLesson1Task3());
-  // group("l09h04", () => runTestLesson1Task4());
-  // group("l09h05", () => runTestLesson1Task5());
+  group("l09h02", () => runTestLesson1Task2());
+   group("l09h03", () => runTestLesson1Task3());
+   group("l09h04", () => runTestLesson1Task4());
+   group("l09h05", () => runTestLesson1Task5());
 }
