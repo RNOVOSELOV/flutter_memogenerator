@@ -79,23 +79,24 @@ class _EditTextBarState extends State<_EditTextBar> {
               controller.selection =
                   TextSelection.collapsed(offset: newText.length);
             }
+            final haveSelected = selectedMemeText != null;
             return TextField(
-              enabled: selectedMemeText != null,
+              enabled: haveSelected,
               controller: controller,
               onChanged: (value) {
-                if (selectedMemeText != null) {
+                if (haveSelected) {
                   bloc.changeMemeText(selectedMemeText.id, value);
                 }
               },
               onEditingComplete: () => bloc.deselectMemeText(),
               cursorColor: AppColors.fuchsia,
               decoration: InputDecoration(
-                hintText: selectedMemeText != null ? "Ввести текст" : "",
+                hintText: haveSelected ? "Ввести текст" : "",
                 hintStyle: TextStyle(fontSize: 16, color: AppColors.darkGrey38),
                 filled: true,
-                fillColor: selectedMemeText == null
-                    ? AppColors.darkGrey6
-                    : AppColors.fuchsia16,
+                fillColor: haveSelected
+                    ? AppColors.fuchsia16
+                    : AppColors.darkGrey6,
                 border: UnderlineInputBorder(
                   borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(4),
@@ -165,11 +166,11 @@ class _CreateMemePageContentState extends State<_CreateMemePageContent> {
                   itemCount: memeTexts.length + 1,
                   separatorBuilder: (BuildContext context, int index) {
                     if (index == 0) {
-                      return SizedBox(height: 0,);
+                      return const SizedBox.shrink();//SizedBox(height: 0,);
                     }
                     return Container(
                       margin: const EdgeInsets.symmetric(horizontal: 16),
-                      height: index == 0 ? 0 : 1,
+                      height: 1,
                       color: AppColors.darkGrey,
                     );
                   },
@@ -281,8 +282,8 @@ class DraggableMemeText extends StatefulWidget {
 }
 
 class _DraggableMemeTextState extends State<DraggableMemeText> {
-  double top = 0;
-  double left = 0;
+  late double top;
+  late double left;
   final double padding = 8;
 
   @override
@@ -300,6 +301,7 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
       left: left,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
+        onTap: () => bloc.selectMemeText(widget.memeText.id),
         onPanUpdate: (details) {
           setState(() {
             left = calculateLeft(details);
