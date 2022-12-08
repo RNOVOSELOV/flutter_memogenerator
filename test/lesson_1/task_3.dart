@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:memogenerator/main.dart';
-import 'package:memogenerator/pages/create_meme_page.dart';
+import 'package:memogenerator/presentation/create_meme/create_meme_page.dart';
 
 import '../shared/test_helpers.dart';
 import 'shared_colors.dart';
