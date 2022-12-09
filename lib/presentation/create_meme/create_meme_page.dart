@@ -217,7 +217,7 @@ class _BottomList extends StatelessWidget {
                   );
                 } else {
                   final item = items.elementAt(index - 1);
-                  return _BottomMemeText(item: item);
+                  return BottomMemeText(item: item);
                 }
               },
             );
@@ -243,8 +243,8 @@ class _BottomSeparator extends StatelessWidget {
   }
 }
 
-class _BottomMemeText extends StatelessWidget {
-  const _BottomMemeText({
+class BottomMemeText extends StatelessWidget {
+  const BottomMemeText({
     Key? key,
     required this.item,
   }) : super(key: key);
