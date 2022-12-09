@@ -364,6 +364,8 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
+    bloc.changeMemeTextOffset(
+        widget.memeTextWithOffset.id, Offset(left, top));
     return Positioned(
       top: top,
       left: left,
