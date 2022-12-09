@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:memogenerator/data/models/meme.dart';
-import 'package:memogenerator/data/models/meme_text_with_position.dart';
+import 'package:memogenerator/data/models/text_with_position.dart';
 import 'package:memogenerator/data/models/position.dart';
 import 'package:memogenerator/data/repositories/memes_repository.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text_offset.dart';
@@ -79,7 +79,7 @@ class CreateMemeBloc {
       final position = Position(
           top: memeTextPosition?.offset.dy ?? 0,
           left: memeTextPosition?.offset.dx ?? 0);
-      return MemeTextWithPosition(
+      return TextWithPosition(
           id: memeText.id, text: memeText.text, position: position);
     }).toList();
     saveMemeSubscription =
@@ -93,7 +93,7 @@ class CreateMemeBloc {
   }
 
   Future<bool> _saveMemeInternal(
-    final List<MemeTextWithPosition> memeTextWithPositions,
+    final List<TextWithPosition> memeTextWithPositions,
   ) async {
     final imagePath = memePathSubject.value;
     if (imagePath == null) {
