@@ -188,38 +188,41 @@ class _BottomList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
-    return Container(
-      color: AppColors.backgroundColor,
-      child: StreamBuilder<List<MemeTextWithSelection>>(
-        initialData: const <MemeTextWithSelection>[],
-        stream: bloc.observeMemeTextsWithSelection(),
-        builder: (context, snapshot) {
-          final items = snapshot.hasData
-              ? snapshot.data!
-              : const <MemeTextWithSelection>[];
-          return ListView.separated(
-            itemCount: items.length + 1,
-            separatorBuilder: (BuildContext context, int index) {
-              if (index == 0) {
-                return const SizedBox.shrink(); //SizedBox(height: 0,);
-              }
-              return const _BottomSeparator();
-            },
-            itemBuilder: (BuildContext context, int index) {
-              if (index == 0) {
-                return Column(
-                  children: const [
-                    SizedBox(height: 12),
-                    _AddNewMemeTextButton(),
-                  ],
-                );
-              } else {
-                final item = items.elementAt(index - 1);
-                return _BottomMemeText(item: item);
-              }
-            },
-          );
-        },
+    return GestureDetector(
+      onTap: () => bloc.deselectMemeText(),
+      child: Container(
+        color: AppColors.backgroundColor,
+        child: StreamBuilder<List<MemeTextWithSelection>>(
+          initialData: const <MemeTextWithSelection>[],
+          stream: bloc.observeMemeTextsWithSelection(),
+          builder: (context, snapshot) {
+            final items = snapshot.hasData
+                ? snapshot.data!
+                : const <MemeTextWithSelection>[];
+            return ListView.separated(
+              itemCount: items.length + 1,
+              separatorBuilder: (BuildContext context, int index) {
+                if (index == 0) {
+                  return const SizedBox.shrink(); //SizedBox(height: 0,);
+                }
+                return const _BottomSeparator();
+              },
+              itemBuilder: (BuildContext context, int index) {
+                if (index == 0) {
+                  return Column(
+                    children: const [
+                      SizedBox(height: 12),
+                      _AddNewMemeTextButton(),
+                    ],
+                  );
+                } else {
+                  final item = items.elementAt(index - 1);
+                  return _BottomMemeText(item: item);
+                }
+              },
+            );
+          },
+        ),
       ),
     );
   }
@@ -250,17 +253,21 @@ class _BottomMemeText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 48,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      alignment: Alignment.centerLeft,
-      color: item.selected ? AppColors.darkGrey16 : Colors.transparent,
-      child: Text(
-        item.memeText.text,
-        style: GoogleFonts.roboto(
-            fontWeight: FontWeight.w400,
-            fontSize: 16,
-            color: AppColors.darkGrey),
+    final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
+    return GestureDetector(
+      onTap: () => bloc.selectMemeText(item.memeText.id),
+      child: Container(
+        height: 48,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        alignment: Alignment.centerLeft,
+        color: item.selected ? AppColors.darkGrey16 : Colors.transparent,
+        child: Text(
+          item.memeText.text,
+          style: GoogleFonts.roboto(
+              fontWeight: FontWeight.w400,
+              fontSize: 16,
+              color: AppColors.darkGrey),
+        ),
       ),
     );
   }
@@ -281,7 +288,7 @@ class _MemeCanvasWidget extends StatelessWidget {
       child: AspectRatio(
         aspectRatio: 1,
         child: GestureDetector(
-          onTap: () => bloc.selectMemeText(null),
+          onTap: () => bloc.deselectMemeText(),
           child: Stack(
             children: [
               StreamBuilder<String?>(
