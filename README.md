@@ -1,6 +1,6 @@
 # The easiest way to create your own Mem
 
-<img src="https://github.com/RNOVOSELOV/flutter_memogenerator/blob/main/resources/memogenerator.gif" width="100" height="220" />
+<img src="https://github.com/RNOVOSELOV/flutter_memogenerator/blob/main/resources/memogenerator.gif" width="210" height="420" />
 
 ## О проекте
 
