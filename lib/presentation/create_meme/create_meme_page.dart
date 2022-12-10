@@ -300,7 +300,14 @@ class _MemeCanvasWidget extends StatelessWidget {
                       color: AppColors.backgroundColor,
                     );
                   }
-                  return Image.file(File(path));
+                  return Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: FileImage(File(path)),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
                 },
               ),
               StreamBuilder<List<MemeTextWithOffset>>(
@@ -364,8 +371,7 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
-    bloc.changeMemeTextOffset(
-        widget.memeTextWithOffset.id, Offset(left, top));
+    bloc.changeMemeTextOffset(widget.memeTextWithOffset.id, Offset(left, top));
     return Positioned(
       top: top,
       left: left,

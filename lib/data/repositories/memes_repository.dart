@@ -14,12 +14,35 @@ class MemesRepository {
 
   factory MemesRepository.getInstance() => instance ??=
       MemesRepository._internal(SharedPreferenceData.getInstance());
+/*
+  Future<bool> saveMeme(final Meme meme) async {
+    final memes = await getMemes();
+    final index = memes.indexWhere((element) => element.id == meme.id);
+    if (index == -1) {
+      return addToMemes(meme);
+    }
+    memes[index] = meme;
+    return _setMemes(memes);
+  }
 
   // Add meme
   Future<bool> addToMemes(final Meme meme) async {
     final rawMemes = await spData.getMemes();
     rawMemes.add(json.encode(meme.toJson()));
-    return _setRawMemes (rawMemes);
+    return _setRawMemes(rawMemes);
+  }
+*/
+  // Add meme
+  Future<bool> addToMemes(final Meme meme) async {
+    final memes = await getMemes();
+    final index = memes.indexWhere((element) => element.id == meme.id);
+    if (index == -1) {
+      final rawMemes = await spData.getMemes();
+      rawMemes.add(json.encode(meme.toJson()));
+      return _setRawMemes(rawMemes);
+    }
+    memes[index] = meme;
+    return _setMemes(memes);
   }
 
   // Remove meme
@@ -49,11 +72,12 @@ class MemesRepository {
   }
 
   Future<bool> _setMemes(final List<Meme> memes) async {
-    final rawMemes = memes.map((element) => json.encode(element.toJson())).toList();
+    final rawMemes =
+        memes.map((element) => json.encode(element.toJson())).toList();
     return _setRawMemes(rawMemes);
   }
 
-  Future<bool> _setRawMemes (final List<String> rawMemes) {
+  Future<bool> _setRawMemes(final List<String> rawMemes) {
     updater.add(null);
     return spData.setMemes(rawMemes);
   }
