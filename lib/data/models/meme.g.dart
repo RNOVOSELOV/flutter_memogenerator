@@ -9,7 +9,7 @@ part of 'meme.dart';
 Meme _$MemeFromJson(Map<String, dynamic> json) => Meme(
       id: json['id'] as String,
       texts: (json['texts'] as List<dynamic>)
-          .map((e) => MemeTextWithPosition.fromJson(e as Map<String, dynamic>))
+          .map((e) => TextWithPosition.fromJson(e as Map<String, dynamic>))
           .toList(),
       memePath: json['meme_path'] as String?,
     );

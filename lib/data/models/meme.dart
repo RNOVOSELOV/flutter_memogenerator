@@ -2,14 +2,14 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:memogenerator/data/models/meme_text_with_position.dart';
+import 'package:memogenerator/data/models/text_with_position.dart';
 
 part 'meme.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class Meme extends Equatable {
   final String id;
-  final List<MemeTextWithPosition> texts;
+  final List<TextWithPosition> texts;
   final String? memePath;
 
   Meme({
