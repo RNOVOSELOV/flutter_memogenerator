@@ -83,23 +83,20 @@ class CreateMemeBloc {
       return TextWithPosition(
           id: memeText.id, text: memeText.text, position: position);
     }).toList();
-    saveMemeSubscription =
-        _saveMemeInternal(textsWithPosition).asStream().listen(
+    saveMemeSubscription = SaveMemeInteractor.getInstance()
+        .saveMeme(
+          id: id,
+          textWithPositions: textsWithPosition,
+          imagePath: memePathSubject.value,
+        )
+        .asStream()
+        .listen(
       (saved) {
         print("Meme saved: $saved");
       },
       onError: (error, stacktrace) =>
           print("Error in saveMemeSubscription: $error, $stacktrace"),
     );
-  }
-
-  Future<bool> _saveMemeInternal(
-    final List<TextWithPosition> memeTextWithPositions,
-  ) async {
-    return await SaveMemeInteractor.getInstance().saveMeme(
-        id: id,
-        textWithPositions: memeTextWithPositions,
-        imagePath: memePathSubject.value);
   }
 
   void _subscribeToNewMemTextOffset() {

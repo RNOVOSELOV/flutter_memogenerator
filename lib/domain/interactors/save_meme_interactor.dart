@@ -15,9 +15,9 @@ class SaveMemeInteractor {
       _instance ??= SaveMemeInteractor._internal();
 
   Future<bool> saveMeme({
-    required String id,
-    required List<TextWithPosition> textWithPositions,
-    String? imagePath,
+    required final String id,
+    required final List<TextWithPosition> textWithPositions,
+    final String? imagePath,
   }) async {
     if (imagePath == null) {
       final meme = Meme(id: id, texts: textWithPositions);
@@ -77,6 +77,7 @@ class SaveMemeInteractor {
 
     int? numberValue = int.tryParse(getFileNumberList.removeLast());
     if (numberValue == null) {
+      print("_generateImageFileName tryParce ERROR");
       return "$imagePath${const Uuid().v4()}.$fileExtension";
     }
     return await _generateImageFileName(

@@ -14,6 +14,7 @@ class MemesRepository {
 
   factory MemesRepository.getInstance() => instance ??=
       MemesRepository._internal(SharedPreferenceData.getInstance());
+
 /*
   Future<bool> saveMeme(final Meme meme) async {
     final memes = await getMemes();
@@ -37,11 +38,10 @@ class MemesRepository {
     final memes = await getMemes();
     final index = memes.indexWhere((element) => element.id == meme.id);
     if (index == -1) {
-      final rawMemes = await spData.getMemes();
-      rawMemes.add(json.encode(meme.toJson()));
-      return _setRawMemes(rawMemes);
+      memes.add(meme);
+    } else {
+      memes[index] = meme;
     }
-    memes[index] = meme;
     return _setMemes(memes);
   }
 
