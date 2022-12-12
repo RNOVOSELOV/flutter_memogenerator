@@ -2,11 +2,13 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:memogenerator/data/models/meme.dart';
 import 'package:memogenerator/data/models/text_with_position.dart';
 import 'package:memogenerator/data/models/position.dart';
 import 'package:memogenerator/data/repositories/memes_repository.dart';
 import 'package:memogenerator/domain/interactors/save_meme_interactor.dart';
+import 'package:memogenerator/domain/interactors/screenshot_interactor.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text_offset.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text_with_offset.dart';
@@ -14,6 +16,7 @@ import 'package:memogenerator/presentation/create_meme/models/meme_text_with_sel
 import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:collection/collection.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:uuid/uuid.dart';
 
 class CreateMemeBloc {
@@ -22,6 +25,8 @@ class CreateMemeBloc {
   final memeTextOffsetSubject =
       BehaviorSubject<List<MemeTextOffset>>.seeded(<MemeTextOffset>[]);
   final memePathSubject = BehaviorSubject<String?>.seeded(null);
+  final screenshotControllerSubject =
+      BehaviorSubject<ScreenshotController>.seeded(ScreenshotController());
 
   final newMemeTextOffsetSubject =
       BehaviorSubject<MemeTextOffset?>.seeded(null);
@@ -29,6 +34,7 @@ class CreateMemeBloc {
   StreamSubscription<MemeTextOffset?>? newMemeTextOffsetSubscription;
   StreamSubscription<bool>? saveMemeSubscription;
   StreamSubscription<Meme?>? existentMemeSubscription;
+  StreamSubscription<void>? shareMemeSubscription;
 
   final String id;
 
@@ -75,6 +81,18 @@ class CreateMemeBloc {
       onError: (error, stacktrace) =>
           print("Error in existentMemeSubscription: $error, $stacktrace"),
     );
+  }
+
+  void shareMeme() {
+    shareMemeSubscription?.cancel();
+    shareMemeSubscription = ScreenshotInteractor.getInstance()
+        .shareScreenshoot(screenshotControllerSubject.value)
+        .asStream()
+        .listen(
+          (event) {},
+          onError: (error, stacktrace) =>
+              print("Error in shareMemeSubscription: $error, $stacktrace"),
+        );
   }
 
   void saveMeme() {
@@ -193,6 +211,9 @@ class CreateMemeBloc {
   Stream<MemeText?> observeSelectedMemeText() =>
       selectedMemeTextSubject.distinct();
 
+  Stream<ScreenshotController> observeScreenShotController() =>
+      screenshotControllerSubject.distinct();
+
   Stream<List<MemeTextWithSelection>> observeMemeTextsWithSelection() {
     return Rx.combineLatest2<List<MemeText>, MemeText?,
             List<MemeTextWithSelection>>(
@@ -211,9 +232,11 @@ class CreateMemeBloc {
     memeTextOffsetSubject.close();
     newMemeTextOffsetSubject.close();
     memePathSubject.close();
+    screenshotControllerSubject.close();
 
     existentMemeSubscription?.cancel();
     newMemeTextOffsetSubscription?.cancel();
     saveMemeSubscription?.cancel();
+    shareMemeSubscription?.cancel();
   }
 }

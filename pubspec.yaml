@@ -21,6 +21,10 @@ dependencies:
   collection: ^1.16.0
   image_picker: ^0.8.6
   path_provider: ^2.0.11
+  screenshot: ^1.2.3
+  share_plus: ^6.3.0
+#  share_plus: ^3.0.4
+
 
 #dependency_overrides:
 #  platform: ^3.1.0
