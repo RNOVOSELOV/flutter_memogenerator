@@ -61,7 +61,15 @@ class CreateMemeBloc {
           }).toList();
           memeTextsSubject.add(memeTexts);
           memeTextOffsetSubject.add(memeTextOffset);
-          memePathSubject.add(meme.memePath);
+          if (meme.memePath != null) {
+            getApplicationDocumentsDirectory().then((docsDirectory) {
+              final onlyImageName =
+                  meme.memePath!.split(Platform.pathSeparator).last;
+              final fullImagePath =
+                  "${docsDirectory.absolute.path}${Platform.pathSeparator}${SaveMemeInteractor.memesPathName}${Platform.pathSeparator}$onlyImageName";
+              memePathSubject.add(fullImagePath);
+            });
+          }
         }
       },
       onError: (error, stacktrace) =>
