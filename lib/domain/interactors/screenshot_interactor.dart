@@ -28,4 +28,17 @@ class ScreenshotInteractor {
 //    await Share.shareFiles([imageFile.path]);
     await Share.shareXFiles([XFile(imageFile.path)]);
   }
+
+  Future<void> saveThumbnail(final String memeId, final ScreenshotController controller) async {
+    final image = await controller.capture();
+    if (image == null) {
+      print("shareThumbnail: Error get image from screenshot controller");
+      return;
+    }
+    final docDocs = await getApplicationDocumentsDirectory();
+    final imageFile = File(
+        "${docDocs.absolute.path}${Platform.pathSeparator}$memeId.png");
+    await imageFile.create();
+    await imageFile.writeAsBytes(image);
+  }
 }
