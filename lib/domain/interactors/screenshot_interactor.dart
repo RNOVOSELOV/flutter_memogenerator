@@ -25,6 +25,7 @@ class ScreenshotInteractor {
         "${temDocs.absolute.path}${Platform.pathSeparator}${DateTime.now().microsecondsSinceEpoch}.png");
     await imageFile.create();
     await imageFile.writeAsBytes(image);
-    await Share.shareFiles([imageFile.path]);
+//    await Share.shareFiles([imageFile.path]);
+    await Share.shareXFiles([XFile(imageFile.path)]);
   }
 }
