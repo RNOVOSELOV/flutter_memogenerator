@@ -38,41 +38,47 @@ class _CreateMemePageState extends State<CreateMemePage> {
   Widget build(BuildContext context) {
     return Provider.value(
       value: bloc,
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          backgroundColor: AppColors.backgroundAppbar,
-          foregroundColor: AppColors.foregroundAppBar,
-          title: const Text(
-            "Создаем мем",
+      child: WillPopScope(
+        onWillPop: () async {
+          final goBack = await showConfirmationExitDialog(context);
+          return goBack ?? false;
+        },
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            backgroundColor: AppColors.backgroundAppbar,
+            foregroundColor: AppColors.foregroundAppBar,
+            title: const Text(
+              "Создаем мем",
+            ),
+            actions: [
+              GestureDetector(
+                onTap: () => bloc.shareMeme(),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Icon(
+                    Icons.share,
+                    color: AppColors.darkGrey,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () => bloc.saveMeme(),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Icon(
+                    Icons.save,
+                    color: AppColors.darkGrey,
+                  ),
+                ),
+              ),
+            ],
+            bottom: const _EditTextBar(),
           ),
-          actions: [
-            GestureDetector(
-              onTap: () => bloc.shareMeme(),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
-                child: Icon(
-                  Icons.share,
-                  color: AppColors.darkGrey,
-                ),
-              ),
-            ),
-            GestureDetector(
-              onTap: () => bloc.saveMeme(),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
-                child: Icon(
-                  Icons.save,
-                  color: AppColors.darkGrey,
-                ),
-              ),
-            ),
-          ],
-          bottom: const _EditTextBar(),
-        ),
-        backgroundColor: AppColors.backgroundColor,
-        body: const SafeArea(
-          child: _CreateMemePageContent(),
+          backgroundColor: AppColors.backgroundColor,
+          body: const SafeArea(
+            child: _CreateMemePageContent(),
+          ),
         ),
       ),
     );
@@ -82,6 +88,35 @@ class _CreateMemePageState extends State<CreateMemePage> {
   void dispose() {
     bloc.dispose();
     super.dispose();
+  }
+
+  Future<bool?> showConfirmationExitDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Хотите выйти?"),
+          content: const Text("Вы потеряете несохраненные изменения."),
+          actionsPadding: const EdgeInsets.symmetric(horizontal: 16),
+          actions: [
+            AppButton(
+              onTap: () {
+                Navigator.of(context).pop(false);
+              },
+              labelText: "Отмена",
+              color: AppColors.darkGrey,
+            ),
+            AppButton(
+              onTap: () {
+                Navigator.of(context).pop(true);
+              },
+              labelText: "Выйти",
+              color: AppColors.fuchsia,
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -351,56 +386,77 @@ class _MemeCanvasWidget extends StatelessWidget {
                 return Screenshot(
                   controller: snapshot.requireData,
                   child: Stack(
-                    children: [
-                      StreamBuilder<String?>(
-                        stream: bloc.observeMemePath(),
-                        builder: (context, snapshot) {
-                          final path = snapshot.hasData ? snapshot.data : null;
-                          if (path == null) {
-                            return Container(
-                              color: AppColors.backgroundColor,
-                            );
-                          }
-                          return Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: FileImage(File(path)),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      StreamBuilder<List<MemeTextWithOffset>>(
-                        initialData: const <MemeTextWithOffset>[],
-                        stream: bloc.observeMemeTextsWithOffsets(),
-                        builder: (context, snapshot) {
-                          final memeTextsWithOffsets = snapshot.hasData
-                              ? snapshot.data!
-                              : const <MemeTextWithOffset>[];
-                          return LayoutBuilder(
-                            builder:
-                                (buildContext, BoxConstraints constraints) {
-                              return Stack(
-                                children: memeTextsWithOffsets
-                                    .map((memeTextWithOffset) {
-                                  return DraggableMemeText(
-                                    key: ValueKey(memeTextWithOffset.memeText.id),
-                                    memeTextWithOffset: memeTextWithOffset,
-                                    parentConstraints: constraints,
-                                  );
-                                }).toList(),
-                              );
-                            },
-                          );
-                        },
-                      ),
+                    children: const [
+                      BackgroundImage(),
+                      MemeTexts(),
                     ],
                   ),
                 );
               }),
         ),
       ),
+    );
+  }
+}
+
+class MemeTexts extends StatelessWidget {
+  const MemeTexts({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
+    return StreamBuilder<List<MemeTextWithOffset>>(
+      initialData: const <MemeTextWithOffset>[],
+      stream: bloc.observeMemeTextsWithOffsets(),
+      builder: (context, snapshot) {
+        final memeTextsWithOffsets =
+            snapshot.hasData ? snapshot.data! : const <MemeTextWithOffset>[];
+        return LayoutBuilder(
+          builder: (buildContext, BoxConstraints constraints) {
+            return Stack(
+              children: memeTextsWithOffsets.map((memeTextWithOffset) {
+                return DraggableMemeText(
+                  key: ValueKey(memeTextWithOffset.memeText.id),
+                  memeTextWithOffset: memeTextWithOffset,
+                  parentConstraints: constraints,
+                );
+              }).toList(),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class BackgroundImage extends StatelessWidget {
+  const BackgroundImage({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
+    return StreamBuilder<String?>(
+      stream: bloc.observeMemePath(),
+      builder: (context, snapshot) {
+        final path = snapshot.hasData ? snapshot.data : null;
+        if (path == null) {
+          return Container(
+            color: AppColors.backgroundColor,
+          );
+        }
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: FileImage(File(path)),
+              fit: BoxFit.cover,
+            ),
+          ),
+        );
+      },
     );
   }
 }

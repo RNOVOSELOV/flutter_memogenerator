@@ -20,23 +20,21 @@ class AppButton extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (icon != null) Icon(icon, color: color),
-              const SizedBox(
-                width: 8,
-              ),
-              Text(
-                labelText.toUpperCase(),
-                style: TextStyle(
-                    color: color, fontSize: 14, fontWeight: FontWeight.w500),
-              )
-            ],
-          ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (icon != null) Icon(icon, color: color),
+            const SizedBox(
+              width: 8,
+            ),
+            Text(
+              labelText.toUpperCase(),
+              style: TextStyle(
+                  color: color, fontSize: 14, fontWeight: FontWeight.w500),
+            )
+          ],
         ),
       ),
     );
