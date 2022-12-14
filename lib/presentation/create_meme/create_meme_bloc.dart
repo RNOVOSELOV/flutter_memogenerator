@@ -54,8 +54,7 @@ class CreateMemeBloc {
       (meme) {
         if (meme != null) {
           final memeTexts = meme.texts.map((textWithPosition) {
-            return MemeText(
-                id: textWithPosition.id, text: textWithPosition.text);
+            return MemeText.createFromTextWithPosition(textWithPosition);
           }).toList();
           final memeTextOffset = meme.texts.map((textWithPosition) {
             return MemeTextOffset(
@@ -95,6 +94,22 @@ class CreateMemeBloc {
         );
   }
 
+  void changeFontSettings(
+      final String textId, final Color color, final double fontSize) {
+    final copiedList = [...memeTextsSubject.value];
+    final index = copiedList.indexWhere((element) => element.id == textId);
+    if (index == -1) {
+      return;
+    }
+    final oldMemeText = copiedList[index];
+    copiedList.removeAt(index);
+    copiedList.insert(
+      index,
+      oldMemeText.copyWithChangedFontSettings(color, fontSize),
+    );
+    memeTextsSubject.add(copiedList);
+  }
+
   void saveMeme() {
     final memeTexts = memeTextsSubject.value;
     final memeTextOffsets = memeTextOffsetSubject.value;
@@ -107,7 +122,12 @@ class CreateMemeBloc {
           top: memeTextPosition?.offset.dy ?? 0,
           left: memeTextPosition?.offset.dx ?? 0);
       return TextWithPosition(
-          id: memeText.id, text: memeText.text, position: position);
+        id: memeText.id,
+        text: memeText.text,
+        position: position,
+        fontSize: memeText.fontSize,
+        color: memeText.color,
+      );
     }).toList();
     saveMemeSubscription = SaveMemeInteractor.getInstance()
         .saveMeme(
@@ -167,8 +187,9 @@ class CreateMemeBloc {
     if (index == -1) {
       return;
     }
+    final oldMemeText = copiedList[index];
     copiedList.removeAt(index);
-    copiedList.insert(index, MemeText(id: id, text: text));
+    copiedList.insert(index, oldMemeText.copyWithChangedText(text));
     memeTextsSubject.add(copiedList);
   }
 
@@ -201,9 +222,9 @@ class CreateMemeBloc {
         });
 
         return MemeTextWithOffset(
-            id: memeText.id,
-            text: memeText.text,
-            offset: memeTextOffset?.offset);
+          offset: memeTextOffset?.offset,
+          memeText: memeText,
+        );
       }).toList();
     }).distinct(
         (previous, next) => const ListEquality().equals(previous, next));
