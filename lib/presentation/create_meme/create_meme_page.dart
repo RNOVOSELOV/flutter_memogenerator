@@ -385,6 +385,7 @@ class _MemeCanvasWidget extends StatelessWidget {
                                 children: memeTextsWithOffsets
                                     .map((memeTextWithOffset) {
                                   return DraggableMemeText(
+                                    key: ValueKey(memeTextWithOffset.memeText.id),
                                     memeTextWithOffset: memeTextWithOffset,
                                     parentConstraints: constraints,
                                   );

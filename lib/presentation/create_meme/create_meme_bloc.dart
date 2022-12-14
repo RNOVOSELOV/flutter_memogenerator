@@ -95,16 +95,17 @@ class CreateMemeBloc {
   }
 
   void changeFontSettings(
-      final String textId, final Color color, final double fontSize) {
+    final String textId,
+    final Color color,
+    final double fontSize,
+  ) {
     final copiedList = [...memeTextsSubject.value];
-    final index = copiedList.indexWhere((element) => element.id == textId);
-    if (index == -1) {
+    final oldMemeText = copiedList.firstWhereOrNull((element) => element.id == textId);
+    if (oldMemeText == null) {
       return;
     }
-    final oldMemeText = copiedList[index];
-    copiedList.removeAt(index);
-    copiedList.insert(
-      index,
+    copiedList.remove(oldMemeText);
+    copiedList.add(
       oldMemeText.copyWithChangedFontSettings(color, fontSize),
     );
     memeTextsSubject.add(copiedList);
