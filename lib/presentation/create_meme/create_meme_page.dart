@@ -341,13 +341,6 @@ class BottomMemeText extends StatelessWidget {
                         topRight: Radius.circular(24),
                         topLeft: Radius.circular(24)),
                   ),
-                  // decoration: const BoxDecoration(
-                  //   color: Colors.white,
-                  //   borderRadius: BorderRadius.only(
-                  //       topLeft: Radius.circular(24), topRight: Radius.circular(24)),
-                  //   shape: BoxShape.rectangle,
-                  // ),
-
                   context: context,
                   builder: (context) {
                     return Provider.value(
@@ -362,6 +355,15 @@ class BottomMemeText extends StatelessWidget {
               child: const Padding(
                 padding: EdgeInsets.all(8),
                 child: Icon(Icons.font_download_outlined),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                bloc.deleteMemeText (item.memeText.id);
+              },
+              child: const Padding(
+                padding: EdgeInsets.all(8),
+                child: Icon(Icons.delete_forever_outlined),
               ),
             ),
             const SizedBox(

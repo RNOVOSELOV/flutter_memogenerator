@@ -176,6 +176,12 @@ class CreateMemeBloc {
     memeTextOffsetSubject.add(copiedMemeTextOffset);
   }
 
+  void deleteMemeText(String id) {
+    final currentMemeTexts = [...memeTextsSubject.value];
+    currentMemeTexts.removeWhere((element) => element.id == id);
+    memeTextsSubject.add(currentMemeTexts);
+  }
+
   void addNewText() {
     final newMemeText = MemeText.create();
     memeTextsSubject.add([...memeTextsSubject.value, newMemeText]);
