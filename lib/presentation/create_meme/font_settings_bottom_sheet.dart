@@ -6,17 +6,17 @@ import 'package:memogenerator/presentation/widgets/app_button.dart';
 import 'package:memogenerator/resources/app_colors.dart';
 import 'package:provider/provider.dart';
 
-class FontSettingsBottomSheet extends StatefulWidget {
-  const FontSettingsBottomSheet({super.key, required this.memeText});
+class FontSettingBottomSheet extends StatefulWidget {
+  const FontSettingBottomSheet({super.key, required this.memeText});
 
   final MemeText memeText;
 
   @override
-  State<FontSettingsBottomSheet> createState() =>
-      _FontSettingsBottomSheetState();
+  State<FontSettingBottomSheet> createState() =>
+      _FontSettingBottomSheetState();
 }
 
-class _FontSettingsBottomSheetState extends State<FontSettingsBottomSheet> {
+class _FontSettingBottomSheetState extends State<FontSettingBottomSheet> {
   late double fontSize;
   late Color color;
 
@@ -30,7 +30,7 @@ class _FontSettingsBottomSheetState extends State<FontSettingsBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: Colors.transparent,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

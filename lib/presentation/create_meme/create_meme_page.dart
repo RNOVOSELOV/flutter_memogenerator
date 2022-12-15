@@ -96,7 +96,7 @@ class _CreateMemePageState extends State<CreateMemePage> {
       builder: (context) {
         return AlertDialog(
           title: const Text("Хотите выйти?"),
-          content: const Text("Вы потеряете несохраненные изменения."),
+          content: const Text("Вы потеряете несохраненные изменения"),
           actionsPadding: const EdgeInsets.symmetric(horizontal: 16),
           actions: [
             AppButton(
@@ -335,11 +335,24 @@ class BottomMemeText extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 showModalBottomSheet(
+                  backgroundColor: Colors.white,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(24),
+                        topLeft: Radius.circular(24)),
+                  ),
+                  // decoration: const BoxDecoration(
+                  //   color: Colors.white,
+                  //   borderRadius: BorderRadius.only(
+                  //       topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+                  //   shape: BoxShape.rectangle,
+                  // ),
+
                   context: context,
                   builder: (context) {
                     return Provider.value(
                       value: bloc,
-                      child: FontSettingsBottomSheet(
+                      child: FontSettingBottomSheet(
                         memeText: item.memeText,
                       ),
                     );
