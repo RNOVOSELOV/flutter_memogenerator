@@ -9,6 +9,6 @@ void main() async {
   group("l11h01", () => runTestLesson3Task1());
   group("l11h02", () => runTestLesson3Task2());
   group("l11h03", () => runTestLesson3Task3());
-//  group("l11h04", () => runTestLesson3Task4());
+  group("l11h04", () => runTestLesson3Task4());
 }
 

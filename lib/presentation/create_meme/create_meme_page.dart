@@ -40,6 +40,10 @@ class _CreateMemePageState extends State<CreateMemePage> {
       value: bloc,
       child: WillPopScope(
         onWillPop: () async {
+          final allSaved = await bloc.memeIsSaved ();
+          if (allSaved) {
+            return true;
+          }
           final goBack = await showConfirmationExitDialog(context);
           return goBack ?? false;
         },
@@ -332,7 +336,7 @@ class BottomMemeText extends StatelessWidget {
             const SizedBox(
               width: 4,
             ),
-            GestureDetector(
+            BottomMemeTextAction(
               onTap: () {
                 showModalBottomSheet(
                   backgroundColor: Colors.white,
@@ -352,25 +356,44 @@ class BottomMemeText extends StatelessWidget {
                   },
                 );
               },
-              child: const Padding(
-                padding: EdgeInsets.all(8),
-                child: Icon(Icons.font_download_outlined),
-              ),
+              icon: Icons.font_download_outlined,
             ),
-            GestureDetector(
+            const SizedBox(
+              width: 4,
+            ),
+            BottomMemeTextAction(
               onTap: () {
-                bloc.deleteMemeText (item.memeText.id);
+                bloc.deleteMemeText(item.memeText.id);
               },
-              child: const Padding(
-                padding: EdgeInsets.all(8),
-                child: Icon(Icons.delete_forever_outlined),
-              ),
+              icon: Icons.delete_forever_outlined,
             ),
             const SizedBox(
               width: 4,
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class BottomMemeTextAction extends StatelessWidget {
+  const BottomMemeTextAction({
+    Key? key,
+    required this.onTap,
+    required this.icon,
+  }) : super(key: key);
+
+  final VoidCallback onTap;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Icon(icon),
       ),
     );
   }
@@ -543,6 +566,7 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
               text: widget.memeTextWithOffset.memeText.text,
               fontSize: widget.memeTextWithOffset.memeText.fontSize,
               color: widget.memeTextWithOffset.memeText.color,
+              fontWeight: widget.memeTextWithOffset.memeText.fontWeight,
             );
           },
         ),
