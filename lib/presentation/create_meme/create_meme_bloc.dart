@@ -42,7 +42,6 @@ class CreateMemeBloc {
     final String? savedId,
     final String? selectedMemePath,
   }) : id = savedId ?? const Uuid().v4() {
-    print("Create BLoC of meme, id: $id");
     memePathSubject.add(selectedMemePath);
     _subscribeToNewMemTextOffset();
     _subscribeToExistentMeme();
@@ -98,20 +97,22 @@ class CreateMemeBloc {
     final String textId,
     final Color color,
     final double fontSize,
+    final FontWeight fontWeight,
   ) {
     final copiedList = [...memeTextsSubject.value];
-    final oldMemeText = copiedList.firstWhereOrNull((element) => element.id == textId);
+    final oldMemeText =
+        copiedList.firstWhereOrNull((element) => element.id == textId);
     if (oldMemeText == null) {
       return;
     }
     copiedList.remove(oldMemeText);
     copiedList.add(
-      oldMemeText.copyWithChangedFontSettings(color, fontSize),
+      oldMemeText.copyWithChangedFontSettings(color, fontSize, fontWeight),
     );
     memeTextsSubject.add(copiedList);
   }
 
-  void saveMeme() {
+  List<TextWithPosition> generateTextWithPositionsForMeme() {
     final memeTexts = memeTextsSubject.value;
     final memeTextOffsets = memeTextOffsetSubject.value;
     final textsWithPosition = memeTexts.map((memeText) {
@@ -123,17 +124,21 @@ class CreateMemeBloc {
           top: memeTextPosition?.offset.dy ?? 0,
           left: memeTextPosition?.offset.dx ?? 0);
       return TextWithPosition(
-        id: memeText.id,
-        text: memeText.text,
-        position: position,
-        fontSize: memeText.fontSize,
-        color: memeText.color,
-      );
+          id: memeText.id,
+          text: memeText.text,
+          position: position,
+          fontSize: memeText.fontSize,
+          color: memeText.color,
+          fontWeight: memeText.fontWeight);
     }).toList();
+    return textsWithPosition;
+  }
+
+  void saveMeme() {
     saveMemeSubscription = SaveMemeInteractor.getInstance()
         .saveMeme(
           id: id,
-          textWithPositions: textsWithPosition,
+          textWithPositions: generateTextWithPositionsForMeme(),
           imagePath: memePathSubject.value,
           screenshotController: screenshotControllerSubject.value,
         )
@@ -145,6 +150,28 @@ class CreateMemeBloc {
       onError: (error, stacktrace) =>
           print("Error in saveMemeSubscription: $error, $stacktrace"),
     );
+  }
+
+  Future<bool> memeIsSaved() async {
+    final Meme? savedMeme = await MemesRepository.getInstance().getMeme(id);
+    if (savedMeme == null) {
+      return false;
+    }
+    final savedMemeTexts = savedMeme.texts.map((textWithPosition) {
+      return MemeText.createFromTextWithPosition(textWithPosition);
+    }).toList();
+    final savedMemeTextOffsets = savedMeme.texts.map((textWithPosition) {
+      return MemeTextOffset(
+          id: textWithPosition.id,
+          offset: Offset(
+            textWithPosition.position.left,
+            textWithPosition.position.top,
+          ));
+    }).toList();
+    return const DeepCollectionEquality.unordered()
+            .equals(savedMemeTexts, memeTextsSubject.value) &&
+        const DeepCollectionEquality.unordered()
+            .equals(savedMemeTextOffsets, memeTextOffsetSubject.value);
   }
 
   void _subscribeToNewMemTextOffset() {
@@ -174,6 +201,12 @@ class CreateMemeBloc {
     }
     copiedMemeTextOffset.add(newMemeTextOffset);
     memeTextOffsetSubject.add(copiedMemeTextOffset);
+  }
+
+  void deleteMemeText(String id) {
+    final currentMemeTexts = [...memeTextsSubject.value];
+    currentMemeTexts.removeWhere((element) => element.id == id);
+    memeTextsSubject.add(currentMemeTexts);
   }
 
   void addNewText() {

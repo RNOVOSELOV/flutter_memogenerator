@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:memogenerator/presentation/main/main_bloc.dart';
 import 'package:memogenerator/presentation/create_meme/create_meme_page.dart';
 import 'package:memogenerator/presentation/main/models/memes_with_docs_path.dart';
+import 'package:memogenerator/presentation/widgets/app_button.dart';
 import 'package:memogenerator/resources/app_colors.dart';
 import 'package:provider/provider.dart';
 
@@ -27,41 +28,47 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Provider.value(
       value: bloc,
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          backgroundColor: AppColors.backgroundAppbar,
-          foregroundColor: AppColors.foregroundAppBar,
-          title: Text(
-            "Мемогенератор",
-            style: GoogleFonts.seymourOne(fontSize: 24),
+      child: WillPopScope(
+        onWillPop: () async {
+          final exitFromApplication = await showConfirmationExitDialog(context);
+          return exitFromApplication ?? false;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            backgroundColor: AppColors.backgroundAppbar,
+            foregroundColor: AppColors.foregroundAppBar,
+            title: Text(
+              "Мемогенератор",
+              style: GoogleFonts.seymourOne(fontSize: 24),
+            ),
           ),
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () async {
-            final selectedMemePath = await bloc.selectMeme();
-            if (selectedMemePath == null) {
-              return;
-            }
-            Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-              return CreateMemePage(
-                selectedMemePath: selectedMemePath,
-              );
-            }));
-          },
-          icon: const Icon(
-            Icons.add,
-            color: AppColors.white,
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () async {
+              final selectedMemePath = await bloc.selectMeme();
+              if (selectedMemePath == null) {
+                return;
+              }
+              Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+                return CreateMemePage(
+                  selectedMemePath: selectedMemePath,
+                );
+              }));
+            },
+            icon: const Icon(
+              Icons.add,
+              color: AppColors.white,
+            ),
+            backgroundColor: AppColors.fabColor,
+            label: const Text(
+              "Создать",
+              style: TextStyle(color: AppColors.white),
+            ),
           ),
-          backgroundColor: AppColors.fabColor,
-          label: const Text(
-            "Создать",
-            style: TextStyle(color: AppColors.white),
+          backgroundColor: AppColors.backgroundColor,
+          body: const SafeArea(
+            child: MainPageContent(),
           ),
-        ),
-        backgroundColor: AppColors.backgroundColor,
-        body: const SafeArea(
-          child: MainPageContent(),
         ),
       ),
     );
@@ -71,6 +78,35 @@ class _MainPageState extends State<MainPage> {
   void dispose() {
     bloc.dispose();
     super.dispose();
+  }
+
+  Future<bool?> showConfirmationExitDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Точно хотите выйти?"),
+          content: const Text("Мемы сами себя не сделают"),
+          actionsPadding: const EdgeInsets.symmetric(horizontal: 16),
+          actions: [
+            AppButton(
+              onTap: () {
+                Navigator.of(context).pop(false);
+              },
+              labelText: "Остаться",
+              color: AppColors.darkGrey,
+            ),
+            AppButton(
+              onTap: () {
+                Navigator.of(context).pop(true);
+              },
+              labelText: "Выйти",
+              color: AppColors.fuchsia,
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
