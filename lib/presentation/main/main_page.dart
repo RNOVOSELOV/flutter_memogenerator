@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:memogenerator/presentation/easter_egg/easter_egg_page.dart';
 import 'dart:io';
 import 'package:memogenerator/presentation/main/main_bloc.dart';
 import 'package:memogenerator/presentation/create_meme/create_meme_page.dart';
@@ -41,9 +42,12 @@ class _MainPageState extends State<MainPage> {
               centerTitle: true,
               backgroundColor: AppColors.backgroundAppbar,
               foregroundColor: AppColors.foregroundAppBar,
-              title: Text(
-                "Мемогенератор",
-                style: GoogleFonts.seymourOne(fontSize: 24),
+              title: GestureDetector(
+                onLongPress: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const EasterEggPage())),
+                child: Text(
+                  "Мемогенератор",
+                  style: GoogleFonts.seymourOne(fontSize: 24),
+                ),
               ),
               bottom: TabBar(
                 labelColor: AppColors.darkGrey,
