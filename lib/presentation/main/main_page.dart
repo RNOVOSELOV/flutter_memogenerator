@@ -43,7 +43,8 @@ class _MainPageState extends State<MainPage> {
               backgroundColor: AppColors.backgroundAppbar,
               foregroundColor: AppColors.foregroundAppBar,
               title: GestureDetector(
-                onLongPress: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const EasterEggPage())),
+                onLongPress: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const EasterEggPage())),
                 child: Text(
                   "Мемогенератор",
                   style: GoogleFonts.seymourOne(fontSize: 24),
@@ -63,9 +64,9 @@ class _MainPageState extends State<MainPage> {
                 ],
               ),
             ),
-            floatingActionButton: CreateMemeFab(),
+            floatingActionButton: const CreateMemeFab(),
             backgroundColor: AppColors.backgroundColor,
-            body: TabBarView(
+            body: const TabBarView(
               children: [
                 SafeArea(child: CreatedMemesGrid()),
                 SafeArea(child: TemplatesGrid()),
@@ -191,17 +192,63 @@ class MemeGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
     final imageFile = File("$docsPath${Platform.pathSeparator}$memeId.png");
-    return GestureDetector(
-      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => CreateMemePage(id: memeId),
-      )),
-      child: Container(
-        alignment: Alignment.centerLeft,
-        decoration: BoxDecoration(
-          border: Border.all(color: AppColors.darkGrey, width: 1),
+    return Stack(
+      children: [
+        GestureDetector(
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => CreateMemePage(id: memeId),
+          )),
+          child: Container(
+            alignment: Alignment.centerLeft,
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.darkGrey, width: 1),
+            ),
+            child:
+                imageFile.existsSync() ? Image.file(imageFile) : Text(memeId),
+          ),
         ),
-        child: imageFile.existsSync() ? Image.file(imageFile) : Text(memeId),
+        GestureDetector(
+          onTap: () async {
+            final removeMemeDialog = await showConfirmationRemoveDialog(
+              context,
+              title: 'Удалить мем?',
+              text: 'Выбранный мем будет удален навсегда',
+            );
+            if ((removeMemeDialog ?? false) == true) {
+              bloc.deleteMeme(memeId);
+            }
+          },
+          child: const DeleteItemButton(),
+        ),
+      ],
+    );
+  }
+}
+
+class DeleteItemButton extends StatelessWidget {
+  const DeleteItemButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: Container(
+        height: 20,
+        width: 20,
+        margin: const EdgeInsets.all(4.0),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: AppColors.darkGrey38,
+        ),
+        child: const Icon(
+          Icons.delete_outline,
+          color: AppColors.white,
+          size: 18,
+        ),
       ),
     );
   }
@@ -248,22 +295,74 @@ class TemplateGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
     final imageFile = File(template.fullImagePath);
-    return GestureDetector(
-      onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (_) => CreateMemePage(
-            selectedMemePath: template.fullImagePath,
+    return Stack(
+      children: [
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => CreateMemePage(
+                selectedMemePath: template.fullImagePath,
+              ),
+            ));
+          },
+          child: Container(
+            alignment: Alignment.centerLeft,
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.darkGrey, width: 1),
+            ),
+            child:
+                imageFile.existsSync() ? Image.file(imageFile) : Text(template.id),
           ),
-        ));
-      },
-      child: Container(
-        alignment: Alignment.centerLeft,
-        decoration: BoxDecoration(
-          border: Border.all(color: AppColors.darkGrey, width: 1),
         ),
-        child: imageFile.existsSync() ? Image.file(imageFile) : Text(template.id),
-      ),
+        GestureDetector(
+          onTap: () async {
+            final removeTemplateDialog = await showConfirmationRemoveDialog(
+              context,
+              title: 'Удалить шаблон?',
+              text: 'Выбранный шаблон будет удален навсегда',
+            );
+            if ((removeTemplateDialog ?? false) == true) {
+              bloc.deleteTemplate(template.id);
+            }
+          },
+          child: const DeleteItemButton(),
+        ),
+      ],
     );
   }
+}
+
+Future<bool?> showConfirmationRemoveDialog(
+  BuildContext context, {
+  required String title,
+  required String text,
+}) {
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(text),
+        actionsPadding: const EdgeInsets.symmetric(horizontal: 16),
+        actions: [
+          AppButton(
+            onTap: () {
+              Navigator.of(context).pop(false);
+            },
+            labelText: "Отмена",
+            color: AppColors.darkGrey,
+          ),
+          AppButton(
+            onTap: () {
+              Navigator.of(context).pop(true);
+            },
+            labelText: "Удалить",
+            color: AppColors.fuchsia,
+          ),
+        ],
+      );
+    },
+  );
 }
