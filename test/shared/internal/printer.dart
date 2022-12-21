@@ -23,7 +23,7 @@ void fancyPrint(
   var tempWord = '';
   for (int i = 0; i < text.length; i++) {
     final effectiveMaxLineCount =
-        lines.isEmpty ? maxLineCount : maxLineCount - _leftIndentCount;
+        lines.isEmpty ? maxLineCount - _leftIndentCount : maxLineCount;
     if (text[i] == ' ') {
       tempPhrase = "$tempPhrase $tempWord".trim();
       tempWord = '';
