@@ -1,9 +1,7 @@
-import 'dart:io';
-import 'package:collection/collection.dart';
 import 'package:memogenerator/data/models/meme.dart';
 import 'package:memogenerator/data/models/text_with_position.dart';
 import 'package:memogenerator/data/repositories/memes_repository.dart';
-import 'package:memogenerator/domain/interactors/copy_unique_file_iteractor.dart';
+import 'package:memogenerator/domain/interactors/copy_unique_file_interactor.dart';
 import 'package:memogenerator/domain/interactors/screenshot_interactor.dart';
 import 'package:screenshot/screenshot.dart';
 
