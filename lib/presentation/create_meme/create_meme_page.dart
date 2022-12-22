@@ -247,7 +247,7 @@ class _CreateMemePageContentState extends State<_CreateMemePageContent> {
       children: [
         const Expanded(
           flex: 2,
-          child: _MemeCanvasWidget(),
+          child: MemeCanvasWidget(),
         ),
         Container(
           height: 1,
@@ -429,8 +429,8 @@ class BottomMemeTextAction extends StatelessWidget {
   }
 }
 
-class _MemeCanvasWidget extends StatelessWidget {
-  const _MemeCanvasWidget({
+class MemeCanvasWidget extends StatelessWidget {
+  const MemeCanvasWidget({
     Key? key,
   }) : super(key: key);
 
