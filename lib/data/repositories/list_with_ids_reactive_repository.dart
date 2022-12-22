@@ -1,17 +1,23 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:rxdart/rxdart.dart';
 
 abstract class ListWithIdsReactiveRepository<T> {
   final updater = PublishSubject<Null>();
 
+  @protected
   Future<List<String>> getRawData();
 
+  @protected
   Future<bool> saveRawData(final List<String> items);
 
+  @protected
   T convertFromString(final String rawItem);
 
+  @protected
   String convertToString(final T item);
 
+  @protected
   dynamic getId(final T item);
 
   Future<List<T>> getItems() async {
