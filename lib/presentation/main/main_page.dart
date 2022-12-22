@@ -6,7 +6,6 @@ import 'dart:io';
 import 'package:memogenerator/presentation/main/main_bloc.dart';
 import 'package:memogenerator/presentation/create_meme/create_meme_page.dart';
 import 'package:memogenerator/presentation/main/models/meme_thumbnail.dart';
-import 'package:memogenerator/presentation/main/models/memes_with_docs_path.dart';
 import 'package:memogenerator/presentation/main/models/template_full.dart';
 import 'package:memogenerator/presentation/widgets/app_button.dart';
 import 'package:memogenerator/resources/app_colors.dart';
