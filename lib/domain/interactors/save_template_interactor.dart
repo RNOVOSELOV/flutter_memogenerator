@@ -1,7 +1,6 @@
 import 'package:memogenerator/data/models/template.dart';
 import 'package:memogenerator/data/repositories/templates_repository.dart';
-import 'package:memogenerator/domain/interactors/copy_unique_file_iteractor.dart';
-import 'package:memogenerator/presentation/main/models/template_full.dart';
+import 'package:memogenerator/domain/interactors/copy_unique_file_interactor.dart';
 import 'package:uuid/uuid.dart';
 
 class SaveTemplateInteractor {
@@ -26,6 +25,6 @@ class SaveTemplateInteractor {
       id: Uuid().v4(),
       imageUrl: newImagePath,
     );
-    return TemplatesRepository.getInstance().addToTemplates(template);
+    return TemplatesRepository.getInstance().addItemOrReplaceById(template);
   }
 }
