@@ -8,5 +8,5 @@ void main() async {
   TestWidgetsFlutterBinding.ensureInitialized();
   group("l12h01", () => runTestLesson4Task1());
   group("l12h02", () => runTestLesson4Task2());
-//  group("l12h03", () => runTestLesson4Task3());
+  group("l12h03", () => runTestLesson4Task3());
 }
