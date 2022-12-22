@@ -44,11 +44,20 @@ class MainBloc {
     return imagePath;
   }
 
-  void deleteMeme (final String memeId)  {
+  Future<void> addTemplate() async {
+    final xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final imagePath = xFile?.path;
+    if (imagePath != null) {
+      await SaveTemplateInteractor.getInstance()
+          .saveTemplate(imagePath: imagePath);
+    }
+  }
+
+  void deleteMeme(final String memeId) {
     MemesRepository.getInstance().removeFromMemes(memeId);
   }
 
-  void deleteTemplate (final String templateId) {
+  void deleteTemplate(final String templateId) {
     TemplatesRepository.getInstance().removeFromTemplates(templateId);
   }
 
