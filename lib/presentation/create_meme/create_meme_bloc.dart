@@ -49,7 +49,7 @@ class CreateMemeBloc {
 
   void _subscribeToExistentMeme() {
     existentMemeSubscription =
-        MemesRepository.getInstance().getMeme(id).asStream().listen(
+        MemesRepository.getInstance().getItemById(id).asStream().listen(
       (meme) {
         if (meme != null) {
           final memeTexts = meme.texts.map((textWithPosition) {
@@ -153,7 +153,7 @@ class CreateMemeBloc {
   }
 
   Future<bool> memeIsSaved() async {
-    final Meme? savedMeme = await MemesRepository.getInstance().getMeme(id);
+    final Meme? savedMeme = await MemesRepository.getInstance().getItemById(id);
     if (savedMeme == null) {
       return false;
     }
