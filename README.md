@@ -7,7 +7,7 @@
 
 "Memogenerator" - Бесплатное простое приложение, с помощью которого можно быстро и удобно создать мем
 
-Проект создан для изучения фреймворка Flutter, познакомился UUID, BottomSheet, TabNavigation, GridView, Animation, работа с разрешениями.
+Проект создан при изучении фреймворка Flutter, познакомился UUID, BottomSheet, TabNavigation, GridView, Animation, работа с разрешениями.
 
 ## Развитие проекта
 
