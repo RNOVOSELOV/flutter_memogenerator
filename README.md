@@ -2,7 +2,7 @@
 #  🛠&nbsp;&nbsp;The easiest way to create your own Mem
 
 
-<div style="background-color: rgb(250, 250, 250);">
+<div style="background-color: rgb(50, 50, 50);">
 <br/>
 <p align="center">
   <img src="https://github.com/RNOVOSELOV/flutter_memogenerator/blob/main/resources/memogenerator.gif" width="210" height="420" />
