@@ -12,7 +12,7 @@ import 'package:memogenerator/resources/app_colors.dart';
 import 'package:provider/provider.dart';
 
 class MainPage extends StatefulWidget {
-  MainPage({Key? key}) : super(key: key);
+  const MainPage({Key? key}) : super(key: key);
 
   @override
   State<MainPage> createState() => _MainPageState();

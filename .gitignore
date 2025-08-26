@@ -46,3 +46,6 @@ app.*.map.json
 
 **/failures/*.png
 *.bak
+
+# FVM Version Cache
+.fvm/
