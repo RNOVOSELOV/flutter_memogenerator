@@ -17,7 +17,7 @@ class TextWithPosition extends Equatable {
   @JsonKey(toJson: fwToJson, fromJson: fwFromJson)
   final FontWeight? fontWeight;
 
-  TextWithPosition({
+  const TextWithPosition({
     required this.id,
     required this.text,
     required this.position,

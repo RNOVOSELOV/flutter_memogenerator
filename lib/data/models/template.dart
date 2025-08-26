@@ -11,7 +11,7 @@ class Template extends Equatable {
   factory Template.fromJson(final Map<String, dynamic> json) =>
       _$TemplateFromJson(json);
 
-  Template({required this.id, required this.imageUrl});
+  const Template({required this.id, required this.imageUrl});
 
   Map<String, dynamic> toJson() => _$TemplateToJson(this);
 

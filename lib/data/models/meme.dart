@@ -12,7 +12,7 @@ class Meme extends Equatable {
   final List<TextWithPosition> texts;
   final String? memePath;
 
-  Meme({
+  const Meme({
     required this.id,
     required this.texts,
     this.memePath,

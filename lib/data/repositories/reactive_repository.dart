@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:rxdart/rxdart.dart';
 
-abstract class ListWithIdsReactiveRepository<T> {
+abstract class ReactiveRepository<T> {
   final updater = PublishSubject<Null>();
 
   @protected

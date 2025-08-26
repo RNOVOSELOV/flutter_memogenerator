@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:memogenerator/data/models/template.dart';
-import 'package:memogenerator/data/repositories/list_with_ids_reactive_repository.dart';
+import 'package:memogenerator/data/repositories/reactive_repository.dart';
 import 'package:memogenerator/data/shared_preference_data.dart';
 
-class TemplatesRepository extends ListWithIdsReactiveRepository<Template> {
+class TemplatesRepository extends ReactiveRepository<Template> {
   final SharedPreferenceData spData;
 
   static TemplatesRepository? instance;
