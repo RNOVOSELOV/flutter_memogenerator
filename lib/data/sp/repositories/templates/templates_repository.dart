@@ -1,9 +1,10 @@
 import 'dart:convert';
-import 'package:memogenerator/data/models/template.dart';
-import 'package:memogenerator/data/repositories/reactive_repository.dart';
-import 'package:memogenerator/data/shared_preference_data.dart';
 
-class TemplatesRepository extends ReactiveRepository<Template> {
+import '../../models/template_model.dart';
+import '../reactive_repository.dart';
+import '../../shared_preference_data.dart';
+
+class TemplatesRepository extends ReactiveRepository<TemplateModel> {
   final SharedPreferenceData spData;
 
   static TemplatesRepository? instance;
@@ -14,14 +15,14 @@ class TemplatesRepository extends ReactiveRepository<Template> {
       TemplatesRepository._internal(SharedPreferenceData.getInstance());
 
   @override
-  Template convertFromString(String rawItem) =>
-      Template.fromJson(json.decode(rawItem));
+  TemplateModel convertFromString(String rawItem) =>
+      TemplateModel.fromJson(json.decode(rawItem));
 
   @override
-  String convertToString(Template item) => json.encode(item.toJson());
+  String convertToString(TemplateModel item) => json.encode(item.toJson());
 
   @override
-  dynamic getId(Template item) => item.id;
+  dynamic getId(TemplateModel item) => item.id;
 
   @override
   Future<List<String>> getRawData() => spData.getTemplates();

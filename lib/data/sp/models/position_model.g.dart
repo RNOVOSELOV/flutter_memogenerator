@@ -1,17 +1,16 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'position.dart';
+part of 'position_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Position _$PositionFromJson(Map<String, dynamic> json) => Position(
+PositionModel _$PositionModelFromJson(Map<String, dynamic> json) =>
+    PositionModel(
       left: (json['left'] as num).toDouble(),
       top: (json['top'] as num).toDouble(),
     );
 
-Map<String, dynamic> _$PositionToJson(Position instance) => <String, dynamic>{
-      'top': instance.top,
-      'left': instance.left,
-    };
+Map<String, dynamic> _$PositionModelToJson(PositionModel instance) =>
+    <String, dynamic>{'top': instance.top, 'left': instance.left};

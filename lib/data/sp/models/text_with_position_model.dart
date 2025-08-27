@@ -1,23 +1,24 @@
 import 'dart:ui';
-
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:memogenerator/data/models/position.dart';
+import 'package:memogenerator/domain/entities/text_with_position.dart';
 
-part 'text_with_position.g.dart';
+import 'position_model.dart';
+
+part 'text_with_position_model.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-class TextWithPosition extends Equatable {
+class TextWithPositionModel extends Equatable {
   final String id;
   final String text;
-  final Position position;
+  final PositionModel position;
   final double? fontSize;
   @JsonKey(toJson: colorToJson, fromJson: colorFromJson)
   final Color? color;
   @JsonKey(toJson: fwToJson, fromJson: fwFromJson)
   final FontWeight? fontWeight;
 
-  const TextWithPosition({
+  const TextWithPositionModel({
     required this.id,
     required this.text,
     required this.position,
@@ -26,17 +27,39 @@ class TextWithPosition extends Equatable {
     required this.fontWeight,
   });
 
-  factory TextWithPosition.fromJson(final Map<String, dynamic> json) =>
-      _$TextWithPositionFromJson(json);
+  factory TextWithPositionModel.fromJson(final Map<String, dynamic> json) =>
+      _$TextWithPositionModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$TextWithPositionToJson(this);
+  Map<String, dynamic> toJson() => _$TextWithPositionModelToJson(this);
+
+  TextWithPosition get textWithPosition => TextWithPosition(
+    id: id,
+    text: text,
+    color: color,
+    fontSize: fontSize,
+    fontWeight: fontWeight,
+    position: position.position,
+  );
+
+  factory TextWithPositionModel.fromTemplate({
+    required final TextWithPosition data,
+  }) {
+    return TextWithPositionModel(
+      id: data.id,
+      fontWeight: data.fontWeight,
+      fontSize: data.fontSize,
+      color: data.color,
+      text: data.text,
+      position: PositionModel.fromPosition(position: data.position),
+    );
+  }
 
   @override
   List<Object?> get props => [id, text, position, fontSize, color, fontWeight];
 }
 
 String? colorToJson(Color? color) {
-  return color?.value.toRadixString(16);
+  return color?.toARGB32().toRadixString(16);
 }
 
 Color? colorFromJson(String? value) {

@@ -1,7 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:memogenerator/data/models/text_with_position.dart';
 import 'package:uuid/uuid.dart';
+
+import '../../../domain/entities/text_with_position.dart';
+
 
 class MemeText extends Equatable {
   static const defaultColor = Colors.black;
@@ -14,7 +16,7 @@ class MemeText extends Equatable {
   final double fontSize;
   final FontWeight fontWeight;
 
-  MemeText({
+  const MemeText({
     required this.id,
     required this.text,
     required this.color,
