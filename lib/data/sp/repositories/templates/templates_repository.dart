@@ -1,32 +1,27 @@
 import 'dart:convert';
 
-import '../../models/template_model.dart';
+import 'package:memogenerator/data/sp/repositories/templates/template_data_provider.dart';
+
+import '../../models/templates_model.dart';
 import '../reactive_repository.dart';
-import '../../shared_preference_data.dart';
 
-class TemplatesRepository extends ReactiveRepository<TemplateModel> {
-  final SharedPreferenceData spData;
+class TemplatesRepository extends ReactiveRepository<TemplatesModel> {
+  final TemplateDataProvider _dataProvider;
 
-  static TemplatesRepository? instance;
-
-  TemplatesRepository._internal(this.spData);
-
-  factory TemplatesRepository.getInstance() => instance ??=
-      TemplatesRepository._internal(SharedPreferenceData.getInstance());
+  TemplatesRepository({required TemplateDataProvider memeDataProvider})
+    : _dataProvider = memeDataProvider;
 
   @override
-  TemplateModel convertFromString(String rawItem) =>
-      TemplateModel.fromJson(json.decode(rawItem));
+  TemplatesModel convertFromString(String rawItem) =>
+      TemplatesModel.fromJson(json.decode(rawItem));
 
   @override
-  String convertToString(TemplateModel item) => json.encode(item.toJson());
+  String convertToString(TemplatesModel item) => json.encode(item.toJson());
 
   @override
-  dynamic getId(TemplateModel item) => item.id;
+  Future<String?> getRawData() => _dataProvider.getTemplatesData();
 
   @override
-  Future<List<String>> getRawData() => spData.getTemplates();
-
-  @override
-  Future<bool> saveRawData(List<String> items) => spData.setTemplates(items);
+  Future<bool> saveRawData(String? item) =>
+      _dataProvider.setTemplatesData(item);
 }

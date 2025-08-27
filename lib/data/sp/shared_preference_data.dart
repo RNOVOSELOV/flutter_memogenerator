@@ -1,36 +1,38 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharedPreferenceData {
+import 'repositories/memes/meme_data_provider.dart';
+import 'repositories/templates/template_data_provider.dart';
+
+class SharedPreferenceData implements MemeDataProvider, TemplateDataProvider {
   static const _memeKey = "meme_key";
   static const _templateKey = "template_key";
 
-  static SharedPreferenceData? _instance;
+  const SharedPreferenceData();
 
-  factory SharedPreferenceData.getInstance() =>
-      _instance ??= SharedPreferenceData._internal();
+  @override
+  Future<String?> getMemeData() => _getItem(_memeKey);
 
-  SharedPreferenceData._internal();
+  @override
+  Future<bool> setMemeData(String? data) => _setItem(key: _memeKey, item: data);
 
-  Future<bool> setMemes(final List<String> memes) => setItems(_memeKey, memes);
+  @override
+  Future<String?> getTemplatesData() => _getItem(_templateKey);
 
-  Future<List<String>> getMemes() => getItems(_memeKey);
+  @override
+  Future<bool> setTemplatesData(String? data) =>
+      _setItem(key: _templateKey, item: data);
 
-  Future<bool> setTemplates(final List<String> templates) =>
-      setItems(_templateKey, templates);
-
-  Future<List<String>> getTemplates() => getItems(_templateKey);
-
-  Future<bool> setItems(
-    final String key,
-    final List<String> items,
-  ) async {
+  Future<bool> _setItem({
+    required final String key,
+    required final String? item,
+  }) async {
     final sp = await SharedPreferences.getInstance();
-    final result = sp.setStringList(key, items);
+    final result = sp.setString(key, item ?? '');
     return result;
   }
 
-  Future<List<String>> getItems(final String key) async {
+  Future<String?> _getItem(final String key) async {
     final sp = await SharedPreferences.getInstance();
-    return sp.getStringList(key) ?? [];
+    return sp.getString(key);
   }
 }

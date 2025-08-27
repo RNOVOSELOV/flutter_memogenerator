@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:memogenerator/domain/interactors/save_meme_interactor.dart';
+import 'package:memogenerator/domain/interactors/meme_interactor.dart';
 import 'package:memogenerator/domain/interactors/screenshot_interactor.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text_offset.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text.dart';
@@ -15,7 +15,8 @@ import 'package:collection/collection.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../data/sp/repositories/memes/memes_repository.dart';
+import '../../data/sp/repositories/memes/meme_repository.dart';
+import '../../data/sp/shared_preference_data.dart';
 import '../../domain/entities/meme.dart';
 import '../../domain/entities/position.dart';
 import '../../domain/entities/text_with_position.dart';
@@ -40,6 +41,9 @@ class CreateMemeBloc {
   StreamSubscription<void>? shareMemeSubscription;
 
   final String id;
+  final memeRepository = MemeRepository(
+    memeDataProvider: SharedPreferenceData(),
+  );
 
   CreateMemeBloc({final String? savedId, final String? selectedMemePath})
     : id = savedId ?? const Uuid().v4() {
@@ -49,9 +53,13 @@ class CreateMemeBloc {
   }
 
   void _subscribeToExistentMeme() {
-    existentMemeSubscription = MemesRepository.getInstance()
-        .getItemById(id)
+    existentMemeSubscription = memeRepository
+        .getItem()
         .asStream()
+        .map(
+          (memesModel) =>
+              memesModel?.memes.firstWhereOrNull((element) => element.id == id),
+        )
         .map((memeModel) => memeModel?.meme)
         .listen(
           (meme) {
@@ -145,7 +153,12 @@ class CreateMemeBloc {
   }
 
   void saveMeme() {
-    saveMemeSubscription = SaveMemeInteractor.getInstance()
+    // TODO
+    final interactor = SaveMemeInteractor(
+      memeRepository: MemeRepository(memeDataProvider: SharedPreferenceData()),
+    );
+
+    saveMemeSubscription = interactor
         .saveMeme(
           id: id,
           textWithPositions: generateTextWithPositionsForMeme(),
@@ -163,9 +176,9 @@ class CreateMemeBloc {
   }
 
   Future<bool> memeIsSaved() async {
-    final Meme? savedMeme = (await MemesRepository.getInstance().getItemById(
-      id,
-    ))?.meme;
+    final savedMeme = (await memeRepository.getItem())?.memes
+        .firstWhereOrNull((element) => element.id == id)
+        ?.meme;
     if (savedMeme == null) {
       return false;
     }

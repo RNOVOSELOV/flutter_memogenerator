@@ -1,0 +1,57 @@
+import 'package:memogenerator/data/sp/models/meme_model.dart';
+import 'package:memogenerator/data/sp/models/memes_model.dart';
+import 'package:memogenerator/domain/interactors/copy_unique_file_interactor.dart';
+import 'package:memogenerator/domain/interactors/screenshot_interactor.dart';
+import 'package:screenshot/screenshot.dart';
+
+import '../../data/sp/repositories/memes/meme_repository.dart';
+import '../entities/meme.dart';
+import '../entities/text_with_position.dart';
+
+class SaveMemeInteractor {
+  static const memesPathName = "memes";
+
+  final MemeRepository _memeRepository;
+
+  SaveMemeInteractor({required MemeRepository memeRepository})
+    : _memeRepository = memeRepository;
+
+  Future<bool> saveMeme({
+    required final String id,
+    required final List<TextWithPosition> textWithPositions,
+    required final ScreenshotController screenshotController,
+    final String? imagePath,
+  }) async {
+    if (imagePath == null) {
+      return await _insertMemeOrReplaceById(
+        meme: Meme(id: id, texts: textWithPositions),
+      );
+    }
+    await ScreenshotInteractor.getInstance().saveThumbnail(
+      id,
+      screenshotController,
+    );
+    final newImagePath = await CopyUniqueFileInteractor.getInstance()
+        .copyUniqueFile(directoryWithFiles: memesPathName, filePath: imagePath);
+    return await _insertMemeOrReplaceById(
+      meme: Meme(id: id, texts: textWithPositions, memePath: newImagePath),
+    );
+  }
+
+  Future<bool> deleteMeme({required final String id}) async {
+    final savedData = (await _memeRepository.getItem())?.memes ?? [];
+    savedData.removeWhere((element) => element.id == id);
+    return await _memeRepository.setItem(MemesModel(memes: savedData));
+  }
+
+  Future<bool> _insertMemeOrReplaceById({required final Meme meme}) async {
+    final savedData = (await _memeRepository.getItem())?.memes ?? [];
+    final itemIndex = savedData.indexWhere((item) => item.id == meme.id);
+    if (itemIndex == -1) {
+      savedData.add(MemeModel.fromMeme(meme: meme));
+    } else {
+      savedData[itemIndex] = MemeModel.fromMeme(meme: meme);
+    }
+    return await _memeRepository.setItem(MemesModel(memes: savedData));
+  }
+}

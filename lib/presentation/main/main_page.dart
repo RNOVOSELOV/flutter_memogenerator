@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:memogenerator/data/sp/models/meme_model.dart';
+import 'package:memogenerator/data/sp/repositories/memes/meme_repository.dart';
+import 'package:memogenerator/data/sp/repositories/templates/templates_repository.dart';
+import 'package:memogenerator/data/sp/shared_preference_data.dart';
 import 'package:memogenerator/presentation/easter_egg/easter_egg_page.dart';
-import 'dart:io';
 import 'package:memogenerator/presentation/main/main_bloc.dart';
 import 'package:memogenerator/presentation/create_meme/create_meme_page.dart';
 import 'package:memogenerator/presentation/main/models/meme_thumbnail.dart';
@@ -12,7 +14,7 @@ import 'package:memogenerator/resources/app_colors.dart';
 import 'package:provider/provider.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+  const MainPage({super.key});
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -27,7 +29,11 @@ class _MainPageState extends State<MainPage>
   @override
   void initState() {
     super.initState();
-    bloc = MainBloc();
+    final sp = SharedPreferenceData();
+    bloc = MainBloc(
+      memeRepository: MemeRepository(memeDataProvider: sp),
+      templatesRepository: TemplatesRepository(memeDataProvider: sp),
+    );
     tabController = TabController(length: 2, vsync: this, initialIndex: 0);
 
     tabController.animation!.addListener(() {
@@ -52,8 +58,9 @@ class _MainPageState extends State<MainPage>
             backgroundColor: AppColors.backgroundAppbar,
             foregroundColor: AppColors.foregroundAppBar,
             title: GestureDetector(
-              onLongPress: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const EasterEggPage())),
+              onLongPress: () => Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const EasterEggPage())),
               child: Text(
                 "Мемогенератор",
                 style: GoogleFonts.seymourOne(fontSize: 24),
@@ -65,25 +72,23 @@ class _MainPageState extends State<MainPage>
               indicatorColor: AppColors.fuchsia,
               indicatorWeight: 3,
               tabs: [
-                Tab(
-                  text: "Созданные".toUpperCase(),
-                ),
-                Tab(
-                  text: "Шаблоны".toUpperCase(),
-                )
+                Tab(text: "Созданные".toUpperCase()),
+                Tab(text: "Шаблоны".toUpperCase()),
               ],
             ),
           ),
           floatingActionButton: tabIndex <= 0.5
-//              ? AnimatedScale(
+              //              ? AnimatedScale(
               ? Transform.scale(
                   scale: 1 - tabIndex / 0.5,
-//                  duration: Duration(milliseconds: 100),
-                  child: const CreateMemeFab())
+                  //                  duration: Duration(milliseconds: 100),
+                  child: const CreateMemeFab(),
+                )
               : Transform.scale(
                   scale: (tabIndex - 0.5) / 0.5,
-//                  duration: Duration(milliseconds: 100),
-                  child: const CreateTemplateFab()),
+                  //                  duration: Duration(milliseconds: 100),
+                  child: const CreateTemplateFab(),
+                ),
           backgroundColor: AppColors.backgroundColor,
           body: TabBarView(
             controller: tabController,
@@ -134,9 +139,7 @@ class _MainPageState extends State<MainPage>
 }
 
 class CreateMemeFab extends StatelessWidget {
-  const CreateMemeFab({
-    Key? key,
-  }) : super(key: key);
+  const CreateMemeFab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -147,29 +150,23 @@ class CreateMemeFab extends StatelessWidget {
         if (selectedMemePath == null) {
           return;
         }
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-          return CreateMemePage(
-            selectedMemePath: selectedMemePath,
-          );
-        }));
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) {
+              return CreateMemePage(selectedMemePath: selectedMemePath);
+            },
+          ),
+        );
       },
-      icon: const Icon(
-        Icons.add,
-        color: AppColors.white,
-      ),
+      icon: const Icon(Icons.add, color: AppColors.white),
       backgroundColor: AppColors.fabColor,
-      label: const Text(
-        "Мем",
-        style: TextStyle(color: AppColors.white),
-      ),
+      label: const Text("Мем", style: TextStyle(color: AppColors.white)),
     );
   }
 }
 
 class CreateTemplateFab extends StatelessWidget {
-  const CreateTemplateFab({
-    Key? key,
-  }) : super(key: key);
+  const CreateTemplateFab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -178,23 +175,15 @@ class CreateTemplateFab extends StatelessWidget {
       onPressed: () async {
         await bloc.addTemplate();
       },
-      icon: const Icon(
-        Icons.add,
-        color: AppColors.white,
-      ),
+      icon: const Icon(Icons.add, color: AppColors.white),
       backgroundColor: AppColors.fabColor,
-      label: const Text(
-        "Шаблон",
-        style: TextStyle(color: AppColors.white),
-      ),
+      label: const Text("Шаблон", style: TextStyle(color: AppColors.white)),
     );
   }
 }
 
 class CreatedMemesGrid extends StatelessWidget {
-  const CreatedMemesGrid({
-    Key? key,
-  }) : super(key: key);
+  const CreatedMemesGrid({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -212,9 +201,7 @@ class CreatedMemesGrid extends StatelessWidget {
           crossAxisSpacing: 8,
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
           children: items.map((item) {
-            return MemeGridItem(
-              memeThumbnail: item,
-            );
+            return MemeGridItem(memeThumbnail: item);
           }).toList(),
         );
       },
@@ -223,10 +210,7 @@ class CreatedMemesGrid extends StatelessWidget {
 }
 
 class MemeGridItem extends StatelessWidget {
-  const MemeGridItem({
-    Key? key,
-    required this.memeThumbnail,
-  }) : super(key: key);
+  const MemeGridItem({Key? key, required this.memeThumbnail}) : super(key: key);
 
   final MemeThumbnail memeThumbnail;
 
@@ -237,9 +221,11 @@ class MemeGridItem extends StatelessWidget {
     return Stack(
       children: [
         GestureDetector(
-          onTap: () => Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => CreateMemePage(id: memeThumbnail.memeId),
-          )),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => CreateMemePage(id: memeThumbnail.memeId),
+            ),
+          ),
           child: Container(
             alignment: Alignment.centerLeft,
             decoration: BoxDecoration(
@@ -269,9 +255,7 @@ class MemeGridItem extends StatelessWidget {
 }
 
 class DeleteItemButton extends StatelessWidget {
-  const DeleteItemButton({
-    Key? key,
-  }) : super(key: key);
+  const DeleteItemButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -296,9 +280,7 @@ class DeleteItemButton extends StatelessWidget {
 }
 
 class TemplatesGrid extends StatelessWidget {
-  const TemplatesGrid({
-    Key? key,
-  }) : super(key: key);
+  const TemplatesGrid({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -316,9 +298,7 @@ class TemplatesGrid extends StatelessWidget {
           crossAxisSpacing: 8,
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
           children: templates.map((template) {
-            return TemplateGridItem(
-              template: template,
-            );
+            return TemplateGridItem(template: template);
           }).toList(),
         );
       },
@@ -327,10 +307,7 @@ class TemplatesGrid extends StatelessWidget {
 }
 
 class TemplateGridItem extends StatelessWidget {
-  const TemplateGridItem({
-    Key? key,
-    required this.template,
-  }) : super(key: key);
+  const TemplateGridItem({Key? key, required this.template}) : super(key: key);
 
   final TemplateFull template;
 
@@ -342,11 +319,12 @@ class TemplateGridItem extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (_) => CreateMemePage(
-                selectedMemePath: template.fullImagePath,
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) =>
+                    CreateMemePage(selectedMemePath: template.fullImagePath),
               ),
-            ));
+            );
           },
           child: Container(
             alignment: Alignment.centerLeft,
