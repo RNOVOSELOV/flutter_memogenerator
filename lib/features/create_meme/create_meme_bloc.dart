@@ -5,18 +5,18 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:memogenerator/domain/interactors/meme_interactor.dart';
 import 'package:memogenerator/domain/interactors/screenshot_interactor.dart';
-import 'package:memogenerator/presentation/create_meme/models/meme_text_offset.dart';
-import 'package:memogenerator/presentation/create_meme/models/meme_text.dart';
-import 'package:memogenerator/presentation/create_meme/models/meme_text_with_offset.dart';
-import 'package:memogenerator/presentation/create_meme/models/meme_text_with_selection.dart';
+import 'package:memogenerator/features/create_meme/models/meme_text_offset.dart';
+import 'package:memogenerator/features/create_meme/models/meme_text.dart';
+import 'package:memogenerator/features/create_meme/models/meme_text_with_offset.dart';
+import 'package:memogenerator/features/create_meme/models/meme_text_with_selection.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:collection/collection.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../data/sp/repositories/memes/meme_repository.dart';
-import '../../data/sp/shared_preference_data.dart';
+import '../../data/shared_pref/repositories/memes/memes_repository.dart';
+import '../../data/shared_pref/shared_preference_data.dart';
 import '../../domain/entities/meme.dart';
 import '../../domain/entities/position.dart';
 import '../../domain/entities/text_with_position.dart';
@@ -41,7 +41,7 @@ class CreateMemeBloc {
   StreamSubscription<void>? shareMemeSubscription;
 
   final String id;
-  final memeRepository = MemeRepository(
+  final memeRepository = MemesRepository(
     memeDataProvider: SharedPreferenceData(),
   );
 
@@ -155,7 +155,7 @@ class CreateMemeBloc {
   void saveMeme() {
     // TODO
     final interactor = SaveMemeInteractor(
-      memeRepository: MemeRepository(memeDataProvider: SharedPreferenceData()),
+      memeRepository: MemesRepository(memeDataProvider: SharedPreferenceData()),
     );
 
     saveMemeSubscription = interactor

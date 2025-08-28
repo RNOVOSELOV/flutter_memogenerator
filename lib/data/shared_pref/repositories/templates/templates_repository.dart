@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:memogenerator/data/sp/repositories/templates/template_data_provider.dart';
+import 'template_data_provider.dart';
 
 import '../../models/templates_model.dart';
 import '../reactive_repository.dart';
@@ -8,8 +8,8 @@ import '../reactive_repository.dart';
 class TemplatesRepository extends ReactiveRepository<TemplatesModel> {
   final TemplateDataProvider _dataProvider;
 
-  TemplatesRepository({required TemplateDataProvider memeDataProvider})
-    : _dataProvider = memeDataProvider;
+  TemplatesRepository({required TemplateDataProvider templateDataProvider})
+    : _dataProvider = templateDataProvider;
 
   @override
   TemplatesModel convertFromString(String rawItem) =>

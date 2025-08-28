@@ -1,26 +1,25 @@
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
-import 'package:memogenerator/data/sp/models/template_model.dart';
-import 'package:memogenerator/data/sp/repositories/templates/templates_repository.dart';
-import 'package:memogenerator/data/sp/shared_preference_data.dart';
+import 'package:memogenerator/data/shared_pref/repositories/templates/templates_repository.dart';
+import 'package:memogenerator/data/shared_pref/shared_preference_data.dart';
 import 'package:memogenerator/domain/entities/template.dart';
 import 'package:memogenerator/domain/interactors/meme_interactor.dart';
 import 'package:memogenerator/domain/interactors/template_interactor.dart';
-import 'package:memogenerator/presentation/main/models/meme_thumbnail.dart';
-import 'package:memogenerator/presentation/main/models/template_full.dart';
+import 'package:memogenerator/features/home/models/meme_thumbnail.dart';
+import 'package:memogenerator/features/home/models/template_full.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../data/sp/repositories/memes/meme_repository.dart';
+import '../../data/shared_pref/repositories/memes/memes_repository.dart';
 import '../../domain/entities/meme.dart';
 
 class MainBloc {
-  final MemeRepository _memeRepository;
+  final MemesRepository _memeRepository;
   final TemplatesRepository _templatesRepository;
 
   MainBloc({
-    required MemeRepository memeRepository,
+    required MemesRepository memeRepository,
     required TemplatesRepository templatesRepository,
   }) : _memeRepository = memeRepository,
        _templatesRepository = templatesRepository;
@@ -72,7 +71,7 @@ class MainBloc {
     // TODO
     final interactor = SaveTemplateInteractor(
       templateRepository: TemplatesRepository(
-        memeDataProvider: SharedPreferenceData(),
+        templateDataProvider: SharedPreferenceData(),
       ),
     );
     final xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -87,7 +86,7 @@ class MainBloc {
     // TODO
     final interactor = SaveTemplateInteractor(
       templateRepository: TemplatesRepository(
-        memeDataProvider: SharedPreferenceData(),
+        templateDataProvider: SharedPreferenceData(),
       ),
     );
     final xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -100,7 +99,7 @@ class MainBloc {
   void deleteMeme(final String memeId) {
     // TODO
     final interactor = SaveMemeInteractor(
-      memeRepository: MemeRepository(memeDataProvider: SharedPreferenceData()),
+      memeRepository: MemesRepository(memeDataProvider: SharedPreferenceData()),
     );
     interactor.deleteMeme(id: memeId);
   }
@@ -109,7 +108,7 @@ class MainBloc {
     // TODO
     final interactor = SaveTemplateInteractor(
       templateRepository: TemplatesRepository(
-        memeDataProvider: SharedPreferenceData(),
+        templateDataProvider: SharedPreferenceData(),
       ),
     );
     interactor.deleteTemplate(id: templateId);

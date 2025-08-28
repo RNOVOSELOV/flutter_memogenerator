@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:memogenerator/presentation/create_meme/models/meme_text.dart';
+import 'package:memogenerator/features/create_meme/models/meme_text.dart';
 
 class MemeTextWithSelection extends Equatable {
   final MemeText memeText;

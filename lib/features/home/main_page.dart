@@ -1,26 +1,26 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:memogenerator/data/sp/repositories/memes/meme_repository.dart';
-import 'package:memogenerator/data/sp/repositories/templates/templates_repository.dart';
-import 'package:memogenerator/data/sp/shared_preference_data.dart';
-import 'package:memogenerator/presentation/easter_egg/easter_egg_page.dart';
-import 'package:memogenerator/presentation/main/main_bloc.dart';
-import 'package:memogenerator/presentation/create_meme/create_meme_page.dart';
-import 'package:memogenerator/presentation/main/models/meme_thumbnail.dart';
-import 'package:memogenerator/presentation/main/models/template_full.dart';
-import 'package:memogenerator/presentation/widgets/app_button.dart';
+import 'package:memogenerator/data/shared_pref/repositories/memes/memes_repository.dart';
+import 'package:memogenerator/data/shared_pref/repositories/templates/templates_repository.dart';
+import 'package:memogenerator/data/shared_pref/shared_preference_data.dart';
+import 'package:memogenerator/features/easter_egg/easter_egg_page.dart';
+import 'package:memogenerator/features/home/main_bloc.dart';
+import 'package:memogenerator/features/create_meme/create_meme_page.dart';
+import 'package:memogenerator/features/home/models/meme_thumbnail.dart';
+import 'package:memogenerator/features/home/models/template_full.dart';
+import 'package:memogenerator/features/widgets/app_button.dart';
 import 'package:memogenerator/resources/app_colors.dart';
 import 'package:provider/provider.dart';
 
-class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+class MemesPage extends StatefulWidget {
+  const MemesPage({super.key});
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<MemesPage> createState() => _MemesPageState();
 }
 
-class _MainPageState extends State<MainPage>
+class _MemesPageState extends State<MemesPage>
     with SingleTickerProviderStateMixin {
   late MainBloc bloc;
   late TabController tabController;
@@ -31,8 +31,8 @@ class _MainPageState extends State<MainPage>
     super.initState();
     final sp = SharedPreferenceData();
     bloc = MainBloc(
-      memeRepository: MemeRepository(memeDataProvider: sp),
-      templatesRepository: TemplatesRepository(memeDataProvider: sp),
+      memeRepository: MemesRepository(memeDataProvider: sp),
+      templatesRepository: TemplatesRepository(templateDataProvider: sp),
     );
     tabController = TabController(length: 2, vsync: this, initialIndex: 0);
 

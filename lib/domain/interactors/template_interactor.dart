@@ -1,6 +1,6 @@
-import 'package:memogenerator/data/sp/models/template_model.dart';
-import 'package:memogenerator/data/sp/models/templates_model.dart';
-import 'package:memogenerator/data/sp/repositories/templates/templates_repository.dart';
+import 'package:memogenerator/data/shared_pref/models/template_model.dart';
+import 'package:memogenerator/data/shared_pref/models/templates_model.dart';
+import 'package:memogenerator/data/shared_pref/repositories/templates/templates_repository.dart';
 import 'package:memogenerator/domain/interactors/copy_unique_file_interactor.dart';
 import 'package:uuid/uuid.dart';
 

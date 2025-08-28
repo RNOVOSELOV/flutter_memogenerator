@@ -4,10 +4,10 @@ import '../../models/memes_model.dart';
 import '../reactive_repository.dart';
 import 'meme_data_provider.dart';
 
-class MemeRepository extends ReactiveRepository<MemesModel> {
+class MemesRepository extends ReactiveRepository<MemesModel> {
   final MemeDataProvider _dataProvider;
 
-  MemeRepository({required MemeDataProvider memeDataProvider})
+  MemesRepository({required MemeDataProvider memeDataProvider})
     : _dataProvider = memeDataProvider;
 
   @override
