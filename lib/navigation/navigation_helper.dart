@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:memogenerator/features/settings/settings_page.dart';
 import 'package:memogenerator/navigation/navigation_path.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
@@ -89,7 +90,7 @@ class CustomNavigationHelper {
               observers: [TalkerRouteObserver(talker)],
               routes: <RouteBase>[
                 GoRoute(
-                  path: '/NavigationPagePath.memesPage.path',
+                  path: NavigationPagePath.templatesPage.path,
                   pageBuilder: (context, state) =>
                       getPage(child: TemplatesPage(), state: state),
                   routes: <RouteBase>[],
@@ -100,9 +101,9 @@ class CustomNavigationHelper {
               observers: [TalkerRouteObserver(talker)],
               routes: <RouteBase>[
                 GoRoute(
-                  path: '/NavigationPage',
+                  path: NavigationPagePath.settingsPage.path,
                   pageBuilder: (context, state) =>
-                      getPage(child: TemplatesPage(), state: state),
+                      getPage(child: SettingsPage(), state: state),
                   routes: <RouteBase>[],
                 ),
               ],
