@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:memogenerator/resources/app_colors.dart';
 import '../../resources/app_icons.dart';
 
 class MainPage extends StatelessWidget {
@@ -17,11 +17,33 @@ class MainPage extends StatelessWidget {
         elevation: 3,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: SvgPicture.asset(AppIcons.iconMeme, width: 48, height: 48),
+            icon: SvgPicture.asset(
+              AppIcons.iconMeme,
+              width: 48,
+              height: 48,
+              colorFilter: ColorFilter.mode(
+                AppColors.darkGrey38,
+                BlendMode.srcIn,
+              ),
+            ),
+            activeIcon: SvgPicture.asset(
+              AppIcons.iconMeme,
+              width: 48,
+              height: 48,
+            ),
             label: 'Мемы',
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
+              AppIcons.iconTemplate,
+              width: 48,
+              height: 48,
+              colorFilter: ColorFilter.mode(
+                AppColors.darkGrey38,
+                BlendMode.srcIn,
+              ),
+            ),
+            activeIcon: SvgPicture.asset(
               AppIcons.iconTemplate,
               width: 48,
               height: 48,
@@ -33,12 +55,23 @@ class MainPage extends StatelessWidget {
               AppIcons.iconSettings,
               width: 48,
               height: 48,
+              colorFilter: ColorFilter.mode(
+                AppColors.darkGrey38,
+                BlendMode.srcIn,
+              ),
+            ),
+            activeIcon: SvgPicture.asset(
+              AppIcons.iconSettings,
+              width: 48,
+              height: 48,
             ),
             label: 'Настройки',
           ),
         ],
         currentIndex: navigationShell.currentIndex,
-        onTap: (int index) => _onTap(context, index),
+        onTap: (int index) {
+          _onTap(context, index);
+        },
       ),
     );
   }

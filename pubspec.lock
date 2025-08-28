@@ -1165,6 +1165,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.2"
+  yx_state:
+    dependency: "direct main"
+    description:
+      name: yx_state
+      sha256: "13ab50d3875686f65058cb9abdfbb1725e9d15ea99ade51b1f3a5f93727a8eaa"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
+  yx_state_flutter:
+    dependency: "direct main"
+    description:
+      name: yx_state_flutter
+      sha256: b0414265c6861f9fd295385ac9c5f01fc99b6163c9e612997163b09a6579c105
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
+  yx_state_transformers:
+    dependency: "direct main"
+    description:
+      name: yx_state_transformers
+      sha256: d54798dd6ce503317c29a024bd02fb22ed2b1b4f550eb5027c4c14fc8a2b88e5
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
 sdks:
   dart: ">=3.8.0 <4.0.0"
   flutter: ">=3.29.0"

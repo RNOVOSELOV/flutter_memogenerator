@@ -3,33 +3,23 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:memogenerator/data/shared_pref/repositories/templates/templates_repository.dart';
 import 'package:memogenerator/data/shared_pref/shared_preference_data.dart';
-import 'package:memogenerator/domain/entities/template.dart';
 import 'package:memogenerator/domain/interactors/meme_interactor.dart';
 import 'package:memogenerator/domain/interactors/template_interactor.dart';
-import 'package:memogenerator/features/home/models/meme_thumbnail.dart';
-import 'package:memogenerator/features/home/models/template_full.dart';
+import 'package:memogenerator/features/memes/domain/models/meme_thumbnail.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../data/shared_pref/repositories/memes/memes_repository.dart';
 import '../../domain/entities/meme.dart';
 
-class MainBloc {
+class MemesBloc {
   final MemesRepository _memeRepository;
-  final TemplatesRepository _templatesRepository;
 
-  MainBloc({
+
+
+  MemesBloc({
     required MemesRepository memeRepository,
-    required TemplatesRepository templatesRepository,
-  }) : _memeRepository = memeRepository,
-       _templatesRepository = templatesRepository;
-
-  // Stream<MemesWithDocsPath> observeMemesWithDocsPath() =>
-  //     Rx.combineLatest2<List<Meme>, Directory, MemesWithDocsPath>(
-  //         MemesRepository.getInstance().observeMemes(),
-  //         getApplicationDocumentsDirectory().asStream(),
-  //         (memes, docDirectory) =>
-  //             MemesWithDocsPath(memes, docDirectory.absolute.path));
+  }) : _memeRepository = memeRepository;
 
   Stream<List<MemeThumbnail>>
   observeMemes() => Rx.combineLatest2<List<Meme>, Directory, List<MemeThumbnail>>(
@@ -47,25 +37,6 @@ class MainBloc {
       }).toList();
     },
   );
-
-  Stream<List<TemplateFull>> observeTemplates() =>
-      Rx.combineLatest2<List<Template>, Directory, List<TemplateFull>>(
-        _templatesRepository.observeItem().map(
-          (templateModels) => templateModels == null
-              ? []
-              : templateModels.templates
-                    .map((templateModel) => templateModel.template)
-                    .toList(),
-        ),
-        getApplicationDocumentsDirectory().asStream(),
-        (templates, docDirectory) {
-          return templates.map((template) {
-            final fullImagePath =
-                "${docDirectory.absolute.path}${Platform.pathSeparator}${SaveTemplateInteractor.templatesPathName}${Platform.pathSeparator}${template.imageUrl}";
-            return TemplateFull(id: template.id, fullImagePath: fullImagePath);
-          }).toList();
-        },
-      );
 
   Future<String?> selectMeme() async {
     // TODO
@@ -114,5 +85,6 @@ class MainBloc {
     interactor.deleteTemplate(id: templateId);
   }
 
-  void dispose() {}
+  void dispose() {
+  }
 }

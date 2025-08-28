@@ -27,6 +27,9 @@ dependencies:
   flutter_svg: ^2.2.0
   yx_scope: ^1.1.2
   yx_scope_flutter: ^1.1.2
+  yx_state: ^1.0.0
+  yx_state_flutter: ^1.0.0
+  yx_state_transformers: ^1.0.0
   talker: ^5.0.0
   talker_flutter: ^5.0.0
   talker_dio_logger: ^5.0.0
@@ -49,3 +52,4 @@ flutter:
   assets:
     - assets/images/
     - assets/svg/
+    - assets/platforms/

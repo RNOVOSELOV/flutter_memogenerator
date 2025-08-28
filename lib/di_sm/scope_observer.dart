@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:memogenerator/di/scope_logs.dart';
+import 'package:memogenerator/di_sm/scope_logs.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:yx_scope/yx_scope.dart';
 

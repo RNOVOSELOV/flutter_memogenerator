@@ -8,7 +8,7 @@ import 'package:memogenerator/features/create_meme/meme_text_on_canvas.dart';
 import 'package:memogenerator/features/create_meme/models/meme_text.dart';
 import 'package:memogenerator/features/create_meme/models/meme_text_with_offset.dart';
 import 'package:memogenerator/features/create_meme/models/meme_text_with_selection.dart';
-import 'package:memogenerator/features/widgets/app_button.dart';
+import 'package:memogenerator/widgets/remove_dialog.dart';
 import 'package:memogenerator/resources/app_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
@@ -17,8 +17,7 @@ class CreateMemePage extends StatefulWidget {
   final String? id;
   final String? selectedMemePath;
 
-  const CreateMemePage({Key? key, this.id, this.selectedMemePath})
-      : super(key: key);
+  const CreateMemePage({super.key, this.id, this.selectedMemePath});
 
   @override
   State<CreateMemePage> createState() => _CreateMemePageState();

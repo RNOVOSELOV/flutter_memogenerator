@@ -3,9 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:memogenerator/navigation/navigation_path.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
-import '../features/home/main_page.dart';
 import '../features/main/main_page.dart';
-import '../main.dart';
+import '../features/templates/templates_page.dart';
+import '../features/memes/memes_page.dart';
 
 class CustomNavigationHelper {
   static final CustomNavigationHelper _instance =
@@ -55,10 +55,12 @@ class CustomNavigationHelper {
         //   ),
         // ),
         StatefulShellRoute.indexedStack(
-          pageBuilder: (context, state, navigationShell) => getPage(
-            child: MainPage(navigationShell: navigationShell),
-            state: state,
-          ),
+          pageBuilder: (context, state, navigationShell) {
+            return getPage(
+              child: MainPage(navigationShell: navigationShell),
+              state: state,
+            );
+          },
           branches: <StatefulShellBranch>[
             StatefulShellBranch(
               preload: false,
@@ -67,8 +69,9 @@ class CustomNavigationHelper {
               routes: <RouteBase>[
                 GoRoute(
                   path: NavigationPagePath.memesPage.path,
-                  pageBuilder: (context, state) =>
-                      getPage(child: MemesPage(), state: state),
+                  pageBuilder: (context, state) {
+                    return getPage(child: MemesPage(), state: state);
+                  },
                   routes: <RouteBase>[
                     // The details screen to display stacked on navigator of the
                     // first tab. This will cover screen A but not the application
@@ -88,7 +91,7 @@ class CustomNavigationHelper {
                 GoRoute(
                   path: '/NavigationPagePath.memesPage.path',
                   pageBuilder: (context, state) =>
-                      getPage(child: MemesPage(), state: state),
+                      getPage(child: TemplatesPage(), state: state),
                   routes: <RouteBase>[],
                 ),
               ],
@@ -99,7 +102,7 @@ class CustomNavigationHelper {
                 GoRoute(
                   path: '/NavigationPage',
                   pageBuilder: (context, state) =>
-                      getPage(child: MemesPage(), state: state),
+                      getPage(child: TemplatesPage(), state: state),
                   routes: <RouteBase>[],
                 ),
               ],

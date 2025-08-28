@@ -4,7 +4,7 @@ class MemeThumbnail extends Equatable {
   final String memeId;
   final String fullImageUrl;
 
-  MemeThumbnail({
+  const MemeThumbnail({
     required this.memeId,
     required this.fullImageUrl,
   });
