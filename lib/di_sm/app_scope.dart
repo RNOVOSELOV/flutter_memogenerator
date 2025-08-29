@@ -1,9 +1,12 @@
 import 'package:memogenerator/data/shared_pref/repositories/memes/memes_repository.dart';
 import 'package:memogenerator/data/shared_pref/repositories/templates/templates_repository.dart';
 import 'package:memogenerator/data/shared_pref/shared_preference_data.dart';
+import 'package:memogenerator/domain/interactors/copy_unique_file_interactor.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:yx_scope/yx_scope.dart';
 
+import '../domain/interactors/meme_interactor.dart';
+import '../domain/interactors/template_interactor.dart';
 import 'scope_observer.dart' show diObserver;
 
 class AppScopeContainer extends ScopeContainer {
@@ -14,6 +17,20 @@ class AppScopeContainer extends ScopeContainer {
   );
   late final templateRepositoryDep = dep(
     () => TemplatesRepository(templateDataProvider: _sharedPreferencesDep.get),
+  );
+
+  late final copyFileInteractorDep = dep(() => CopyUniqueFileInteractor());
+  late final memesInteractorDep = dep(
+    () => MemeInteractor(
+      memeRepository: memeRepositoryDep.get,
+      copyUniqueFileInteractor: copyFileInteractorDep.get,
+    ),
+  );
+  late final templatesInteractorDep = dep(
+    () => TemplateInteractor(
+      templateRepository: templateRepositoryDep.get,
+      copyUniqueFileInteractor: copyFileInteractorDep.get,
+    ),
   );
 }
 

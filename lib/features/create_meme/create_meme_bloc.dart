@@ -16,7 +16,6 @@ import 'package:screenshot/screenshot.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../data/shared_pref/repositories/memes/memes_repository.dart';
-import '../../data/shared_pref/shared_preference_data.dart';
 import '../../domain/entities/meme.dart';
 import '../../domain/entities/position.dart';
 import '../../domain/entities/text_with_position.dart';
@@ -40,25 +39,33 @@ class CreateMemeBloc {
   StreamSubscription<Meme?>? existentMemeSubscription;
   StreamSubscription<void>? shareMemeSubscription;
 
-  final String id;
-  final memeRepository = MemesRepository(
-    memeDataProvider: SharedPreferenceData(),
-  );
+  final String _id;
+  final MemesRepository _memeRepository;
+  final MemeInteractor _memeInteractor;
 
-  CreateMemeBloc({final String? savedId, final String? selectedMemePath})
-    : id = savedId ?? const Uuid().v4() {
+  CreateMemeBloc({
+    required final String selectedMemePath,
+    final String? savedId,
+    required final MemeInteractor memeInteractor,
+    required final MemesRepository memeRepository,
+  }) : _id = savedId ?? const Uuid().v4(),
+       _memeRepository = memeRepository,
+       _memeInteractor = memeInteractor {
     memePathSubject.add(selectedMemePath);
+
     _subscribeToNewMemTextOffset();
+
     _subscribeToExistentMeme();
   }
 
   void _subscribeToExistentMeme() {
-    existentMemeSubscription = memeRepository
+    existentMemeSubscription = _memeRepository
         .getItem()
         .asStream()
         .map(
-          (memesModel) =>
-              memesModel?.memes.firstWhereOrNull((element) => element.id == id),
+          (memesModel) => memesModel?.memes.firstWhereOrNull(
+            (element) => element.id == _id,
+          ),
         )
         .map((memeModel) => memeModel?.meme)
         .listen(
@@ -84,7 +91,7 @@ class CreateMemeBloc {
                       .split(Platform.pathSeparator)
                       .last;
                   final fullImagePath =
-                      "${docsDirectory.absolute.path}${Platform.pathSeparator}${SaveMemeInteractor.memesPathName}${Platform.pathSeparator}$onlyImageName";
+                      "${docsDirectory.absolute.path}${Platform.pathSeparator}${MemeInteractor.memesPathName}${Platform.pathSeparator}$onlyImageName";
                   memePathSubject.add(fullImagePath);
                 });
               }
@@ -153,14 +160,9 @@ class CreateMemeBloc {
   }
 
   void saveMeme() {
-    // TODO
-    final interactor = SaveMemeInteractor(
-      memeRepository: MemesRepository(memeDataProvider: SharedPreferenceData()),
-    );
-
-    saveMemeSubscription = interactor
+    saveMemeSubscription = _memeInteractor
         .saveMeme(
-          id: id,
+          id: _id,
           textWithPositions: generateTextWithPositionsForMeme(),
           imagePath: memePathSubject.value,
           screenshotController: screenshotControllerSubject.value,
@@ -176,8 +178,8 @@ class CreateMemeBloc {
   }
 
   Future<bool> memeIsSaved() async {
-    final savedMeme = (await memeRepository.getItem())?.memes
-        .firstWhereOrNull((element) => element.id == id)
+    final savedMeme = (await _memeRepository.getItem())?.memes
+        .firstWhereOrNull((element) => element.id == _id)
         ?.meme;
     if (savedMeme == null) {
       return false;

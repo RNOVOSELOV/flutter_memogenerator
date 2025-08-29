@@ -1,28 +1,26 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:path_provider/path_provider.dart';
 
 class CopyUniqueFileInteractor {
-  static CopyUniqueFileInteractor? _instance;
 
-  factory CopyUniqueFileInteractor.getInstance() =>
-      _instance ??= CopyUniqueFileInteractor._internal();
-
-  CopyUniqueFileInteractor._internal();
+  CopyUniqueFileInteractor ();
 
   Future<String> copyUniqueFile({
     required final String directoryWithFiles,
     required final String filePath,
   }) async {
     final docsPath = await getApplicationDocumentsDirectory();
+    log('!!! DOC PATH: $docsPath');
     final memePath =
         "${docsPath.absolute.path}${Platform.pathSeparator}$directoryWithFiles";
+    log('!!! DIRECTORY PATH: $docsPath');
     final memesDirectory = Directory(memePath);
     await memesDirectory.create(recursive: true);
-
     final currentFiles = memesDirectory.listSync();
-
     final imageName = _getFileNameByPath(filePath);
+    log('!!! IMAGE NAME: $imageName');
     final oldFileWithTheSameName = currentFiles.firstWhereOrNull(
       (element) {
         return _getFileNameByPath(element.path) == imageName && element is File;
@@ -30,6 +28,7 @@ class CopyUniqueFileInteractor {
     );
 
     final newImagePath = "$memePath${Platform.pathSeparator}$imageName";
+    log('!!! NEW IMAGE NAME: $newImagePath');
     final tempFile = File(filePath);
     // Файлов с таким названием нет, сохраняем файл в документы
     if (oldFileWithTheSameName == null) {
@@ -39,6 +38,7 @@ class CopyUniqueFileInteractor {
     final oldFileLength = await (oldFileWithTheSameName as File).length();
     final newFileLength = await tempFile.length();
     // такой файл уже существует, не сохраняем его заново
+    log('!!!OLD: ${oldFileLength} NEW: ${newFileLength} ');
     if (oldFileLength == newFileLength) {
       return imageName;
     }

@@ -12,6 +12,7 @@ class SettingsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
+        elevation: 3,
         backgroundColor: AppColors.backgroundAppbar,
         foregroundColor: AppColors.foregroundAppBar,
         title: Row(

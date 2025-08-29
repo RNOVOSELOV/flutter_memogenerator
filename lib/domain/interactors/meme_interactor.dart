@@ -8,13 +8,17 @@ import '../../data/shared_pref/repositories/memes/memes_repository.dart';
 import '../entities/meme.dart';
 import '../entities/text_with_position.dart';
 
-class SaveMemeInteractor {
+class MemeInteractor {
   static const memesPathName = "memes";
 
   final MemesRepository _memeRepository;
+  final CopyUniqueFileInteractor _copyUniqueFileInteractor;
 
-  SaveMemeInteractor({required MemesRepository memeRepository})
-    : _memeRepository = memeRepository;
+  MemeInteractor({
+    required MemesRepository memeRepository,
+    required CopyUniqueFileInteractor copyUniqueFileInteractor,
+  }) : _memeRepository = memeRepository,
+       _copyUniqueFileInteractor = copyUniqueFileInteractor;
 
   Future<bool> saveMeme({
     required final String id,
@@ -31,7 +35,7 @@ class SaveMemeInteractor {
       id,
       screenshotController,
     );
-    final newImagePath = await CopyUniqueFileInteractor.getInstance()
+    final newImagePath = await _copyUniqueFileInteractor
         .copyUniqueFile(directoryWithFiles: memesPathName, filePath: imagePath);
     return await _insertMemeOrReplaceById(
       meme: Meme(id: id, texts: textWithPositions, memePath: newImagePath),

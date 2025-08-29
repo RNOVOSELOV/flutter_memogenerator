@@ -1,5 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:memogenerator/features/create_meme/create_meme_page.dart';
+import 'package:memogenerator/features/create_meme/models/meme_parameters.dart';
 import 'package:memogenerator/features/settings/settings_page.dart';
 import 'package:memogenerator/navigation/navigation_path.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -41,20 +44,20 @@ class CustomNavigationHelper {
       navigatorKey: _rootNavigatorKey,
       initialLocation: NavigationPagePath.memesPage.path,
       observers: [TalkerRouteObserver(talker)],
+      debugLogDiagnostics: kDebugMode ? true : false,
       routes: <RouteBase>[
-        // The details screen to display stacked on navigator
-        // This will cover all screen with
-        // shell (bottom navigation bar).
-        // GoRoute(
-        //   parentNavigatorKey: _rootNavigatorKey,
-        //   name: '/root_path_name',
-        //   path: '/root_path_name',
-        //   pageBuilder: (context, state) => MaterialPage(
-        //     child: DetailsScreen(label: 'QWERT'),
-        //     key: state.pageKey,
-        //     fullscreenDialog: false,
-        //   ),
-        // ),
+        GoRoute(
+          parentNavigatorKey: _rootNavigatorKey,
+          name: NavigationPagePath.editMemePage.name,
+          path: NavigationPagePath.editMemePage.path,
+          pageBuilder: (context, state) {
+            final arguments = state.extra as MemeArgs;
+            return getPage(
+              child: CreateMemePage(memeArgs: arguments),
+              state: state,
+            );
+          },
+        ),
         StatefulShellRoute.indexedStack(
           pageBuilder: (context, state, navigationShell) {
             return getPage(
@@ -74,9 +77,6 @@ class CustomNavigationHelper {
                     return getPage(child: MemesPage(), state: state);
                   },
                   routes: <RouteBase>[
-                    // The details screen to display stacked on navigator of the
-                    // first tab. This will cover screen A but not the application
-                    // shell (bottom navigation bar).
                     // GoRoute(
                     //   path: '/memes/edit',
                     //   builder: (BuildContext context, GoRouterState state) =>

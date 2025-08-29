@@ -11,9 +11,13 @@ import 'package:rxdart/rxdart.dart';
 
 class TemplatesBloc {
   final TemplatesRepository _templatesRepository;
+  final TemplateInteractor _templateInteractor;
 
-  TemplatesBloc({required TemplatesRepository templatesRepository})
-    : _templatesRepository = templatesRepository;
+  TemplatesBloc({
+    required TemplatesRepository templatesRepository,
+    required TemplateInteractor templateInteractor,
+  }) : _templatesRepository = templatesRepository,
+       _templateInteractor = templateInteractor;
 
   Stream<List<TemplateFull>> observeTemplates() =>
       Rx.combineLatest2<List<Template>, Directory, List<TemplateFull>>(
@@ -28,34 +32,22 @@ class TemplatesBloc {
         (templates, docDirectory) {
           return templates.map((template) {
             final fullImagePath =
-                "${docDirectory.absolute.path}${Platform.pathSeparator}${SaveTemplateInteractor.templatesPathName}${Platform.pathSeparator}${template.imageUrl}";
+                "${docDirectory.absolute.path}${Platform.pathSeparator}${TemplateInteractor.templatesPathName}${Platform.pathSeparator}${template.imageUrl}";
             return TemplateFull(id: template.id, fullImagePath: fullImagePath);
           }).toList();
         },
       );
 
   Future<void> addTemplate() async {
-    // TODO
-    final interactor = SaveTemplateInteractor(
-      templateRepository: TemplatesRepository(
-        templateDataProvider: SharedPreferenceData(),
-      ),
-    );
     final xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     final imagePath = xFile?.path;
     if (imagePath != null) {
-      await interactor.saveTemplate(imagePath: imagePath);
+      await _templateInteractor.saveTemplate(imagePath: imagePath);
     }
   }
 
   void deleteTemplate(final String templateId) {
-    // TODO
-    final interactor = SaveTemplateInteractor(
-      templateRepository: TemplatesRepository(
-        templateDataProvider: SharedPreferenceData(),
-      ),
-    );
-    interactor.deleteTemplate(id: templateId);
+    _templateInteractor.deleteTemplate(id: templateId);
   }
 
   void dispose() {}

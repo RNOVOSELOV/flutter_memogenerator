@@ -1,8 +1,7 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
-import 'package:memogenerator/data/shared_pref/repositories/templates/templates_repository.dart';
-import 'package:memogenerator/data/shared_pref/shared_preference_data.dart';
 import 'package:memogenerator/domain/interactors/meme_interactor.dart';
 import 'package:memogenerator/domain/interactors/template_interactor.dart';
 import 'package:memogenerator/features/memes/domain/models/meme_thumbnail.dart';
@@ -13,17 +12,21 @@ import '../../data/shared_pref/repositories/memes/memes_repository.dart';
 import '../../domain/entities/meme.dart';
 
 class MemesBloc {
-  final MemesRepository _memeRepository;
-
-
+  final MemesRepository _memesRepository;
+  final MemeInteractor _memeInteractor;
+  final TemplateInteractor _templateInteractor;
 
   MemesBloc({
     required MemesRepository memeRepository,
-  }) : _memeRepository = memeRepository;
+    required MemeInteractor memeInteractor,
+    required TemplateInteractor templateInteractor,
+  }) : _memesRepository = memeRepository,
+       _memeInteractor = memeInteractor,
+       _templateInteractor = templateInteractor;
 
   Stream<List<MemeThumbnail>>
   observeMemes() => Rx.combineLatest2<List<Meme>, Directory, List<MemeThumbnail>>(
-    _memeRepository.observeItem().map(
+    _memesRepository.observeItem().map(
       (memeModels) => memeModels == null
           ? []
           : memeModels.memes.map((memeModel) => memeModel.meme).toList(),
@@ -39,52 +42,30 @@ class MemesBloc {
   );
 
   Future<String?> selectMeme() async {
-    // TODO
-    final interactor = SaveTemplateInteractor(
-      templateRepository: TemplatesRepository(
-        templateDataProvider: SharedPreferenceData(),
-      ),
-    );
     final xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     final imagePath = xFile?.path;
+    log('!!! PICK ${xFile?.hashCode} $xFile $imagePath');
     if (imagePath != null) {
-      await interactor.saveTemplate(imagePath: imagePath);
+      await _templateInteractor.saveTemplate(imagePath: imagePath);
     }
     return imagePath;
   }
 
   Future<void> addTemplate() async {
-    // TODO
-    final interactor = SaveTemplateInteractor(
-      templateRepository: TemplatesRepository(
-        templateDataProvider: SharedPreferenceData(),
-      ),
-    );
     final xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     final imagePath = xFile?.path;
     if (imagePath != null) {
-      await interactor.saveTemplate(imagePath: imagePath);
+      await _templateInteractor.saveTemplate(imagePath: imagePath);
     }
   }
 
   void deleteMeme(final String memeId) {
-    // TODO
-    final interactor = SaveMemeInteractor(
-      memeRepository: MemesRepository(memeDataProvider: SharedPreferenceData()),
-    );
-    interactor.deleteMeme(id: memeId);
+    _memeInteractor.deleteMeme(id: memeId);
   }
 
   void deleteTemplate(final String templateId) {
-    // TODO
-    final interactor = SaveTemplateInteractor(
-      templateRepository: TemplatesRepository(
-        templateDataProvider: SharedPreferenceData(),
-      ),
-    );
-    interactor.deleteTemplate(id: templateId);
+    _templateInteractor.deleteTemplate(id: templateId);
   }
 
-  void dispose() {
-  }
+  void dispose() {}
 }

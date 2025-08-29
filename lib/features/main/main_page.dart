@@ -19,8 +19,8 @@ class MainPage extends StatelessWidget {
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
               AppIcons.iconMeme,
-              width: 48,
-              height: 48,
+              width: 32,
+              height: 32,
               colorFilter: ColorFilter.mode(
                 AppColors.darkGrey38,
                 BlendMode.srcIn,
@@ -28,16 +28,16 @@ class MainPage extends StatelessWidget {
             ),
             activeIcon: SvgPicture.asset(
               AppIcons.iconMeme,
-              width: 48,
-              height: 48,
+              width: 32,
+              height: 32,
             ),
             label: 'Мемы',
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
               AppIcons.iconTemplate,
-              width: 48,
-              height: 48,
+              width: 32,
+              height: 32,
               colorFilter: ColorFilter.mode(
                 AppColors.darkGrey38,
                 BlendMode.srcIn,
@@ -45,16 +45,16 @@ class MainPage extends StatelessWidget {
             ),
             activeIcon: SvgPicture.asset(
               AppIcons.iconTemplate,
-              width: 48,
-              height: 48,
+              width: 32,
+              height: 32,
             ),
             label: 'Шаблоны',
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
               AppIcons.iconSettings,
-              width: 48,
-              height: 48,
+              width: 32,
+              height: 32,
               colorFilter: ColorFilter.mode(
                 AppColors.darkGrey38,
                 BlendMode.srcIn,
@@ -62,8 +62,8 @@ class MainPage extends StatelessWidget {
             ),
             activeIcon: SvgPicture.asset(
               AppIcons.iconSettings,
-              width: 48,
-              height: 48,
+              width: 32,
+              height: 32,
             ),
             label: 'Настройки',
           ),

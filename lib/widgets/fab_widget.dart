@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 import '../resources/app_colors.dart';
 
@@ -11,6 +12,7 @@ class CreateFab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton.extended(
+      heroTag: Uuid().v1(),
       onPressed: onTap,
       icon: const Icon(Icons.add, color: AppColors.white),
       backgroundColor: AppColors.fabColor,

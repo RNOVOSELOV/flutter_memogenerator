@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:memogenerator/di_sm/app_scope.dart';
 import 'package:memogenerator/features/create_meme/create_meme_page.dart';
+import 'package:memogenerator/features/create_meme/models/meme_parameters.dart';
+import 'package:memogenerator/navigation/navigation_helper.dart';
+import 'package:memogenerator/navigation/navigation_path.dart';
 import 'package:memogenerator/widgets/remove_dialog.dart';
 import 'package:memogenerator/resources/app_colors.dart';
-import 'package:memogenerator/resources/app_images.dart';
 import 'package:provider/provider.dart';
 import 'package:yx_scope_flutter/yx_scope_flutter.dart';
 
+import '../../widgets/custom_appbar.dart';
 import '../../widgets/fab_widget.dart';
 import '../../widgets/grid_item.dart';
 import 'domain/models/meme_thumbnail.dart';
@@ -32,6 +34,8 @@ class _MemesPageState extends State<MemesPage> {
     );
     bloc = MemesBloc(
       memeRepository: appScopeHolder.scope!.memeRepositoryDep.get,
+      templateInteractor: appScopeHolder.scope!.templatesInteractorDep.get,
+      memeInteractor: appScopeHolder.scope!.memesInteractorDep.get,
     );
   }
 
@@ -40,40 +44,19 @@ class _MemesPageState extends State<MemesPage> {
     return Provider.value(
       value: bloc,
       child: Scaffold(
-        appBar: AppBar(
-          centerTitle: false,
-          backgroundColor: AppColors.backgroundAppbar,
-          foregroundColor: AppColors.foregroundAppBar,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  AppImages.iconLauncher,
-                  height: 32,
-                  width: 32,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              SizedBox(width: 12),
-              Text(
-                "Мемогенератор",
-                style: GoogleFonts.seymourOne(fontSize: 24),
-              ),
-            ],
-          ),
-        ),
         floatingActionButton: CreateFab(
+
           text: 'Мем',
           onTap: () async {
             final selectedMemePath = await bloc.selectMeme();
             if (selectedMemePath == null) {
-              // TODO showError
               return;
             }
-            // TODO OPEN CREATE MEME PAGE
+            print('!!! SELECTED PATH $selectedMemePath');
+            CustomNavigationHelper.instance.router.pushNamed(
+              NavigationPagePath.editMemePage.name,
+              extra: MemeArgs(path: selectedMemePath),
+            );
             // Navigator.of(context).push(
             //   MaterialPageRoute(
             //     builder: (_) {
@@ -84,7 +67,7 @@ class _MemesPageState extends State<MemesPage> {
           },
         ),
         backgroundColor: AppColors.backgroundColor,
-        body: SafeArea(child: MemesGrid()),
+        body: MemePageBodyContent(),
       ),
     );
   }
@@ -96,55 +79,69 @@ class _MemesPageState extends State<MemesPage> {
   }
 }
 
-class MemesGrid extends StatelessWidget {
-  const MemesGrid({super.key});
+class MemePageBodyContent extends StatelessWidget {
+  const MemePageBodyContent({super.key});
 
   @override
   Widget build(BuildContext context) {
     final MemesBloc bloc = Provider.of<MemesBloc>(context, listen: false);
     return StreamBuilder<List<MemeThumbnail>>(
       stream: bloc.observeMemes(),
+      initialData: [],
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const SizedBox.shrink();
         }
         final items = snapshot.requireData;
-        return GridView.extent(
-          maxCrossAxisExtent: 180,
-          mainAxisSpacing: 8,
-          crossAxisSpacing: 8,
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-          children: items.map((item) {
-            return GridItem(
-              fileId: item.memeId,
-              fileUri: item.fullImageUrl,
-              onPress: () async {
-                await Future.delayed(Duration(milliseconds: 200), () {});
-                if (!context.mounted) {
-                  return;
-                }
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => CreateMemePage(id: item.memeId),
-                  ),
-                );
-              },
-              onDelete: () async {
-                await Future.delayed(Duration(milliseconds: 200), () {});
-                if (!context.mounted) {
-                  return;
-                }
-                final removeMemeDialog = await showConfirmationRemoveDialog(
-                  context,
-                  title: 'Удалить мем?',
-                  text: 'Выбранный мем будет удален навсегда',
-                );
-                if ((removeMemeDialog ?? false) == true) {
-                  bloc.deleteMeme(item.memeId);
-                }
-              },
-            );
-          }).toList(),
+        return CustomScrollView(
+          slivers: [
+            CustomAppBar(title: 'Мемогенератор'),
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+              sliver: SliverGrid.builder(
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 180,
+                  mainAxisSpacing: 8,
+                  crossAxisSpacing: 8,
+                  childAspectRatio: 1,
+                ),
+                itemCount: items.length,
+                itemBuilder: (context, index) => GridItem(
+                  fileId: items.elementAt(index).memeId,
+                  fileUri: items.elementAt(index).fullImageUrl,
+                  onPress: () async {
+                    await Future.delayed(Duration(milliseconds: 200), () {});
+                    if (!context.mounted) {
+                      return;
+                    }
+
+                    // Navigator.of(context).push(
+                    //   MaterialPageRoute(
+                    //     builder: (context) => CreateMemePage(
+                    //       id: items.elementAt(index).memeId,
+                    //       //selectedMemePath: items.elementAt(index).fullImageUrl,
+                    //     ),
+                    //   ),
+                    // );
+                  },
+                  onDelete: () async {
+                    await Future.delayed(Duration(milliseconds: 200), () {});
+                    if (!context.mounted) {
+                      return;
+                    }
+                    final removeMemeDialog = await showConfirmationRemoveDialog(
+                      context,
+                      title: 'Удалить мем?',
+                      text: 'Выбранный мем будет удален навсегда',
+                    );
+                    if ((removeMemeDialog ?? false) == true) {
+                      bloc.deleteMeme(items.elementAt(index).memeId);
+                    }
+                  },
+                ),
+              ),
+            ),
+          ],
         );
       },
     );
