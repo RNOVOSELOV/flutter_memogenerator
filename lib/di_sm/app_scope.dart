@@ -1,3 +1,5 @@
+import 'package:memogenerator/data/http/api_service.dart';
+import 'package:memogenerator/data/http/dio_builder.dart';
 import 'package:memogenerator/data/shared_pref/repositories/memes/memes_repository.dart';
 import 'package:memogenerator/data/shared_pref/repositories/templates/templates_repository.dart';
 import 'package:memogenerator/data/shared_pref/shared_preference_data.dart';
@@ -5,6 +7,7 @@ import 'package:memogenerator/domain/interactors/copy_unique_file_interactor.dar
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:yx_scope/yx_scope.dart';
 
+import '../data/http/domain/api_repository.dart';
 import '../domain/interactors/meme_interactor.dart';
 import '../domain/interactors/template_interactor.dart';
 import 'scope_observer.dart' show diObserver;
@@ -31,6 +34,18 @@ class AppScopeContainer extends ScopeContainer {
       templateRepository: templateRepositoryDep.get,
       copyUniqueFileInteractor: copyFileInteractorDep.get,
     ),
+  );
+
+  late final _apiServiceDep = dep(
+    () => ApiService(
+      dio: DioBuilder(
+        talker: talkerDep.get,
+      ).addHeaderParameters().addAuthorizationInterceptor().build(),
+      talker: talkerDep.get,
+    ),
+  );
+  late final memeApiRepositoryDep = dep(
+    () => ApiRepository(dataProvider: _apiServiceDep.get),
   );
 }
 

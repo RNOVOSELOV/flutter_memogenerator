@@ -45,29 +45,44 @@ class GridItem extends StatelessWidget {
         ),
         Align(
           alignment: AlignmentGeometry.bottomRight,
-          child: Container(
-            height: 28,
-            width: 28,
-            alignment: Alignment.center,
-            margin: const EdgeInsets.all(4.0),
-            child: ElevatedButton(
-              onPressed: onDelete,
-              style: ElevatedButton.styleFrom(
-                elevation: 1,
-                alignment: Alignment.center,
-                shape: CircleBorder(),
-                backgroundColor: AppColors.fuchsia50,
-                padding: EdgeInsets.zero,
-              ),
-              child: const Icon(
-                Icons.delete_outline,
-                color: AppColors.white,
-                size: 16,
-              ),
-            ),
+          child: GridItemActionButton(
+            onPress: onDelete,
+            icon: Icons.delete_outline,
           ),
         ),
       ],
+    );
+  }
+}
+
+class GridItemActionButton extends StatelessWidget {
+  const GridItemActionButton({
+    super.key,
+    required this.onPress,
+    required this.icon,
+  });
+
+  final VoidCallback onPress;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 28,
+      width: 28,
+      alignment: Alignment.center,
+      margin: const EdgeInsets.all(4.0),
+      child: ElevatedButton(
+        onPressed: onPress,
+        style: ElevatedButton.styleFrom(
+          elevation: 1,
+          alignment: Alignment.center,
+          shape: CircleBorder(),
+          backgroundColor: AppColors.fuchsia50,
+          padding: EdgeInsets.zero,
+        ),
+        child: Icon(icon, color: AppColors.white, size: 16),
+      ),
     );
   }
 }

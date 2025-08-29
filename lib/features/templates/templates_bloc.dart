@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
@@ -37,14 +38,6 @@ class TemplatesBloc {
           }).toList();
         },
       );
-
-  Future<void> addTemplate() async {
-    final xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-    final imagePath = xFile?.path;
-    if (imagePath != null) {
-      await _templateInteractor.saveTemplate(imagePath: imagePath);
-    }
-  }
 
   void deleteTemplate(final String templateId) {
     _templateInteractor.deleteTemplate(id: templateId);

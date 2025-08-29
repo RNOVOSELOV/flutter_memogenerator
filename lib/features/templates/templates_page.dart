@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:memogenerator/features/create_meme/create_meme_page.dart';
 import 'package:memogenerator/widgets/remove_dialog.dart';
 import 'package:memogenerator/resources/app_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:yx_scope_flutter/yx_scope_flutter.dart';
 
 import '../../di_sm/app_scope.dart';
-import '../../resources/app_images.dart';
+import '../../navigation/navigation_helper.dart';
+import '../../navigation/navigation_path.dart';
 import '../../widgets/custom_appbar.dart';
 import '../../widgets/fab_widget.dart';
 import '../../widgets/grid_item.dart';
+import '../create_meme/models/meme_parameters.dart';
 import 'templates_bloc.dart';
 import 'domain/models/template_full.dart';
 
@@ -45,7 +45,10 @@ class _TemplatesPageState extends State<TemplatesPage> {
         floatingActionButton: CreateFab(
           text: 'Шаблон',
           onTap: () async {
-            await bloc.addTemplate();
+            CustomNavigationHelper.instance.router.pushNamed(
+              NavigationPagePath.templateDownloadPage.name,
+            );
+            //            await bloc.addTemplate();
           },
         ),
         backgroundColor: AppColors.backgroundColor,
@@ -99,15 +102,13 @@ class TemplatesPageBodyContent extends StatelessWidget {
                     if (!context.mounted) {
                       return;
                     }
-                    // Navigator.of(context).push(
-                    //   MaterialPageRoute(
-                    //     builder: (_) => CreateMemePage(
-                    //       selectedMemePath: items
-                    //           .elementAt(index)
-                    //           .fullImagePath,
-                    //     ),
-                    //   ),
-                    // );
+                    CustomNavigationHelper.instance.router.pushNamed(
+                      NavigationPagePath.editMemePage.name,
+                      extra: MemeArgs(
+                        id: items.elementAt(index).id,
+                        path: items.elementAt(index).fullImagePath,
+                      ),
+                    );
                   },
                   onDelete: () async {
                     final removeTemplateDialog =

@@ -8,6 +8,7 @@ import 'package:memogenerator/navigation/navigation_path.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 import '../features/main/main_page.dart';
+import '../features/template_download/template_download_page.dart';
 import '../features/templates/templates_page.dart';
 import '../features/memes/memes_page.dart';
 
@@ -76,13 +77,7 @@ class CustomNavigationHelper {
                   pageBuilder: (context, state) {
                     return getPage(child: MemesPage(), state: state);
                   },
-                  routes: <RouteBase>[
-                    // GoRoute(
-                    //   path: '/memes/edit',
-                    //   builder: (BuildContext context, GoRouterState state) =>
-                    //       const EditMemesPage(),
-                    // ),
-                  ],
+                  routes: <RouteBase>[],
                 ),
               ],
             ),
@@ -90,10 +85,18 @@ class CustomNavigationHelper {
               observers: [TalkerRouteObserver(talker)],
               routes: <RouteBase>[
                 GoRoute(
+                  name: NavigationPagePath.templatesPage.name,
                   path: NavigationPagePath.templatesPage.path,
                   pageBuilder: (context, state) =>
                       getPage(child: TemplatesPage(), state: state),
-                  routes: <RouteBase>[],
+                  routes: <RouteBase>[
+                    GoRoute(
+                      name: NavigationPagePath.templateDownloadPage.name,
+                      path: NavigationPagePath.templateDownloadPage.path,
+                      builder: (BuildContext context, GoRouterState state) =>
+                          const TemplateDownloadPage(),
+                    ),
+                  ],
                 ),
               ],
             ),
