@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:memogenerator/di_sm/app_scope.dart';
-import 'package:memogenerator/features/create_meme/create_meme_page.dart';
 import 'package:memogenerator/features/create_meme/models/meme_parameters.dart';
 import 'package:memogenerator/navigation/navigation_helper.dart';
 import 'package:memogenerator/navigation/navigation_path.dart';
@@ -45,25 +44,16 @@ class _MemesPageState extends State<MemesPage> {
       value: bloc,
       child: Scaffold(
         floatingActionButton: CreateFab(
-
           text: 'Мем',
           onTap: () async {
             final selectedMemePath = await bloc.selectMeme();
             if (selectedMemePath == null) {
               return;
             }
-            print('!!! SELECTED PATH $selectedMemePath');
             CustomNavigationHelper.instance.router.pushNamed(
               NavigationPagePath.editMemePage.name,
               extra: MemeArgs(path: selectedMemePath),
             );
-            // Navigator.of(context).push(
-            //   MaterialPageRoute(
-            //     builder: (_) {
-            //       return CreateMemePage(selectedMemePath: selectedMemePath);
-            //     },
-            //   ),
-            // );
           },
         ),
         backgroundColor: AppColors.backgroundColor,
@@ -114,15 +104,13 @@ class MemePageBodyContent extends StatelessWidget {
                     if (!context.mounted) {
                       return;
                     }
-
-                    // Navigator.of(context).push(
-                    //   MaterialPageRoute(
-                    //     builder: (context) => CreateMemePage(
-                    //       id: items.elementAt(index).memeId,
-                    //       //selectedMemePath: items.elementAt(index).fullImageUrl,
-                    //     ),
-                    //   ),
-                    // );
+                    CustomNavigationHelper.instance.router.pushNamed(
+                      NavigationPagePath.editMemePage.name,
+                      extra: MemeArgs(
+                        id: items.elementAt(index).memeId,
+                        path: items.elementAt(index).fullImageUrl,
+                      ),
+                    );
                   },
                   onDelete: () async {
                     await Future.delayed(Duration(milliseconds: 200), () {});

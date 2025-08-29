@@ -44,27 +44,14 @@ class MemesBloc {
   Future<String?> selectMeme() async {
     final xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     final imagePath = xFile?.path;
-    log('!!! PICK ${xFile?.hashCode} $xFile $imagePath');
     if (imagePath != null) {
       await _templateInteractor.saveTemplate(imagePath: imagePath);
     }
     return imagePath;
   }
 
-  Future<void> addTemplate() async {
-    final xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-    final imagePath = xFile?.path;
-    if (imagePath != null) {
-      await _templateInteractor.saveTemplate(imagePath: imagePath);
-    }
-  }
-
   void deleteMeme(final String memeId) {
     _memeInteractor.deleteMeme(id: memeId);
-  }
-
-  void deleteTemplate(final String templateId) {
-    _templateInteractor.deleteTemplate(id: templateId);
   }
 
   void dispose() {}

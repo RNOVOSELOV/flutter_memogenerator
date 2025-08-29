@@ -27,16 +27,19 @@ class GridItem extends StatelessWidget {
             padding: EdgeInsets.zero,
             elevation: 20,
             shape: RoundedRectangleBorder(
-              side: BorderSide(color: AppColors.darkGrey, width: 1),
-              borderRadius: BorderRadius.zero,
+              side: BorderSide(color: AppColors.darkGrey16, width: 1),
+              borderRadius: BorderRadius.all(Radius.circular(8)),
             ),
           ),
           child: imageFile.existsSync()
-              ? Image.file(
-                  imageFile,
-                  height: double.infinity,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
+              ? ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                  child: Image.file(
+                    imageFile,
+                    height: double.infinity,
+                    width: double.infinity,
+                    fit: BoxFit.scaleDown,
+                  ),
                 )
               : Text(fileId),
         ),
@@ -53,7 +56,7 @@ class GridItem extends StatelessWidget {
                 elevation: 1,
                 alignment: Alignment.center,
                 shape: CircleBorder(),
-                backgroundColor: AppColors.darkGrey38,
+                backgroundColor: AppColors.fuchsia50,
                 padding: EdgeInsets.zero,
               ),
               child: const Icon(

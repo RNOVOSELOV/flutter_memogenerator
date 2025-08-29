@@ -406,7 +406,7 @@ class BottomMemeTextAction extends StatelessWidget {
 }
 
 class MemeCanvasWidget extends StatelessWidget {
-  const MemeCanvasWidget({Key? key}) : super(key: key);
+  const MemeCanvasWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -415,23 +415,33 @@ class MemeCanvasWidget extends StatelessWidget {
       color: AppColors.darkGrey38,
       padding: const EdgeInsets.all(8),
       alignment: Alignment.topCenter,
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: GestureDetector(
-          onTap: () => bloc.deselectMemeText(),
-          child: StreamBuilder<ScreenshotController>(
-            stream: bloc.observeScreenShotController(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData || snapshot.data == null) {
-                return const SizedBox.shrink();
-              }
-              return Screenshot(
-                controller: snapshot.requireData,
-                child: Stack(children: const [BackgroundImage(), MemeTexts()]),
-              );
-            },
-          ),
-        ),
+      child: StreamBuilder<(String path, double aspectRatio)?>(
+        stream: bloc.observeMemePath(),
+        builder: (context, snapshot) {
+          final imageData = snapshot.hasData ? snapshot.data : null;
+          if (imageData == null) {
+            return AspectRatio(
+              aspectRatio: 1,
+              child: Container(color: AppColors.backgroundColor),
+            );
+          }
+          final file = File(imageData.$1);
+          return AspectRatio(
+            aspectRatio: imageData.$2,
+            child: GestureDetector(
+              onTap: () => bloc.deselectMemeText(),
+              child: Screenshot(
+                controller: bloc.screenshotController,
+                child: Stack(
+                  children: [
+                    Image.file(file, fit: BoxFit.scaleDown,),
+                    MemeTexts(),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -462,32 +472,6 @@ class MemeTexts extends StatelessWidget {
               }).toList(),
             );
           },
-        );
-      },
-    );
-  }
-}
-
-class BackgroundImage extends StatelessWidget {
-  const BackgroundImage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
-    return StreamBuilder<String?>(
-      stream: bloc.observeMemePath(),
-      builder: (context, snapshot) {
-        final path = snapshot.hasData ? snapshot.data : null;
-        if (path == null) {
-          return Container(color: AppColors.backgroundColor);
-        }
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: FileImage(File(path)),
-              fit: BoxFit.cover,
-            ),
-          ),
         );
       },
     );
