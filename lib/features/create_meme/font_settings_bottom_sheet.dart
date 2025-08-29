@@ -144,9 +144,9 @@ class ColorSelection extends StatelessWidget {
   final ValueChanged<Color> changeColor;
 
   const ColorSelection({
-    Key? key,
+    super.key,
     required this.changeColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

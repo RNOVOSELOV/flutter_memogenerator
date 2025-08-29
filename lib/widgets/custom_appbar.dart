@@ -33,6 +33,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           Text(title, style: GoogleFonts.seymourOne(fontSize: 24)),
         ],
       ),
+      floating: true,
     );
   }
 

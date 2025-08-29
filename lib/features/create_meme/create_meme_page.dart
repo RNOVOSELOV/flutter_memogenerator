@@ -60,16 +60,30 @@ class _CreateMemePageState extends State<CreateMemePage> {
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
+            elevation: 3,
+            centerTitle: false,
+            titleSpacing: 0,
             backgroundColor: AppColors.backgroundAppbar,
             foregroundColor: AppColors.foregroundAppBar,
-            title: const Text("Создаем мем"),
+            title: Text(
+              widget.memeArgs.id == null
+                  ? 'Создание мема'
+                  : 'Редактирование мема',
+              style: GoogleFonts.seymourOne(fontSize: 18),
+            ),
             actions: [
               AnimatedIconButton(
-                onTap: () => bloc.shareMeme(),
+                onTap: () {
+                  bloc.deselectMemeText();
+                  bloc.shareMeme();
+                },
                 icon: Icons.share,
               ),
               AnimatedIconButton(
-                onTap: () => bloc.saveMeme(),
+                onTap: () {
+                  bloc.deselectMemeText();
+                  bloc.saveMeme();
+                },
                 icon: Icons.save,
               ),
             ],
@@ -122,8 +136,11 @@ class AnimatedIconButton extends StatefulWidget {
   final VoidCallback onTap;
   final IconData icon;
 
-  const AnimatedIconButton({Key? key, required this.onTap, required this.icon})
-    : super(key: key);
+  const AnimatedIconButton({
+    super.key,
+    required this.onTap,
+    required this.icon,
+  });
 
   @override
   State<AnimatedIconButton> createState() => _AnimatedIconButtonState();
@@ -134,20 +151,20 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
+    return IconButton(
+      onPressed: () {
         setState(() => scale = 1.5);
         widget.onTap();
       },
-      child: Padding(
+      style: IconButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: AnimatedScale(
-          scale: scale,
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.bounceInOut,
-          child: Icon(widget.icon, color: AppColors.darkGrey, size: 24),
-          onEnd: () => setState(() => scale = 1.0),
-        ),
+      ),
+      icon: AnimatedScale(
+        scale: scale,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.bounceInOut,
+        child: Icon(widget.icon, color: AppColors.darkGrey, size: 24),
+        onEnd: () => setState(() => scale = 1.0),
       ),
     );
   }
@@ -238,7 +255,7 @@ class _EditTextBarState extends State<_EditTextBar> {
 }
 
 class _CreateMemePageContent extends StatefulWidget {
-  const _CreateMemePageContent({Key? key}) : super(key: key);
+  const _CreateMemePageContent();
 
   @override
   State<_CreateMemePageContent> createState() => _CreateMemePageContentState();
@@ -247,18 +264,39 @@ class _CreateMemePageContent extends StatefulWidget {
 class _CreateMemePageContentState extends State<_CreateMemePageContent> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Expanded(flex: 2, child: MemeCanvasWidget()),
-        Container(height: 1, width: double.infinity, color: AppColors.darkGrey),
-        const Expanded(flex: 1, child: _BottomList()),
-      ],
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        if (orientation == Orientation.portrait) {
+          return Column(
+            children: [
+              const Expanded(flex: 2, child: MemeCanvasWidget()),
+              Container(
+                height: 1,
+                width: double.infinity,
+                color: AppColors.darkGrey,
+              ),
+              const Expanded(flex: 1, child: _BottomList()),
+            ],
+          );
+        }
+        return Row(
+          children: [
+            const Expanded(flex: 2, child: MemeCanvasWidget()),
+            Container(
+              height: double.infinity,
+              width: 1,
+              color: AppColors.darkGrey,
+            ),
+            const Expanded(flex: 1, child: _BottomList()),
+          ],
+        );
+      },
     );
   }
 }
 
 class _BottomList extends StatelessWidget {
-  const _BottomList({Key? key}) : super(key: key);
+  const _BottomList({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -287,10 +325,36 @@ class _BottomList extends StatelessWidget {
                   return Column(
                     children: [
                       const SizedBox(height: 12),
-                      AppButton(
-                        onTap: () => bloc.addNewText(),
-                        labelText: "Добавить текст",
-                        icon: Icons.add,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 0,
+                        ),
+                        child: TextButton(
+                          onPressed: () => bloc.addNewText(),
+                          style: TextButton.styleFrom(
+                            alignment: Alignment.center,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.zero,
+                            ),
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.add, color: AppColors.fuchsia),
+                              SizedBox(width: 12),
+                              Text(
+                                'Добавить текст'.toUpperCase(),
+                                style: TextStyle(
+                                  color: AppColors.fuchsia,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   );
@@ -308,20 +372,20 @@ class _BottomList extends StatelessWidget {
 }
 
 class _BottomSeparator extends StatelessWidget {
-  const _BottomSeparator({Key? key}) : super(key: key);
+  const _BottomSeparator({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      margin: const EdgeInsets.symmetric(horizontal: 24),
       height: 1,
-      color: AppColors.darkGrey,
+      color: AppColors.darkGrey38,
     );
   }
 }
 
 class BottomMemeText extends StatelessWidget {
-  const BottomMemeText({Key? key, required this.item}) : super(key: key);
+  const BottomMemeText({super.key, required this.item});
 
   final MemeTextWithSelection item;
 
@@ -342,6 +406,7 @@ class BottomMemeText extends StatelessWidget {
             Expanded(
               child: Text(
                 item.memeText.text,
+                overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.roboto(
                   fontWeight: FontWeight.w400,
                   fontSize: 16,
@@ -369,7 +434,7 @@ class BottomMemeText extends StatelessWidget {
                   },
                 );
               },
-              icon: Icons.font_download_outlined,
+              icon: Icons.format_color_text_outlined,
             ),
             const SizedBox(width: 4),
             BottomMemeTextAction(
@@ -386,21 +451,41 @@ class BottomMemeText extends StatelessWidget {
   }
 }
 
-class BottomMemeTextAction extends StatelessWidget {
+class BottomMemeTextAction extends StatefulWidget {
   const BottomMemeTextAction({
-    Key? key,
+    super.key,
     required this.onTap,
     required this.icon,
-  }) : super(key: key);
+  });
 
   final VoidCallback onTap;
   final IconData icon;
 
   @override
+  State<BottomMemeTextAction> createState() => _BottomMemeTextActionState();
+}
+
+class _BottomMemeTextActionState extends State<BottomMemeTextAction> {
+  double scale = 1.0;
+
+  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Padding(padding: const EdgeInsets.all(8), child: Icon(icon)),
+    return IconButton(
+      onPressed: () {
+        setState(() => scale = 1.2);
+        Future.delayed(Duration(milliseconds: 200), widget.onTap);
+      },
+      style: IconButton.styleFrom(
+        padding: EdgeInsets.zero,
+        alignment: Alignment.center,
+      ),
+      icon: AnimatedScale(
+        scale: scale,
+        duration: Duration(milliseconds: 200),
+        curve: Curves.bounceInOut,
+        child: Icon(widget.icon, color: AppColors.darkGrey, size: 24,),
+        onEnd: () => setState(() => scale = 1.0),
+      ),
     );
   }
 }
@@ -411,44 +496,44 @@ class MemeCanvasWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
-    return Container(
-      color: AppColors.darkGrey38,
-      padding: const EdgeInsets.all(8),
-      alignment: Alignment.topCenter,
-      child: StreamBuilder<(String path, double aspectRatio)?>(
-        stream: bloc.observeMemePath(),
-        builder: (context, snapshot) {
-          final imageData = snapshot.hasData ? snapshot.data : null;
-          if (imageData == null) {
+    return GestureDetector(
+      onTap: () => bloc.deselectMemeText(),
+      child: Container(
+        color: AppColors.darkGrey38,
+        padding: const EdgeInsets.all(8),
+        alignment: Alignment.topCenter,
+        child: StreamBuilder<(String path, double aspectRatio)?>(
+          stream: bloc.observeMemePath(),
+          builder: (context, snapshot) {
+            final imageData = snapshot.hasData ? snapshot.data : null;
+            if (imageData == null) {
+              return AspectRatio(
+                aspectRatio: 1,
+                child: Container(color: AppColors.backgroundColor),
+              );
+            }
+            final file = File(imageData.$1);
             return AspectRatio(
-              aspectRatio: 1,
-              child: Container(color: AppColors.backgroundColor),
-            );
-          }
-          final file = File(imageData.$1);
-          return AspectRatio(
-            aspectRatio: imageData.$2,
-            child: GestureDetector(
-              onTap: () => bloc.deselectMemeText(),
+              aspectRatio: imageData.$2,
               child: Screenshot(
                 controller: bloc.screenshotController,
                 child: Stack(
                   children: [
-                    Image.file(file, fit: BoxFit.scaleDown,),
+                    Image.file(file, fit: BoxFit.scaleDown),
                     MemeTexts(),
                   ],
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
 }
 
 class MemeTexts extends StatelessWidget {
-  const MemeTexts({Key? key}) : super(key: key);
+  const MemeTexts({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -483,10 +568,10 @@ class DraggableMemeText extends StatefulWidget {
   final BoxConstraints parentConstraints;
 
   const DraggableMemeText({
-    Key? key,
+    super.key,
     required this.memeTextWithOffset,
     required this.parentConstraints,
-  }) : super(key: key);
+  });
 
   @override
   State<DraggableMemeText> createState() => _DraggableMemeTextState();

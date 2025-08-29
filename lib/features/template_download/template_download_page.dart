@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:either_dart/either.dart';
 import 'package:flutter/material.dart';
@@ -124,12 +126,17 @@ class TemplatesPageBodyContent extends StatelessWidget {
   }
 }
 
-class GridItem extends StatelessWidget {
+class GridItem extends StatefulWidget {
   const GridItem({super.key, required this.onDownload, required this.memeData});
 
   final VoidCallback onDownload;
   final MemeData memeData;
 
+  @override
+  State<GridItem> createState() => _GridItemState();
+}
+
+class _GridItemState extends State<GridItem> {
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -141,35 +148,32 @@ class GridItem extends StatelessWidget {
             side: BorderSide(color: AppColors.darkGrey16, width: 1),
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
-          child: Center(
-            child: CachedNetworkImage(
-              imageUrl: memeData.url,
-              imageBuilder: (context, imageProvider) => Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: imageProvider,
-                    fit: BoxFit.scaleDown,
-                  ),
+          child: CachedNetworkImage(
+            imageUrl: widget.memeData.url,
+            imageBuilder: (context, imageProvider) => Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.scaleDown,
                 ),
               ),
-              progressIndicatorBuilder: (context, url, progress) {
-                return Center(
-                  child: CircularProgressIndicator.adaptive(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      AppColors.fuchsia,
-                    ),
-                    value: progress.progress,
-                  ),
-                );
-              },
-              errorWidget: (context, url, error) => Icon(Icons.error),
             ),
+            progressIndicatorBuilder: (context, url, progress) {
+              return Center(
+                child: CircularProgressIndicator.adaptive(
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.fuchsia),
+                  value: progress.progress,
+                ),
+              );
+            },
+            errorWidget: (context, url, error) => Icon(Icons.error),
           ),
         ),
         Align(
           alignment: AlignmentGeometry.bottomRight,
           child: GridItemActionButton(
-            onPress: onDownload,
+            onPress: widget.onDownload,
             icon: Icons.arrow_downward_outlined,
           ),
         ),

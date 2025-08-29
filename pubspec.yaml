@@ -23,7 +23,7 @@ dependencies:
   dio: ^5.9.0
   either_dart: ^1.0.0
   image_picker: ^1.2.0
-  path_provider: ^2.1.5
+  path_provider: ^2.1.5           #НЕ ПОДДЕРЖИВАЕТ WEB
   image: ^4.5.4
   cached_network_image: ^3.4.1
   screenshot: ^3.0.0
