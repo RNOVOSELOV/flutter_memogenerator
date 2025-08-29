@@ -87,10 +87,10 @@ class _CreateMemePageState extends State<CreateMemePage> {
                 icon: Icons.save,
               ),
             ],
-            bottom: const _EditTextBar(),
+            //            bottom: const _EditTextBar(),
           ),
           backgroundColor: AppColors.backgroundColor,
-          body: const SafeArea(child: _CreateMemePageContent()),
+          body: _CreateMemePageContent(),
         ),
       ),
     );
@@ -171,7 +171,7 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton> {
 }
 
 class _EditTextBar extends StatefulWidget implements PreferredSizeWidget {
-  const _EditTextBar({Key? key}) : super(key: key);
+  const _EditTextBar({super.key});
 
   @override
   State<_EditTextBar> createState() => _EditTextBarState();
@@ -271,7 +271,7 @@ class _CreateMemePageContentState extends State<_CreateMemePageContent> {
             children: [
               const Expanded(flex: 2, child: MemeCanvasWidget()),
               Container(
-                height: 1,
+                height: 2,
                 width: double.infinity,
                 color: AppColors.darkGrey,
               ),
@@ -284,7 +284,7 @@ class _CreateMemePageContentState extends State<_CreateMemePageContent> {
             const Expanded(flex: 2, child: MemeCanvasWidget()),
             Container(
               height: double.infinity,
-              width: 1,
+              width: 2,
               color: AppColors.darkGrey,
             ),
             const Expanded(flex: 1, child: _BottomList()),
@@ -483,7 +483,7 @@ class _BottomMemeTextActionState extends State<BottomMemeTextAction> {
         scale: scale,
         duration: Duration(milliseconds: 200),
         curve: Curves.bounceInOut,
-        child: Icon(widget.icon, color: AppColors.darkGrey, size: 24,),
+        child: Icon(widget.icon, color: AppColors.darkGrey, size: 24),
         onEnd: () => setState(() => scale = 1.0),
       ),
     );
@@ -501,31 +501,48 @@ class MemeCanvasWidget extends StatelessWidget {
       child: Container(
         color: AppColors.darkGrey38,
         padding: const EdgeInsets.all(8),
-        alignment: Alignment.topCenter,
-        child: StreamBuilder<(String path, double aspectRatio)?>(
-          stream: bloc.observeMemePath(),
-          builder: (context, snapshot) {
-            final imageData = snapshot.hasData ? snapshot.data : null;
-            if (imageData == null) {
-              return AspectRatio(
-                aspectRatio: 1,
-                child: Container(color: AppColors.backgroundColor),
-              );
-            }
-            final file = File(imageData.$1);
-            return AspectRatio(
-              aspectRatio: imageData.$2,
-              child: Screenshot(
-                controller: bloc.screenshotController,
-                child: Stack(
-                  children: [
-                    Image.file(file, fit: BoxFit.scaleDown),
-                    MemeTexts(),
-                  ],
+        alignment: Alignment.center,
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.center,
+              child: StreamBuilder<(String path, double aspectRatio)?>(
+                stream: bloc.observeMemePath(),
+                builder: (context, snapshot) {
+                  final imageData = snapshot.hasData ? snapshot.data : null;
+                  if (imageData == null) {
+                    return AspectRatio(
+                      aspectRatio: 1,
+                      child: Container(color: AppColors.backgroundColor),
+                    );
+                  }
+                  final file = File(imageData.$1);
+                  return AspectRatio(
+                    aspectRatio: imageData.$2,
+                    child: Screenshot(
+                      controller: bloc.screenshotController,
+                      child: Stack(
+                        children: [
+                          Image.file(file, fit: BoxFit.scaleDown),
+                          MemeTexts(),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: FractionallySizedBox(
+                widthFactor: 0.9,
+                child: SizedBox(
+                  height: 52,
+                  child: const _EditTextBar(),
                 ),
               ),
-            );
-          },
+            ),
+          ],
         ),
       ),
     );

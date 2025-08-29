@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:memogenerator/features/create_meme/create_meme_bloc.dart';
 import 'package:memogenerator/features/create_meme/meme_text_on_canvas.dart';
 import 'package:memogenerator/features/create_meme/models/meme_text.dart';
@@ -33,9 +34,7 @@ class _FontSettingBottomSheetState extends State<FontSettingBottomSheet> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const SizedBox(
-          height: 8,
-        ),
+        const SizedBox(height: 8),
         Center(
           child: Container(
             height: 4,
@@ -46,9 +45,7 @@ class _FontSettingBottomSheetState extends State<FontSettingBottomSheet> {
             ),
           ),
         ),
-        const SizedBox(
-          height: 16,
-        ),
+        const SizedBox(height: 16),
         MemeTextOnCanvas(
           parentConstraints: const BoxConstraints.expand(),
           padding: 8,
@@ -58,29 +55,21 @@ class _FontSettingBottomSheetState extends State<FontSettingBottomSheet> {
           color: color,
           fontWeight: fontWeight,
         ),
-        const SizedBox(
-          height: 48,
-        ),
+        const SizedBox(height: 48),
         FontSizeSlider(
           changeFontSize: (value) => setState(() => fontSize = value),
           initialFontSize: fontSize,
         ),
-        const SizedBox(
-          height: 16,
-        ),
+        const SizedBox(height: 16),
         ColorSelection(
           changeColor: (color) => setState(() => this.color = color),
         ),
-        const SizedBox(
-          height: 16,
-        ),
+        const SizedBox(height: 16),
         FontWeightSlider(
           changeFontWeight: (value) => setState(() => fontWeight = value),
           initialFontWeight: fontWeight,
         ),
-        const SizedBox(
-          height: 36,
-        ),
+        const SizedBox(height: 36),
         Align(
           alignment: Alignment.centerRight,
           child: Buttons(
@@ -90,9 +79,7 @@ class _FontSettingBottomSheetState extends State<FontSettingBottomSheet> {
             fontWeight: fontWeight,
           ),
         ),
-        const SizedBox(
-          height: 48,
-        ),
+        const SizedBox(height: 48),
       ],
     );
   }
@@ -123,18 +110,15 @@ class Buttons extends StatelessWidget {
           labelText: "Отмена",
           color: AppColors.darkGrey,
         ),
-        const SizedBox(
-          width: 24,
-        ),
+        const SizedBox(width: 24),
         AppButton(
-            onTap: () {
-              bloc.changeFontSettings(memeId, color, fontSize, fontWeight);
-              Navigator.of(context).pop();
-            },
-            labelText: "Сохранить"),
-        const SizedBox(
-          width: 16,
+          onTap: () {
+            bloc.changeFontSettings(memeId, color, fontSize, fontWeight);
+            Navigator.of(context).pop();
+          },
+          labelText: "Сохранить",
         ),
+        const SizedBox(width: 16),
       ],
     );
   }
@@ -143,51 +127,112 @@ class Buttons extends StatelessWidget {
 class ColorSelection extends StatelessWidget {
   final ValueChanged<Color> changeColor;
 
-  const ColorSelection({
-    super.key,
-    required this.changeColor,
-  });
+  const ColorSelection({super.key, required this.changeColor});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        const SizedBox(
-          width: 16,
-        ),
+        const SizedBox(width: 16),
         const Text(
           "Color:",
           style: TextStyle(fontSize: 20, color: AppColors.darkGrey),
         ),
-        const SizedBox(
-          width: 16,
-        ),
-        ColorSelectionBox(
-          changeColor: changeColor,
-          color: Colors.white,
-        ),
-        const SizedBox(
-          width: 16,
-        ),
-        ColorSelectionBox(
-          changeColor: changeColor,
-          color: Colors.black,
-        ),
-        const SizedBox(
-          width: 16,
-        ),
+        const SizedBox(width: 16),
+        ColorSelectionBox(changeColor: changeColor, color: Colors.white),
+        const SizedBox(width: 16),
+        ColorSelectionBox(changeColor: changeColor, color: Colors.black),
+        const SizedBox(width: 16),
+        ColorPickerWidget(changeColor: changeColor),
       ],
+    );
+  }
+}
+
+class ColorPickerWidget extends StatefulWidget {
+  const ColorPickerWidget({super.key, required this.changeColor});
+
+  final ValueChanged<Color> changeColor;
+
+  @override
+  State<ColorPickerWidget> createState() => _ColorPickerWidgetState();
+}
+
+class _ColorPickerWidgetState extends State<ColorPickerWidget> {
+  Color? selectedColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            WidgetsBinding.instance.addPostFrameCallback(
+              (_) => setState(() => selectedColor = AppColors.fuchsia),
+            );
+            return AlertDialog(
+              title: Text('Выберите цвет'),
+              content: SingleChildScrollView(
+                child: ColorPicker(
+                  pickerColor: selectedColor ?? AppColors.fuchsia,
+                  onColorChanged: (value) =>
+                      setState(() => selectedColor = value),
+                  labelTypes: [],
+                  pickerAreaHeightPercent: 0.8,
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    if (selectedColor != null) {
+                      widget.changeColor(selectedColor!);
+                    }
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'Готово'.toUpperCase(),
+                    style: TextStyle(color: AppColors.fuchsia),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+
+        //widget.changeColor(color)
+      },
+      child: Container(
+        height: 32,
+        width: 32,
+        decoration: BoxDecoration(
+          color: selectedColor,
+          gradient: selectedColor == null
+              ? LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    AppColors.white,
+                    AppColors.lemon,
+                    AppColors.fuchsia,
+                    Colors.black,
+                  ],
+                )
+              : null,
+          border: Border.all(color: Colors.black, width: 1),
+        ),
+      ),
     );
   }
 }
 
 class ColorSelectionBox extends StatelessWidget {
   const ColorSelectionBox({
-    Key? key,
+    super.key,
     required this.changeColor,
     required this.color,
-  }) : super(key: key);
+  });
 
   final ValueChanged<Color> changeColor;
   final Color color;
@@ -235,9 +280,7 @@ class _FontSizeSliderState extends State<FontSizeSlider> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const SizedBox(
-          width: 16,
-        ),
+        const SizedBox(width: 16),
         const Padding(
           padding: EdgeInsets.only(bottom: 8),
           child: Text(
@@ -248,12 +291,13 @@ class _FontSizeSliderState extends State<FontSizeSlider> {
         Expanded(
           child: SliderTheme(
             data: SliderThemeData(
-                activeTrackColor: AppColors.fuchsia,
-                inactiveTrackColor: AppColors.fuchsia38,
-                valueIndicatorShape: const PaddleSliderValueIndicatorShape(),
-                thumbColor: AppColors.fuchsia,
-                inactiveTickMarkColor: AppColors.fuchsia,
-                valueIndicatorColor: AppColors.fuchsia),
+              activeTrackColor: AppColors.fuchsia,
+              inactiveTrackColor: AppColors.fuchsia38,
+              valueIndicatorShape: const PaddleSliderValueIndicatorShape(),
+              thumbColor: AppColors.fuchsia,
+              inactiveTickMarkColor: AppColors.fuchsia,
+              valueIndicatorColor: AppColors.fuchsia,
+            ),
             child: Slider(
               min: 16,
               max: 32,
@@ -301,9 +345,7 @@ class _FontWeightSliderState extends State<FontWeightSlider> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const SizedBox(
-          width: 16,
-        ),
+        const SizedBox(width: 16),
         const Padding(
           padding: EdgeInsets.only(bottom: 8),
           child: Text(
@@ -314,10 +356,11 @@ class _FontWeightSliderState extends State<FontWeightSlider> {
         Expanded(
           child: SliderTheme(
             data: SliderThemeData(
-                activeTrackColor: AppColors.fuchsia,
-                inactiveTrackColor: AppColors.fuchsia38,
-                thumbColor: AppColors.fuchsia,
-                inactiveTickMarkColor: AppColors.fuchsia),
+              activeTrackColor: AppColors.fuchsia,
+              inactiveTrackColor: AppColors.fuchsia38,
+              thumbColor: AppColors.fuchsia,
+              inactiveTickMarkColor: AppColors.fuchsia,
+            ),
             child: Slider(
               min: 0,
               max: 8,
