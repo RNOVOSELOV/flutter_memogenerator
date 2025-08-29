@@ -3,12 +3,8 @@ import 'package:collection/collection.dart';
 import 'package:path_provider/path_provider.dart';
 
 class CopyUniqueFileInteractor {
-  static CopyUniqueFileInteractor? _instance;
 
-  factory CopyUniqueFileInteractor.getInstance() =>
-      _instance ??= CopyUniqueFileInteractor._internal();
-
-  CopyUniqueFileInteractor._internal();
+  CopyUniqueFileInteractor ();
 
   Future<String> copyUniqueFile({
     required final String directoryWithFiles,
@@ -19,16 +15,13 @@ class CopyUniqueFileInteractor {
         "${docsPath.absolute.path}${Platform.pathSeparator}$directoryWithFiles";
     final memesDirectory = Directory(memePath);
     await memesDirectory.create(recursive: true);
-
     final currentFiles = memesDirectory.listSync();
-
     final imageName = _getFileNameByPath(filePath);
     final oldFileWithTheSameName = currentFiles.firstWhereOrNull(
       (element) {
         return _getFileNameByPath(element.path) == imageName && element is File;
       },
     );
-
     final newImagePath = "$memePath${Platform.pathSeparator}$imageName";
     final tempFile = File(filePath);
     // Файлов с таким названием нет, сохраняем файл в документы
