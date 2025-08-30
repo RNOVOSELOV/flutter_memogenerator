@@ -66,25 +66,23 @@ class _CreateMemePageState extends State<CreateMemePage> {
             backgroundColor: AppColors.backgroundAppbar,
             foregroundColor: AppColors.foregroundAppBar,
             title: Text(
-              widget.memeArgs.id == null
-                  ? 'Создание мема'
-                  : 'Редактирование мема',
-              style: GoogleFonts.seymourOne(fontSize: 18),
+              'Редактор',
+              style: GoogleFonts.seymourOne(fontSize: 24),
             ),
             actions: [
-              AnimatedIconButton(
-                onTap: () {
-                  bloc.deselectMemeText();
-                  bloc.shareMeme();
-                },
-                icon: Icons.share,
-              ),
               AnimatedIconButton(
                 onTap: () {
                   bloc.deselectMemeText();
                   bloc.saveMeme();
                 },
                 icon: Icons.save,
+              ),
+              AnimatedIconButton(
+                onTap: () {
+                  bloc.deselectMemeText();
+                  bloc.shareMeme();
+                },
+                icon: Icons.share,
               ),
             ],
             //            bottom: const _EditTextBar(),
@@ -171,7 +169,13 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton> {
 }
 
 class _EditTextBar extends StatefulWidget implements PreferredSizeWidget {
-  const _EditTextBar({super.key});
+  const _EditTextBar({
+    required this.selectedMemeText,
+    required this.selectedMemeId,
+  });
+
+  final String selectedMemeId;
+  final String selectedMemeText;
 
   @override
   State<_EditTextBar> createState() => _EditTextBarState();
@@ -181,7 +185,34 @@ class _EditTextBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _EditTextBarState extends State<_EditTextBar> {
-  final controller = TextEditingController();
+  late final TextEditingController controller;
+  late final FocusNode focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = TextEditingController(text: '');
+    focusNode = FocusNode(canRequestFocus: true);
+    configureTextEdit();
+  }
+
+  @override
+  void didUpdateWidget(covariant _EditTextBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    configureTextEdit();
+  }
+
+  void configureTextEdit() {
+    if (widget.selectedMemeText != controller.text) {
+      controller.text = widget.selectedMemeText;
+      controller.selection = TextSelection.collapsed(
+        offset: widget.selectedMemeText.length,
+      );
+    }
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => focusNode.requestFocus(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -191,34 +222,20 @@ class _EditTextBarState extends State<_EditTextBar> {
       child: StreamBuilder<MemeText?>(
         stream: bloc.observeSelectedMemeText(),
         builder: (context, snapshot) {
-          final MemeText? selectedMemeText = snapshot.hasData
-              ? snapshot.data!
-              : null;
-          if (selectedMemeText?.text != controller.text) {
-            final newText = selectedMemeText?.text ?? "";
-            controller.text = newText;
-            controller.selection = TextSelection.collapsed(
-              offset: newText.length,
-            );
-          }
-          final haveSelected = selectedMemeText != null;
           return TextField(
-            enabled: haveSelected,
+            enabled: true,
+            focusNode: focusNode,
             controller: controller,
             onChanged: (value) {
-              if (haveSelected) {
-                bloc.changeMemeText(selectedMemeText.id, value);
-              }
+              bloc.changeMemeText(widget.selectedMemeId, value);
             },
             onEditingComplete: () => bloc.deselectMemeText(),
-            cursorColor: AppColors.fuchsia,
+            cursorColor: AppColors.lemon,
             decoration: InputDecoration(
-              hintText: haveSelected ? "Ввести текст" : "",
+              hintText: 'Введите текст',
               hintStyle: TextStyle(fontSize: 16, color: AppColors.darkGrey38),
               filled: true,
-              fillColor: haveSelected
-                  ? AppColors.fuchsia16
-                  : AppColors.darkGrey6,
+              fillColor: AppColors.fuchsia38,
               border: UnderlineInputBorder(
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(4),
@@ -250,6 +267,7 @@ class _EditTextBarState extends State<_EditTextBar> {
   @override
   void dispose() {
     controller.dispose();
+    focusNode.dispose();
     super.dispose();
   }
 }
@@ -269,13 +287,13 @@ class _CreateMemePageContentState extends State<_CreateMemePageContent> {
         if (orientation == Orientation.portrait) {
           return Column(
             children: [
-              const Expanded(flex: 2, child: MemeCanvasWidget()),
+              const Expanded(flex: 5, child: MemeCanvasWidget()),
               Container(
                 height: 2,
                 width: double.infinity,
                 color: AppColors.darkGrey,
               ),
-              const Expanded(flex: 1, child: _BottomList()),
+              const Expanded(flex: 4, child: _BottomList()),
             ],
           );
         }
@@ -532,15 +550,28 @@ class MemeCanvasWidget extends StatelessWidget {
                 },
               ),
             ),
-            Align(
-              alignment: Alignment.topCenter,
-              child: FractionallySizedBox(
-                widthFactor: 0.9,
-                child: SizedBox(
-                  height: 52,
-                  child: const _EditTextBar(),
-                ),
-              ),
+            StreamBuilder<MemeText?>(
+              stream: bloc.observeSelectedMemeText(),
+              builder:
+                  (BuildContext context, AsyncSnapshot<MemeText?> snapshot) {
+                    final MemeText? selectedMemeText = snapshot.hasData
+                        ? snapshot.requireData
+                        : null;
+                    if (selectedMemeText == null) return SizedBox.shrink();
+                    return Align(
+                      alignment: Alignment.topCenter,
+                      child: FractionallySizedBox(
+                        widthFactor: 0.9,
+                        child: SizedBox(
+                          height: 52,
+                          child: _EditTextBar(
+                            selectedMemeId: selectedMemeText.id,
+                            selectedMemeText: selectedMemeText.text,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
             ),
           ],
         ),

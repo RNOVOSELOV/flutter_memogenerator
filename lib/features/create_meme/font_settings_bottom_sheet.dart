@@ -170,13 +170,13 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
           context: context,
           builder: (context) {
             WidgetsBinding.instance.addPostFrameCallback(
-              (_) => setState(() => selectedColor = AppColors.fuchsia),
+              (_) => setState(() => selectedColor = AppColors.lemon),
             );
             return AlertDialog(
               title: Text('Выберите цвет'),
               content: SingleChildScrollView(
                 child: ColorPicker(
-                  pickerColor: selectedColor ?? AppColors.fuchsia,
+                  pickerColor: selectedColor ?? AppColors.lemon,
                   onColorChanged: (value) =>
                       setState(() => selectedColor = value),
                   labelTypes: [],
