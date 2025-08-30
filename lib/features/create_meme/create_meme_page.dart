@@ -41,6 +41,7 @@ class _CreateMemePageState extends State<CreateMemePage> {
       selectedMemePath: widget.memeArgs.path,
       memeRepository: appScopeHolder.scope!.memeRepositoryDep.get,
       memeInteractor: appScopeHolder.scope!.memesInteractorDep.get,
+      screenshotInteractor: appScopeHolder.scope!.screenshotInteractorDep.get,
     );
   }
 

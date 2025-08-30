@@ -45,16 +45,19 @@ class CreateMemeBloc {
   final String _id;
   final MemesRepository _memeRepository;
   final MemeInteractor _memeInteractor;
+  final ScreenshotInteractor _screenshotInteractor;
   final ScreenshotController _screenshotController;
 
   CreateMemeBloc({
     required final String selectedMemePath,
     final String? savedId,
+    required final ScreenshotInteractor screenshotInteractor,
     required final MemeInteractor memeInteractor,
     required final MemesRepository memeRepository,
   }) : _id = savedId ?? const Uuid().v4(),
        _memeRepository = memeRepository,
        _memeInteractor = memeInteractor,
+       _screenshotInteractor = screenshotInteractor,
        _screenshotController = ScreenshotController() {
     getAspectRatio(
       File(selectedMemePath),
@@ -123,8 +126,10 @@ class CreateMemeBloc {
   }
 
   void shareMeme() {
+    // TODO remove shareMemeSubscription. Use direct call
+    // TODO _screenshotInteractor.shareScreenshoot(_screenshotController)
     shareMemeSubscription?.cancel();
-    shareMemeSubscription = ScreenshotInteractor.getInstance()
+    shareMemeSubscription = _screenshotInteractor
         .shareScreenshoot(_screenshotController)
         .asStream()
         .listen(
@@ -331,6 +336,7 @@ class CreateMemeBloc {
 
   ScreenshotController get screenshotController => _screenshotController;
 
+  // TODO remove
   // Stream<ScreenshotController> observeScreenShotController() =>
   //     screenshotControllerSubject.distinct();
 

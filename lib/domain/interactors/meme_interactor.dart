@@ -13,11 +13,14 @@ class MemeInteractor {
 
   final MemesRepository _memeRepository;
   final CopyUniqueFileInteractor _copyUniqueFileInteractor;
+  final ScreenshotInteractor _screenshotInteractor;
 
   MemeInteractor({
     required MemesRepository memeRepository,
     required CopyUniqueFileInteractor copyUniqueFileInteractor,
+    required ScreenshotInteractor screenshotInteractor,
   }) : _memeRepository = memeRepository,
+       _screenshotInteractor = screenshotInteractor,
        _copyUniqueFileInteractor = copyUniqueFileInteractor;
 
   Future<bool> saveMeme({
@@ -31,12 +34,12 @@ class MemeInteractor {
         meme: Meme(id: id, texts: textWithPositions),
       );
     }
-    await ScreenshotInteractor.getInstance().saveThumbnail(
-      id,
-      screenshotController,
+    // TODO check saving thumbnails
+    _screenshotInteractor.saveThumbnail(id, screenshotController);
+    final newImagePath = await _copyUniqueFileInteractor.copyUniqueFile(
+      directoryWithFiles: memesPathName,
+      filePath: imagePath,
     );
-    final newImagePath = await _copyUniqueFileInteractor
-        .copyUniqueFile(directoryWithFiles: memesPathName, filePath: imagePath);
     return await _insertMemeOrReplaceById(
       meme: Meme(id: id, texts: textWithPositions, memePath: newImagePath),
     );
