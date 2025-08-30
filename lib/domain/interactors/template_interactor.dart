@@ -25,7 +25,6 @@ class TemplateInteractor {
       directoryWithFiles: templatesPathName,
       filePath: imagePath,
     );
-    log('!!! NEW PATH $newImagePath');
     return await _insertTemplateOrReplaceById(
       template: Template(id: Uuid().v4(), imageUrl: newImagePath),
     );
@@ -50,12 +49,10 @@ class TemplateInteractor {
     // final itemIndex = savedData.indexWhere((item) => item.id == template.id);
     if (itemIndex == -1) {
       savedData.add(TemplateModel.fromTemplate(template: template));
-      log('!!! SD: $savedData\nII: $itemIndex');
       return await _templateRepository.setItem(
         TemplatesModel(templates: savedData),
       );
     }
-    log('!!! SD: $savedData\nII: $itemIndex');
     return true;
   }
 }

@@ -4,6 +4,7 @@ import 'package:memogenerator/data/shared_pref/repositories/memes/memes_reposito
 import 'package:memogenerator/data/shared_pref/repositories/templates/templates_repository.dart';
 import 'package:memogenerator/data/shared_pref/shared_preference_data.dart';
 import 'package:memogenerator/domain/interactors/copy_unique_file_interactor.dart';
+import 'package:memogenerator/domain/interactors/screenshot_interactor.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:yx_scope/yx_scope.dart';
 
@@ -23,10 +24,14 @@ class AppScopeContainer extends ScopeContainer {
   );
 
   late final copyFileInteractorDep = dep(() => CopyUniqueFileInteractor());
+  late final screenshotInteractorDep = dep(
+    () => ScreenshotInteractor(talker: talkerDep.get),
+  );
   late final memesInteractorDep = dep(
     () => MemeInteractor(
       memeRepository: memeRepositoryDep.get,
       copyUniqueFileInteractor: copyFileInteractorDep.get,
+      screenshotInteractor: screenshotInteractorDep.get,
     ),
   );
   late final templatesInteractorDep = dep(
