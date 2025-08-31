@@ -23,7 +23,8 @@ class GridItem extends StatelessWidget {
       children: [
         Card(
           margin: EdgeInsets.zero,
-          elevation: 1,
+          elevation: 0,
+          color: AppColors.white,
           shape: RoundedRectangleBorder(
             side: BorderSide(color: AppColors.darkGrey16, width: 1),
             borderRadius: BorderRadius.all(Radius.circular(8)),
