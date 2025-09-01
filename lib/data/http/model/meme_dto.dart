@@ -7,6 +7,8 @@ part 'meme_dto.g.dart';
 class MemeDto extends Equatable {
   @JsonKey(name: 'id')
   final String id;
+  @JsonKey(name: 'name')
+  final String name;
   @JsonKey(name: 'url')
   final String url;
   @JsonKey(name: 'width')
@@ -19,6 +21,7 @@ class MemeDto extends Equatable {
 
   const MemeDto({
     required this.id,
+    required this.name,
     required this.url,
     required this.width,
     required this.height,
@@ -27,5 +30,5 @@ class MemeDto extends Equatable {
   Map<String, dynamic> toJson() => _$MemeDtoToJson(this);
 
   @override
-  List<Object?> get props => [id, url, width, height];
+  List<Object?> get props => [id, name, url, width, height];
 }

@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:memogenerator/navigation/navigation_helper.dart';
+import 'package:memogenerator/theme/dark_theme.dart';
+import 'package:memogenerator/theme/light_theme.dart';
 import 'package:yx_scope_flutter/yx_scope_flutter.dart';
 import 'package:yx_state/yx_state.dart';
 
@@ -49,7 +51,9 @@ class _MyAppState extends State<MyApp> {
           return MaterialApp.router(
             title: 'Memegenerator',
             debugShowCheckedModeBanner: false,
-            theme: ThemeData(primarySwatch: Colors.blue),
+            theme: lightTheme,
+            darkTheme: darkTheme,
+            themeMode: ThemeMode.light,
             routerConfig: CustomNavigationHelper.instance.router,
           );
         },

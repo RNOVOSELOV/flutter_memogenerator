@@ -24,6 +24,8 @@ class MemesBloc {
        _memeInteractor = memeInteractor,
        _templateInteractor = templateInteractor;
 
+  // TODO Обновить мемы в списке, использовать функцию combineLatest3, где в терий стрим клаcть например null
+  // TODO для перегенерации всей комбинации
   Stream<List<MemeThumbnail>>
   observeMemes() => Rx.combineLatest2<List<Meme>, Directory, List<MemeThumbnail>>(
     _memesRepository.observeItem().map(

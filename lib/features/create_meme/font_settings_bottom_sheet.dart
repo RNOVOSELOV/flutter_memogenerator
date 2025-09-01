@@ -3,7 +3,8 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:memogenerator/features/create_meme/create_meme_bloc.dart';
 import 'package:memogenerator/features/create_meme/meme_text_on_canvas.dart';
 import 'package:memogenerator/features/create_meme/models/meme_text.dart';
-import 'package:memogenerator/widgets/remove_dialog.dart';
+import 'package:memogenerator/theme/extensions/theme_extensions.dart';
+import 'package:memogenerator/widgets/confirmation_dialog.dart';
 import 'package:memogenerator/resources/app_colors.dart';
 import 'package:provider/provider.dart';
 
@@ -38,9 +39,9 @@ class _FontSettingBottomSheetState extends State<FontSettingBottomSheet> {
         Center(
           child: Container(
             height: 4,
-            width: 64,
+            width: 48,
             decoration: BoxDecoration(
-              color: AppColors.darkGrey38,
+              color: context.color.cardBorderColor,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -92,12 +93,12 @@ class Buttons extends StatelessWidget {
   final FontWeight fontWeight;
 
   const Buttons({
-    Key? key,
+    super.key,
     required this.color,
     required this.fontSize,
     required this.memeId,
     required this.fontWeight,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -106,17 +107,27 @@ class Buttons extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         AppButton(
-          onTap: () => Navigator.of(context).pop(),
-          labelText: "Отмена",
-          color: AppColors.darkGrey,
-        ),
-        const SizedBox(width: 24),
-        AppButton(
-          onTap: () {
-            bloc.changeFontSettings(memeId, color, fontSize, fontWeight);
-            Navigator.of(context).pop();
+          onTap: () async {
+            await Future.delayed(Duration(milliseconds: 200), () {});
+            if (context.mounted) {
+              Navigator.of(context).pop();
+            }
           },
+          fontSize: 18,
+          labelText: "Отмена",
+          color: context.color.textIconColor,
+        ),
+        AppButton(
+          onTap: () async {
+            await Future.delayed(Duration(milliseconds: 200), () {});
+            if (context.mounted) {
+              bloc.changeFontSettings(memeId, color, fontSize, fontWeight);
+              Navigator.of(context).pop();
+            }
+          },
+          fontSize: 18,
           labelText: "Сохранить",
+          color: context.color.accentColor,
         ),
         const SizedBox(width: 16),
       ],
@@ -135,11 +146,14 @@ class ColorSelection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         const SizedBox(width: 16),
-        const Text(
-          "Color:",
-          style: TextStyle(fontSize: 20, color: AppColors.darkGrey),
+        Text(
+          "Цвет:",
+          style: TextStyle(
+            fontSize: 20,
+            color: context.color.textSecondaryColor,
+          ),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: 20),
         ColorSelectionBox(changeColor: changeColor, color: Colors.white),
         const SizedBox(width: 16),
         ColorSelectionBox(changeColor: changeColor, color: Colors.black),
@@ -170,13 +184,13 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
           context: context,
           builder: (context) {
             WidgetsBinding.instance.addPostFrameCallback(
-              (_) => setState(() => selectedColor = AppColors.lemon),
+              (_) => setState(() => selectedColor = context.theme.primaryColor),
             );
             return AlertDialog(
               title: Text('Выберите цвет'),
               content: SingleChildScrollView(
                 child: ColorPicker(
-                  pickerColor: selectedColor ?? AppColors.lemon,
+                  pickerColor: selectedColor ?? context.theme.primaryColor,
                   onColorChanged: (value) =>
                       setState(() => selectedColor = value),
                   labelTypes: [],
@@ -193,15 +207,13 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
                   },
                   child: Text(
                     'Готово'.toUpperCase(),
-                    style: TextStyle(color: AppColors.fuchsia),
+                    style: TextStyle(color: context.color.accentColor),
                   ),
                 ),
               ],
             );
           },
         );
-
-        //widget.changeColor(color)
       },
       child: Container(
         height: 32,
@@ -213,14 +225,14 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    AppColors.white,
-                    AppColors.lemon,
-                    AppColors.fuchsia,
+                    Colors.white,
+                    context.theme.primaryColor,
+                    context.color.accentColor,
                     Colors.black,
                   ],
                 )
               : null,
-          border: Border.all(color: Colors.black, width: 1),
+          border: Border.all(color: context.color.textSecondaryColor, width: 1),
         ),
       ),
     );
@@ -246,7 +258,7 @@ class ColorSelectionBox extends StatelessWidget {
         width: 32,
         decoration: BoxDecoration(
           color: color,
-          border: Border.all(color: Colors.black, width: 1),
+          border: Border.all(color: context.color.textSecondaryColor, width: 1),
         ),
       ),
     );
@@ -255,10 +267,10 @@ class ColorSelectionBox extends StatelessWidget {
 
 class FontSizeSlider extends StatefulWidget {
   const FontSizeSlider({
-    Key? key,
+    super.key,
     required this.initialFontSize,
     required this.changeFontSize,
-  }) : super(key: key);
+  });
 
   final ValueChanged<double> changeFontSize;
   final double initialFontSize;
@@ -281,22 +293,27 @@ class _FontSizeSliderState extends State<FontSizeSlider> {
     return Row(
       children: [
         const SizedBox(width: 16),
-        const Padding(
+        Padding(
           padding: EdgeInsets.only(bottom: 8),
           child: Text(
-            "Size:",
-            style: TextStyle(fontSize: 20, color: AppColors.darkGrey),
+            "Размер:",
+            style: TextStyle(
+              fontSize: 20,
+              color: context.color.textSecondaryColor,
+            ),
           ),
         ),
         Expanded(
           child: SliderTheme(
             data: SliderThemeData(
-              activeTrackColor: AppColors.fuchsia,
-              inactiveTrackColor: AppColors.fuchsia38,
+              activeTrackColor: context.color.accentColor,
+              inactiveTrackColor: context.color.accentColor.withValues(
+                alpha: 0.38,
+              ),
               valueIndicatorShape: const PaddleSliderValueIndicatorShape(),
-              thumbColor: AppColors.fuchsia,
-              inactiveTickMarkColor: AppColors.fuchsia,
-              valueIndicatorColor: AppColors.fuchsia,
+              thumbColor: context.color.accentColor,
+              inactiveTickMarkColor: context.color.accentColor,
+              valueIndicatorColor: context.color.accentColor,
             ),
             child: Slider(
               min: 16,
@@ -346,20 +363,25 @@ class _FontWeightSliderState extends State<FontWeightSlider> {
     return Row(
       children: [
         const SizedBox(width: 16),
-        const Padding(
+        Padding(
           padding: EdgeInsets.only(bottom: 8),
           child: Text(
-            "Font Weight:",
-            style: TextStyle(fontSize: 20, color: AppColors.darkGrey),
+            "Толщина:",
+            style: TextStyle(
+              fontSize: 20,
+              color: context.color.textSecondaryColor,
+            ),
           ),
         ),
         Expanded(
           child: SliderTheme(
             data: SliderThemeData(
-              activeTrackColor: AppColors.fuchsia,
-              inactiveTrackColor: AppColors.fuchsia38,
-              thumbColor: AppColors.fuchsia,
-              inactiveTickMarkColor: AppColors.fuchsia,
+              activeTrackColor: context.color.accentColor,
+              inactiveTrackColor: context.color.accentColor.withValues(
+                alpha: 0.38,
+              ),
+              thumbColor: context.color.accentColor,
+              inactiveTickMarkColor: context.color.accentColor,
             ),
             child: Slider(
               min: 0,

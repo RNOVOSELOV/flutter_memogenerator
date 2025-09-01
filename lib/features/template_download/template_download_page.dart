@@ -2,8 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:either_dart/either.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:memogenerator/domain/entities/message.dart';
 import 'package:memogenerator/features/template_download/template_download_bloc.dart';
 import 'package:memogenerator/resources/app_colors.dart';
+import 'package:memogenerator/theme/extensions/theme_extensions.dart';
+import 'package:memogenerator/widgets/snackbar_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:yx_scope_flutter/yx_scope_flutter.dart';
 
@@ -41,9 +44,25 @@ class _TemplateDownloadPageState extends State<TemplateDownloadPage> {
   Widget build(BuildContext context) {
     return Provider.value(
       value: bloc,
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
-        body: TemplatesPageBodyContent(),
+      child: StreamProvider<Message?>(
+        create: (BuildContext context) => bloc.messageStream,
+        initialData: null,
+        child: Consumer<Message?>(
+          builder: (BuildContext context, Message? message, Widget? child) {
+            if (message != null) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  generateSnackBarWidget(context: context, message: message),
+                );
+              });
+            }
+            return child!;
+          },
+          child: Scaffold(
+            backgroundColor: context.theme.scaffoldBackgroundColor,
+            body: TemplatesPageBodyContent(),
+          ),
+        ),
       ),
     );
   }
@@ -72,15 +91,8 @@ class TemplatesPageBodyContent extends StatelessWidget {
         return CustomScrollView(
           slivers: [
             SliverAppBar(
-              elevation: 3,
-              centerTitle: false,
-              backgroundColor: AppColors.backgroundAppbar,
-              foregroundColor: AppColors.foregroundAppBar,
               titleSpacing: 0,
-              title: Text(
-                'Загрузить шаблон',
-                style: GoogleFonts.seymourOne(fontSize: 24),
-              ),
+              title: Text('Загрузить шаблон'),
               floating: isTemplatesDataReceived ? true : false,
               pinned: !isTemplatesDataReceived || (data != null && data.isLeft)
                   ? true
@@ -88,11 +100,7 @@ class TemplatesPageBodyContent extends StatelessWidget {
             ),
             if (!isTemplatesDataReceived || data == null)
               SliverFillRemaining(
-                child: Center(
-                  child: const CircularProgressIndicator(
-                    color: AppColors.fuchsia,
-                  ),
-                ),
+                child: Center(child: const CircularProgressIndicator()),
               ),
             if (data != null && data.isLeft)
               SliverFillRemaining(
@@ -166,9 +174,9 @@ class _GridItemState extends State<GridItem> {
           child: Card(
             margin: EdgeInsets.zero,
             elevation: 0,
-            color: AppColors.white,
+            color: context.color.cardBackgroundColor,
             shape: RoundedRectangleBorder(
-              side: BorderSide(color: AppColors.darkGrey16, width: 1),
+              side: BorderSide(color: context.color.cardBorderColor, width: 1),
               borderRadius: BorderRadius.all(Radius.circular(8)),
             ),
             child: CachedNetworkImage(
@@ -185,9 +193,6 @@ class _GridItemState extends State<GridItem> {
               progressIndicatorBuilder: (context, url, progress) {
                 return Center(
                   child: CircularProgressIndicator.adaptive(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      AppColors.fuchsia,
-                    ),
                     value: progress.progress,
                   ),
                 );

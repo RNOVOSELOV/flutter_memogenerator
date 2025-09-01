@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:memogenerator/resources/app_colors.dart';
+import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import '../../resources/app_icons.dart';
 
 class MainPage extends StatelessWidget {
@@ -13,57 +14,39 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: navigationShell,
+      backgroundColor: context.theme.scaffoldBackgroundColor,
       bottomNavigationBar: BottomNavigationBar(
-        elevation: 3,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              AppIcons.iconMeme,
-              width: 32,
-              height: 32,
-              colorFilter: ColorFilter.mode(
-                AppColors.darkGrey38,
-                BlendMode.srcIn,
-              ),
+            icon: _BottomNavBarIconWidget(
+              icon: AppIcons.iconMeme,
+              color: context.color.iconUnselectedColor,
             ),
-            activeIcon: SvgPicture.asset(
-              AppIcons.iconMeme,
-              width: 32,
-              height: 32,
+            activeIcon: _BottomNavBarIconWidget(
+              icon: AppIcons.iconMeme,
+              color: context.color.iconSelectedColor,
             ),
             label: 'Мемы',
           ),
           BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              AppIcons.iconTemplate,
-              width: 32,
-              height: 32,
-              colorFilter: ColorFilter.mode(
-                AppColors.darkGrey38,
-                BlendMode.srcIn,
-              ),
+            icon: _BottomNavBarIconWidget(
+              icon: AppIcons.iconTemplate,
+              color: context.color.iconUnselectedColor,
             ),
-            activeIcon: SvgPicture.asset(
-              AppIcons.iconTemplate,
-              width: 32,
-              height: 32,
+            activeIcon: _BottomNavBarIconWidget(
+              icon: AppIcons.iconTemplate,
+              color: context.color.iconSelectedColor,
             ),
             label: 'Шаблоны',
           ),
           BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              AppIcons.iconSettings,
-              width: 32,
-              height: 32,
-              colorFilter: ColorFilter.mode(
-                AppColors.darkGrey38,
-                BlendMode.srcIn,
-              ),
+            icon: _BottomNavBarIconWidget(
+              icon: AppIcons.iconSettings,
+              color: context.color.iconUnselectedColor,
             ),
-            activeIcon: SvgPicture.asset(
-              AppIcons.iconSettings,
-              width: 32,
-              height: 32,
+            activeIcon: _BottomNavBarIconWidget(
+              icon: AppIcons.iconSettings,
+              color: context.color.iconSelectedColor,
             ),
             label: 'Настройки',
           ),
@@ -80,6 +63,29 @@ class MainPage extends StatelessWidget {
     navigationShell.goBranch(
       index,
       initialLocation: index == navigationShell.currentIndex,
+    );
+  }
+}
+
+class _BottomNavBarIconWidget extends StatelessWidget {
+  const _BottomNavBarIconWidget({
+    required this.color,
+    required this.icon,
+  });
+
+  final Color color;
+  final String icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4, top: 4),
+      child: SvgPicture.asset(
+        icon,
+        width: 38,
+        height: 38,
+        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+      ),
     );
   }
 }

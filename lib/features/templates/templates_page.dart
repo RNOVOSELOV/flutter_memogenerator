@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:memogenerator/widgets/remove_dialog.dart';
+import 'package:memogenerator/theme/extensions/theme_extensions.dart';
+import 'package:memogenerator/widgets/confirmation_dialog.dart';
 import 'package:memogenerator/resources/app_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:yx_scope_flutter/yx_scope_flutter.dart';
@@ -42,6 +43,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
     return Provider.value(
       value: bloc,
       child: Scaffold(
+        backgroundColor: context.theme.scaffoldBackgroundColor,
         floatingActionButton: CreateFab(
           text: 'Шаблон',
           onTap: () async {
@@ -51,7 +53,6 @@ class _TemplatesPageState extends State<TemplatesPage> {
             //            await bloc.addTemplate();
           },
         ),
-        backgroundColor: AppColors.backgroundColor,
         body: TemplatesPageBodyContent(),
       ),
     );
@@ -111,11 +112,16 @@ class TemplatesPageBodyContent extends StatelessWidget {
                     );
                   },
                   onDelete: () async {
+                    await Future.delayed(Duration(milliseconds: 200), () {});
+                    if (!context.mounted) {
+                      return;
+                    }
                     final removeTemplateDialog =
-                        await showConfirmationRemoveDialog(
+                        await showConfirmationDialog(
                           context,
                           title: 'Удалить шаблон?',
                           text: 'Выбранный шаблон будет удален навсегда',
+                          actionButtonText: 'Удалить'
                         );
                     if ((removeTemplateDialog ?? false) == true) {
                       bloc.deleteTemplate(items.elementAt(index).id);

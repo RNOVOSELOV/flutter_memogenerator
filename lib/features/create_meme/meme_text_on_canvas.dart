@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:memogenerator/resources/app_colors.dart';
+import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 
 class MemeTextOnCanvas extends StatelessWidget {
   const MemeTextOnCanvas({
-    Key? key,
+    super.key,
     required this.parentConstraints,
     required this.padding,
     required this.selected,
@@ -11,7 +12,7 @@ class MemeTextOnCanvas extends StatelessWidget {
     required this.fontSize,
     required this.color,
     required this.fontWeight,
-  }) : super(key: key);
+  });
 
   final double padding;
   final BoxConstraints parentConstraints;
@@ -31,15 +32,21 @@ class MemeTextOnCanvas extends StatelessWidget {
       padding: EdgeInsets.all(padding),
       decoration: BoxDecoration(
         border: Border.all(
-          width: 1,
-          color: selected ? AppColors.fuchsia : Colors.transparent,
+          width: 2,
+          color: selected ? context.color.cardBorderColor.withValues(alpha: 0.8) : Colors.transparent,
         ),
-        color: selected ? AppColors.darkGrey16 : Colors.transparent,
+        color: selected
+            ? context.color.cardBackgroundColor
+            : Colors.transparent,
       ),
       child: Text(
         text,
         textAlign: TextAlign.center,
-        style: TextStyle(color: color, fontSize: fontSize, fontWeight: fontWeight),
+        style: TextStyle(
+          color: color,
+          fontSize: fontSize,
+          fontWeight: fontWeight,
+        ),
       ),
     );
   }
