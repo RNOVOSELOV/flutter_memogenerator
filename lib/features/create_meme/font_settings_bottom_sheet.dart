@@ -39,9 +39,9 @@ class _FontSettingBottomSheetState extends State<FontSettingBottomSheet> {
         Center(
           child: Container(
             height: 4,
-            width: 64,
+            width: 48,
             decoration: BoxDecoration(
-              color: Colors.black,
+              color: context.color.cardBorderColor,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -93,12 +93,12 @@ class Buttons extends StatelessWidget {
   final FontWeight fontWeight;
 
   const Buttons({
-    Key? key,
+    super.key,
     required this.color,
     required this.fontSize,
     required this.memeId,
     required this.fontWeight,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -107,17 +107,27 @@ class Buttons extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         AppButton(
-          onTap: () => Navigator.of(context).pop(),
+          onTap: () async {
+            await Future.delayed(Duration(milliseconds: 200), () {});
+            if (context.mounted) {
+              Navigator.of(context).pop();
+            }
+          },
+          fontSize: 18,
           labelText: "Отмена",
           color: context.color.textIconColor,
         ),
-        const SizedBox(width: 24),
         AppButton(
-          onTap: () {
-            bloc.changeFontSettings(memeId, color, fontSize, fontWeight);
-            Navigator.of(context).pop();
+          onTap: () async {
+            await Future.delayed(Duration(milliseconds: 200), () {});
+            if (context.mounted) {
+              bloc.changeFontSettings(memeId, color, fontSize, fontWeight);
+              Navigator.of(context).pop();
+            }
           },
+          fontSize: 18,
           labelText: "Сохранить",
+          color: context.color.accentColor,
         ),
         const SizedBox(width: 16),
       ],
@@ -136,11 +146,14 @@ class ColorSelection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         const SizedBox(width: 16),
-        const Text(
-          "Color:",
-          style: TextStyle(fontSize: 20, color: Colors.black),
+        Text(
+          "Цвет:",
+          style: TextStyle(
+            fontSize: 20,
+            color: context.color.textSecondaryColor,
+          ),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: 20),
         ColorSelectionBox(changeColor: changeColor, color: Colors.white),
         const SizedBox(width: 16),
         ColorSelectionBox(changeColor: changeColor, color: Colors.black),
@@ -171,7 +184,7 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
           context: context,
           builder: (context) {
             WidgetsBinding.instance.addPostFrameCallback(
-              (_) => setState(() => selectedColor = context.theme.primaryColor,),
+              (_) => setState(() => selectedColor = context.theme.primaryColor),
             );
             return AlertDialog(
               title: Text('Выберите цвет'),
@@ -201,8 +214,6 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
             );
           },
         );
-
-        //widget.changeColor(color)
       },
       child: Container(
         height: 32,
@@ -221,7 +232,7 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
                   ],
                 )
               : null,
-          border: Border.all(color: Colors.black, width: 1),
+          border: Border.all(color: context.color.textSecondaryColor, width: 1),
         ),
       ),
     );
@@ -247,7 +258,7 @@ class ColorSelectionBox extends StatelessWidget {
         width: 32,
         decoration: BoxDecoration(
           color: color,
-          border: Border.all(color: Colors.black, width: 1),
+          border: Border.all(color: context.color.textSecondaryColor, width: 1),
         ),
       ),
     );
@@ -256,10 +267,10 @@ class ColorSelectionBox extends StatelessWidget {
 
 class FontSizeSlider extends StatefulWidget {
   const FontSizeSlider({
-    Key? key,
+    super.key,
     required this.initialFontSize,
     required this.changeFontSize,
-  }) : super(key: key);
+  });
 
   final ValueChanged<double> changeFontSize;
   final double initialFontSize;
@@ -282,18 +293,23 @@ class _FontSizeSliderState extends State<FontSizeSlider> {
     return Row(
       children: [
         const SizedBox(width: 16),
-        const Padding(
+        Padding(
           padding: EdgeInsets.only(bottom: 8),
           child: Text(
-            "Size:",
-            style: TextStyle(fontSize: 20, color: Colors.black),
+            "Размер:",
+            style: TextStyle(
+              fontSize: 20,
+              color: context.color.textSecondaryColor,
+            ),
           ),
         ),
         Expanded(
           child: SliderTheme(
             data: SliderThemeData(
               activeTrackColor: context.color.accentColor,
-              inactiveTrackColor: context.color.accentColor.withValues(alpha: 0.38),
+              inactiveTrackColor: context.color.accentColor.withValues(
+                alpha: 0.38,
+              ),
               valueIndicatorShape: const PaddleSliderValueIndicatorShape(),
               thumbColor: context.color.accentColor,
               inactiveTickMarkColor: context.color.accentColor,
@@ -347,18 +363,23 @@ class _FontWeightSliderState extends State<FontWeightSlider> {
     return Row(
       children: [
         const SizedBox(width: 16),
-        const Padding(
+        Padding(
           padding: EdgeInsets.only(bottom: 8),
           child: Text(
-            "Font Weight:",
-            style: TextStyle(fontSize: 20, color: Colors.black),
+            "Толщина:",
+            style: TextStyle(
+              fontSize: 20,
+              color: context.color.textSecondaryColor,
+            ),
           ),
         ),
         Expanded(
           child: SliderTheme(
             data: SliderThemeData(
               activeTrackColor: context.color.accentColor,
-              inactiveTrackColor: context.color.accentColor.withValues(alpha: 0.38),
+              inactiveTrackColor: context.color.accentColor.withValues(
+                alpha: 0.38,
+              ),
               thumbColor: context.color.accentColor,
               inactiveTickMarkColor: context.color.accentColor,
             ),

@@ -7,49 +7,37 @@ extension ThemeBuildContext on BuildContext {
   ThemeColors get color => Theme.of(this).extension<ThemeColors>()!;
 }
 
-// extension ThemeStylesExtension on ThemeData {
-//   TextStyle get crewBold24 => textTheme.displayLarge!;
-//
-//   TextStyle get crewSemiBold24 => textTheme.displayMedium!;
-//
-//   TextStyle get crewRegular24 => textTheme.displaySmall!;
-//
-//   TextStyle get crewBold20 => textTheme.headlineLarge!;
-//
-//   TextStyle get crewSemiBold20 => textTheme.headlineMedium!;
-//
-//   TextStyle get crewRegular20 => textTheme.headlineSmall!;
-//
-//   TextStyle get crewBold16 => textTheme.titleLarge!;
-//
-//   TextStyle get crewSemiBold16 => textTheme.titleMedium!;
-//
-//   TextStyle get crewRegular16 => textTheme.titleSmall!;
-//
-//   TextStyle get crewBold14 => textTheme.bodyLarge!;
-//
-//   TextStyle get crewSemiBold14 => textTheme.bodyMedium!;
-//
-//   TextStyle get crewRegular14 => textTheme.bodySmall!;
-//
-//   TextStyle get crewBold12 => textTheme.labelLarge!;
-//
-//   TextStyle get crewSemiBold12 => textTheme.labelMedium!;
-//
-//   TextStyle get crewRegular12 => textTheme.labelSmall!;
-//
-//   // TODO REMOVE BOTTOM AFTER REDESIGN
-//
-//   TextStyle get cardText => textTheme.labelSmall!;
-//
-//   TextStyle get crewMobileLabelSmall => textTheme.labelMedium!;
-//
-//   TextStyle get m3BodyLarge => textTheme.titleSmall!;
-//
-//   TextStyle get m3LabelSmall => textTheme.labelMedium!;
-//
-//   TextStyle get m3BodySmall => textTheme.labelSmall!;
-// }
+extension ThemeStylesExtension on ThemeData {
+  TextStyle get memeBold24 => textTheme.displayLarge!;
+
+  TextStyle get memeSemiBold24 => textTheme.displayMedium!;
+
+  TextStyle get memeRegular24 => textTheme.displaySmall!;
+
+  TextStyle get memeBold20 => textTheme.headlineLarge!;
+
+  TextStyle get memeSemiBold20 => textTheme.headlineMedium!;
+
+  TextStyle get memeRegular20 => textTheme.headlineSmall!;
+
+  TextStyle get memeBold16 => textTheme.titleLarge!;
+
+  TextStyle get memeSemiBold16 => textTheme.titleMedium!;
+
+  TextStyle get memeRegular16 => textTheme.titleSmall!;
+
+  TextStyle get memeBold14 => textTheme.bodyLarge!;
+
+  TextStyle get memeSemiBold14 => textTheme.bodyMedium!;
+
+  TextStyle get memeRegular14 => textTheme.bodySmall!;
+
+  TextStyle get memeBold12 => textTheme.labelLarge!;
+
+  TextStyle get memeSemiBold12 => textTheme.labelMedium!;
+
+  TextStyle get memeRegular12 => textTheme.labelSmall!;
+}
 
 /*
 displayLarge

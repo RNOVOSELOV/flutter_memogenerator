@@ -1,12 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:memogenerator/resources/app_colors.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../domain/entities/text_with_position.dart';
 
 
 class MemeText extends Equatable {
-  static const defaultColor = Colors.black;
+  static const defaultColor = AppColors.dayTextColor;
   static const defaultFontSize = 24.0;
   static const defaultFontWeight = FontWeight.normal;
 

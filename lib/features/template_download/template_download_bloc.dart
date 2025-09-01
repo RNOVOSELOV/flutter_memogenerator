@@ -44,7 +44,7 @@ class TemplateDownloadBloc {
       _messageController.sink.add(
         Message(
           status: Status.error,
-          message: 'Шаблон "${memeData.name}" был загружен ранее.',
+          message: 'Загрузка не требуется. Шаблон "${memeData.name}" уже сохранен в галерее.',
         ),
       );
       return;

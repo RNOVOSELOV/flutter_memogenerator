@@ -8,7 +8,7 @@ class ThemeColors extends ThemeExtension<ThemeColors> {
   final Color cardBorderColor;
   final Color textIconColor;
   final Color textPrimaryColor;
-  final Color texSecondaryColor;
+  final Color textSecondaryColor;
   final Color accentColor;
 
   const ThemeColors({
@@ -18,7 +18,7 @@ class ThemeColors extends ThemeExtension<ThemeColors> {
     required this.cardBorderColor,
     required this.textIconColor,
     required this.textPrimaryColor,
-    required this.texSecondaryColor,
+    required this.textSecondaryColor,
     required this.accentColor,
   });
 
@@ -30,7 +30,7 @@ class ThemeColors extends ThemeExtension<ThemeColors> {
     Color? cardBorderColor,
     Color? textIconColor,
     Color? textPrimaryColor,
-    Color? texSecondaryColor,
+    Color? textSecondaryColor,
     Color? accentColor,
   }) {
     return ThemeColors(
@@ -40,7 +40,7 @@ class ThemeColors extends ThemeExtension<ThemeColors> {
       cardBorderColor: cardBorderColor ?? this.cardBorderColor,
       textIconColor: textIconColor ?? this.textIconColor,
       textPrimaryColor: textPrimaryColor ?? this.textPrimaryColor,
-      texSecondaryColor: texSecondaryColor ?? this.texSecondaryColor,
+      textSecondaryColor: textSecondaryColor ?? this.textSecondaryColor,
       accentColor: accentColor ?? this.accentColor,
     );
   }
@@ -72,7 +72,7 @@ class ThemeColors extends ThemeExtension<ThemeColors> {
       cardBorderColor: Color.lerp(cardBorderColor, other.cardBorderColor, t)!,
       textIconColor: Color.lerp(textIconColor, other.textIconColor, t)!,
       textPrimaryColor: Color.lerp(textPrimaryColor, other.textPrimaryColor, t)!,
-      texSecondaryColor: Color.lerp(texSecondaryColor, other.texSecondaryColor, t)!,
+      textSecondaryColor: Color.lerp(textSecondaryColor, other.textSecondaryColor, t)!,
       accentColor: Color.lerp(accentColor, other.accentColor, t)!,
     );
   }
@@ -84,7 +84,7 @@ class ThemeColors extends ThemeExtension<ThemeColors> {
     cardBorderColor: AppColors.daySecondaryTextColor,
     textIconColor: AppColors.daySecondaryTextColor,
     textPrimaryColor: AppColors.dayTextColor,
-    texSecondaryColor: AppColors.dayTextTertiaryColor,
+    textSecondaryColor: AppColors.dayTextTertiaryColor,
     accentColor: AppColors.dayAccentColor,
   );
 
@@ -95,7 +95,7 @@ class ThemeColors extends ThemeExtension<ThemeColors> {
     cardBorderColor: AppColors.nightSecondaryTextColor,
     textIconColor: AppColors.nightSecondaryTextColor,
     textPrimaryColor: AppColors.nightTextColor,
-    texSecondaryColor: AppColors.nightTextTertiaryColor,
+    textSecondaryColor: AppColors.nightTextTertiaryColor,
     accentColor: AppColors.nightAccentColor,
   );
 }

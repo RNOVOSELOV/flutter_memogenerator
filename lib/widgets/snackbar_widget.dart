@@ -15,7 +15,7 @@ SnackBar generateSnackBarWidget({
       contentState: message.status,
     ),
     backgroundColor: context.color.cardBackgroundColor.withValues(alpha: 1.0),
-    duration: const Duration(seconds: 5),
+    duration: const Duration(seconds: 2),
     elevation: 5,
     behavior: SnackBarBehavior.floating,
     padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
@@ -75,6 +75,7 @@ class SnackBarWidget extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(width: 8),
               SizedBox(
                 width: 32,
                 height: 32,

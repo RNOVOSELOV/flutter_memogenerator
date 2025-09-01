@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:uuid/uuid.dart';
 
 import '../resources/app_colors.dart';
@@ -15,7 +16,7 @@ class CreateFab extends StatelessWidget {
       heroTag: Uuid().v1(),
       onPressed: onTap,
       icon: const Icon(Icons.add),
-      label: Text(text),
+      label: Text(text, style: context.theme.memeSemiBold16,),
     );
   }
 }

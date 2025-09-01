@@ -15,11 +15,11 @@ Future<bool?> showConfirmationDialog(
       return AlertDialog(
         title: Text(
           title,
-          style: GoogleFonts.roboto(color: context.color.textPrimaryColor),
+          style: context.theme.memeSemiBold20,
         ),
         content: Text(
           text,
-          style: GoogleFonts.roboto(color: context.color.texSecondaryColor),
+          style: context.theme.memeRegular16.copyWith(color: context.color.textSecondaryColor),
         ),
         contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 24),
         actionsPadding: const EdgeInsets.only(bottom: 16, right: 8),
@@ -57,6 +57,7 @@ class AppButton extends StatelessWidget {
   final String labelText;
   final IconData? icon;
   final Color? color;
+  final double fontSize;
 
   const AppButton({
     super.key,
@@ -64,6 +65,7 @@ class AppButton extends StatelessWidget {
     required this.labelText,
     this.icon,
     this.color,
+    this.fontSize = 14,
   });
 
   @override
@@ -87,7 +89,7 @@ class AppButton extends StatelessWidget {
               labelText.toUpperCase(),
               style: TextStyle(
                 color: color,
-                fontSize: 14,
+                fontSize: fontSize,
                 fontWeight: FontWeight.w500,
               ),
             ),

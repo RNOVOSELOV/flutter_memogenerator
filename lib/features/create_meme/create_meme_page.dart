@@ -139,7 +139,7 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton> {
   }
 }
 
-class _EditTextBar extends StatefulWidget implements PreferredSizeWidget {
+class _EditTextBar extends StatefulWidget {
   const _EditTextBar({
     required this.selectedMemeText,
     required this.selectedMemeId,
@@ -150,9 +150,6 @@ class _EditTextBar extends StatefulWidget implements PreferredSizeWidget {
 
   @override
   State<_EditTextBar> createState() => _EditTextBarState();
-
-  @override
-  Size get preferredSize => const Size.fromHeight(68);
 }
 
 class _EditTextBarState extends State<_EditTextBar> {
@@ -180,70 +177,45 @@ class _EditTextBarState extends State<_EditTextBar> {
         offset: widget.selectedMemeText.length,
       );
     }
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => focusNode.requestFocus(),
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.selectedMemeText.isEmpty) {
+        focusNode.requestFocus();
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      child: StreamBuilder<MemeText?>(
-        stream: bloc.observeSelectedMemeText(),
-        builder: (context, snapshot) {
-          return TextField(
-            enabled: true,
-            focusNode: focusNode,
-            controller: controller,
-            onChanged: (value) {
-              bloc.changeMemeText(widget.selectedMemeId, value);
-            },
-            onEditingComplete: () => bloc.deselectMemeText(),
-            cursorColor: context.theme.primaryColor,
-            decoration: InputDecoration(
-              hintText: 'Введите текст',
-              hintStyle: TextStyle(
-                fontSize: 16,
-                color: context.color.textIconColor.withValues(alpha: 0.5),
-              ),
-              filled: true,
-              fillColor: context.color.accentColor.withValues(alpha: 0.38),
-              border: UnderlineInputBorder(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(4),
-                  topRight: Radius.circular(4),
-                ),
-                borderSide: BorderSide(
-                  width: 1,
-                  color: context.color.accentColor.withValues(alpha: 0.38),
-                ),
-              ),
-              disabledBorder: UnderlineInputBorder(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(4),
-                  topRight: Radius.circular(4),
-                ),
-                borderSide: BorderSide(
-                  width: 1,
-                  color: context.color.textIconColor.withValues(alpha: 0.38),
-                ),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(4),
-                  topRight: Radius.circular(4),
-                ),
-                borderSide: BorderSide(
-                  width: 2,
-                  color: context.color.accentColor,
-                ),
-              ),
-            ),
-          );
-        },
-      ),
+    return StreamBuilder<MemeText?>(
+      stream: bloc.observeSelectedMemeText(),
+      builder: (context, snapshot) {
+        return TextField(
+          enabled: true,
+          textAlign: TextAlign.start,
+          textAlignVertical: TextAlignVertical.center,
+          focusNode: focusNode,
+          controller: controller,
+          onChanged: (value) {
+            bloc.changeMemeText(widget.selectedMemeId, value);
+          },
+          onEditingComplete: () => bloc.deselectMemeText(),
+          cursorColor: context.color.accentColor,
+          style: GoogleFonts.roboto(
+            color: context.color.textPrimaryColor,
+            fontStyle: FontStyle.normal,
+            fontWeight: FontWeight.w400,
+            fontSize: 16,
+            height: 1,
+            letterSpacing: 0.4,
+          ),
+          decoration: InputDecoration(
+            hintText: 'Введите текст',
+            filled: true,
+            fillColor: context.color.accentColor.withValues(alpha: 0.38),
+          ),
+        );
+      },
     );
   }
 
@@ -271,7 +243,11 @@ class _CreateMemePageContentState extends State<_CreateMemePageContent> {
           return Column(
             children: [
               const Expanded(flex: 5, child: MemeCanvasWidget()),
-              Container(height: 2, width: double.infinity, color: Colors.black),
+              Container(
+                height: 1,
+                width: double.infinity,
+                color: context.color.cardBorderColor,
+              ),
               const Expanded(flex: 4, child: _BottomList()),
             ],
           );
@@ -279,7 +255,11 @@ class _CreateMemePageContentState extends State<_CreateMemePageContent> {
         return Row(
           children: [
             const Expanded(flex: 2, child: MemeCanvasWidget()),
-            Container(height: double.infinity, width: 2, color: Colors.black),
+            Container(
+              height: double.infinity,
+              width: 1,
+              color: context.color.cardBorderColor,
+            ),
             const Expanded(flex: 1, child: _BottomList()),
           ],
         );
@@ -296,68 +276,66 @@ class _BottomList extends StatelessWidget {
     final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
     return GestureDetector(
       onTap: () => bloc.deselectMemeText(),
-      child: Container(
-        child: StreamBuilder<List<MemeTextWithSelection>>(
-          initialData: const <MemeTextWithSelection>[],
-          stream: bloc.observeMemeTextsWithSelection(),
-          builder: (context, snapshot) {
-            final items = snapshot.hasData
-                ? snapshot.data!
-                : const <MemeTextWithSelection>[];
-            return ListView.separated(
-              itemCount: items.length + 1,
-              separatorBuilder: (BuildContext context, int index) {
-                if (index == 0) {
-                  return const SizedBox.shrink(); //SizedBox(height: 0,);
-                }
-                return const _BottomSeparator();
-              },
-              itemBuilder: (BuildContext context, int index) {
-                if (index == 0) {
-                  return Column(
-                    children: [
-                      const SizedBox(height: 12),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 0,
+      child: StreamBuilder<List<MemeTextWithSelection>>(
+        initialData: const <MemeTextWithSelection>[],
+        stream: bloc.observeMemeTextsWithSelection(),
+        builder: (context, snapshot) {
+          final items = snapshot.hasData
+              ? snapshot.data!
+              : const <MemeTextWithSelection>[];
+          return ListView.separated(
+            itemCount: items.length + 1,
+            separatorBuilder: (BuildContext context, int index) {
+              if (index == 0) {
+                return const SizedBox.shrink(); //SizedBox(height: 0,);
+              }
+              return const _BottomSeparator();
+            },
+            itemBuilder: (BuildContext context, int index) {
+              if (index == 0) {
+                return Column(
+                  children: [
+                    const SizedBox(height: 12),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 0,
+                      ),
+                      child: TextButton(
+                        onPressed: () => bloc.addNewText(),
+                        style: TextButton.styleFrom(
+                          alignment: Alignment.center,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero,
+                          ),
                         ),
-                        child: TextButton(
-                          onPressed: () => bloc.addNewText(),
-                          style: TextButton.styleFrom(
-                            alignment: Alignment.center,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero,
-                            ),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.add, color: context.color.accentColor),
-                              SizedBox(width: 12),
-                              Text(
-                                'Добавить текст'.toUpperCase(),
-                                style: TextStyle(
-                                  color: context.color.accentColor,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.add, color: context.color.accentColor),
+                            SizedBox(width: 12),
+                            Text(
+                              'Добавить текст'.toUpperCase(),
+                              style: TextStyle(
+                                color: context.color.accentColor,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  );
-                } else {
-                  final item = items.elementAt(index - 1);
-                  return BottomMemeText(item: item);
-                }
-              },
-            );
-          },
-        ),
+                    ),
+                  ],
+                );
+              } else {
+                final item = items.elementAt(index - 1);
+                return BottomMemeText(item: item);
+              }
+            },
+          );
+        },
       ),
     );
   }
@@ -371,7 +349,7 @@ class _BottomSeparator extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 24),
       height: 1,
-      color: Colors.black,
+      color: context.color.cardBorderColor.withValues(alpha: 0.8),
     );
   }
 }
@@ -391,8 +369,7 @@ class BottomMemeText extends StatelessWidget {
         height: 48,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         alignment: Alignment.centerLeft,
-        color: item.selected ? Colors.black : Colors.transparent,
-        // dg38
+        color: item.selected ? context.color.cardBackgroundColor : Colors.transparent,
         child: Row(
           children: [
             const SizedBox(width: 16),
@@ -403,7 +380,7 @@ class BottomMemeText extends StatelessWidget {
                 style: GoogleFonts.roboto(
                   fontWeight: FontWeight.w400,
                   fontSize: 16,
-                  color: Colors.black, // DG
+                  color: context.color.textPrimaryColor,
                 ),
               ),
             ),
@@ -411,7 +388,7 @@ class BottomMemeText extends StatelessWidget {
             BottomMemeTextAction(
               onTap: () {
                 showModalBottomSheet(
-                  backgroundColor: Colors.white,
+                  backgroundColor: context.theme.scaffoldBackgroundColor,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
                       topRight: Radius.circular(24),
@@ -476,7 +453,7 @@ class _BottomMemeTextActionState extends State<BottomMemeTextAction> {
         scale: scale,
         duration: Duration(milliseconds: 200),
         curve: Curves.bounceInOut,
-        child: Icon(widget.icon, color: Colors.black, size: 24),
+        child: Icon(widget.icon, color: context.color.iconSelectedColor, size: 24),
         onEnd: () => setState(() => scale = 1.0),
       ),
     );
@@ -492,7 +469,7 @@ class MemeCanvasWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () => bloc.deselectMemeText(),
       child: Container(
-        color: Colors.black,
+        color: context.color.cardBackgroundColor,
         padding: const EdgeInsets.all(8),
         alignment: Alignment.center,
         child: Stack(

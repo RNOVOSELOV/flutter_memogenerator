@@ -4,7 +4,7 @@ import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 
 class MemeTextOnCanvas extends StatelessWidget {
   const MemeTextOnCanvas({
-    Key? key,
+    super.key,
     required this.parentConstraints,
     required this.padding,
     required this.selected,
@@ -12,7 +12,7 @@ class MemeTextOnCanvas extends StatelessWidget {
     required this.fontSize,
     required this.color,
     required this.fontWeight,
-  }) : super(key: key);
+  });
 
   final double padding;
   final BoxConstraints parentConstraints;
@@ -32,15 +32,21 @@ class MemeTextOnCanvas extends StatelessWidget {
       padding: EdgeInsets.all(padding),
       decoration: BoxDecoration(
         border: Border.all(
-          width: 1,
-          color: selected ? context.color.accentColor : Colors.transparent,
+          width: 2,
+          color: selected ? context.color.cardBorderColor.withValues(alpha: 0.8) : Colors.transparent,
         ),
-        color: selected ? context.color.cardBackgroundColor : Colors.transparent,
+        color: selected
+            ? context.color.cardBackgroundColor
+            : Colors.transparent,
       ),
       child: Text(
         text,
         textAlign: TextAlign.center,
-        style: TextStyle(color: color, fontSize: fontSize, fontWeight: fontWeight),
+        style: TextStyle(
+          color: color,
+          fontSize: fontSize,
+          fontWeight: fontWeight,
+        ),
       ),
     );
   }
