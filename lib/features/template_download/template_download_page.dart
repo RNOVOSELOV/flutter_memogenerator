@@ -2,9 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:either_dart/either.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:memogenerator/domain/entities/message.dart';
 import 'package:memogenerator/features/template_download/template_download_bloc.dart';
 import 'package:memogenerator/resources/app_colors.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
+import 'package:memogenerator/widgets/snackbar_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:yx_scope_flutter/yx_scope_flutter.dart';
 
@@ -42,9 +44,25 @@ class _TemplateDownloadPageState extends State<TemplateDownloadPage> {
   Widget build(BuildContext context) {
     return Provider.value(
       value: bloc,
-      child: Scaffold(
-        backgroundColor: context.theme.scaffoldBackgroundColor,
-        body: TemplatesPageBodyContent(),
+      child: StreamProvider<Message?>(
+        create: (BuildContext context) => bloc.messageStream,
+        initialData: null,
+        child: Consumer<Message?>(
+          builder: (BuildContext context, Message? message, Widget? child) {
+            if (message != null) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  generateSnackBarWidget(context: context, message: message),
+                );
+              });
+            }
+            return child!;
+          },
+          child: Scaffold(
+            backgroundColor: context.theme.scaffoldBackgroundColor,
+            body: TemplatesPageBodyContent(),
+          ),
+        ),
       ),
     );
   }
