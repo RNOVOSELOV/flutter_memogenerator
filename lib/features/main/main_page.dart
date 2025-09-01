@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:memogenerator/resources/app_colors.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import '../../resources/app_icons.dart';
 

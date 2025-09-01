@@ -10,7 +10,6 @@ import 'package:memogenerator/features/create_meme/models/meme_text_with_offset.
 import 'package:memogenerator/features/create_meme/models/meme_text_with_selection.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:memogenerator/widgets/confirmation_dialog.dart';
-import 'package:memogenerator/resources/app_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:yx_scope_flutter/yx_scope_flutter.dart';

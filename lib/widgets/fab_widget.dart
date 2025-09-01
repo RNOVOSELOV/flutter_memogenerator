@@ -16,7 +16,10 @@ class CreateFab extends StatelessWidget {
       heroTag: Uuid().v1(),
       onPressed: onTap,
       icon: const Icon(Icons.add),
-      label: Text(text, style: context.theme.memeSemiBold16,),
+      label: Text(
+        text,
+        style: context.theme.memeSemiBold16.copyWith(color: AppColors.daySurfacesColor),
+      ),
     );
   }
 }
