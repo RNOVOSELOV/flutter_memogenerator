@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:either_dart/either.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +11,7 @@ import '../../data/http/domain/entities/api_error.dart';
 import '../../data/http/domain/entities/meme_data.dart';
 import '../../di_sm/app_scope.dart';
 import '../../widgets/grid_item.dart';
+import 'fullscreen_image_widget.dart';
 
 class TemplateDownloadPage extends StatefulWidget {
   const TemplateDownloadPage({super.key});
@@ -68,20 +67,8 @@ class TemplatesPageBodyContent extends StatelessWidget {
     return FutureBuilder<Either<ApiError, List<MemeData>>>(
       future: bloc.getMemes(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Center(
-            child: const CircularProgressIndicator(color: AppColors.fuchsia),
-          );
-        }
-        final data = snapshot.requireData;
-        if (data.isLeft) {
-          // TODO show Error
-          return Center(child: Text(data.left.description));
-        }
-        final items = data.right;
-        if (items.isEmpty) {
-          // TODO show message
-        }
+        final isTemplatesDataReceived = snapshot.hasData;
+        final data = snapshot.data;
         return CustomScrollView(
           slivers: [
             SliverAppBar(
@@ -94,31 +81,54 @@ class TemplatesPageBodyContent extends StatelessWidget {
                 'Загрузить шаблон',
                 style: GoogleFonts.seymourOne(fontSize: 24),
               ),
-              floating: true,
+              floating: isTemplatesDataReceived ? true : false,
+              pinned: !isTemplatesDataReceived || (data != null && data.isLeft)
+                  ? true
+                  : false,
             ),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-              sliver: SliverGrid.builder(
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 180,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                  childAspectRatio: 1,
-                ),
-                itemCount: items.length,
-                itemBuilder: (context, index) => GridItem(
-                  memeData: items.elementAt(index),
-                  onDownload: () {
-                    final TemplateDownloadBloc bloc =
-                        Provider.of<TemplateDownloadBloc>(
-                          context,
-                          listen: false,
-                        );
-                    bloc.saveTemplate(memeData: items.elementAt(index));
-                  },
+            if (!isTemplatesDataReceived || data == null)
+              SliverFillRemaining(
+                child: Center(
+                  child: const CircularProgressIndicator(
+                    color: AppColors.fuchsia,
+                  ),
                 ),
               ),
-            ),
+            if (data != null && data.isLeft)
+              SliverFillRemaining(
+                child: Center(child: Text(data.left.description)),
+              ),
+            if (data != null && data.isRight)
+              data.right.isEmpty
+                  ? Center(child: Text('Получен пустой список шаблонов'))
+                  : SliverPadding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 12,
+                      ),
+                      sliver: SliverGrid.builder(
+                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 180,
+                          mainAxisSpacing: 8,
+                          crossAxisSpacing: 8,
+                          childAspectRatio: 1,
+                        ),
+                        itemCount: data.right.length,
+                        itemBuilder: (context, index) => GridItem(
+                          memeData: data.right.elementAt(index),
+                          onDownload: () {
+                            final TemplateDownloadBloc bloc =
+                                Provider.of<TemplateDownloadBloc>(
+                                  context,
+                                  listen: false,
+                                );
+                            bloc.saveTemplate(
+                              memeData: data.right.elementAt(index),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
           ],
         );
       },
@@ -141,33 +151,49 @@ class _GridItemState extends State<GridItem> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Card(
-          margin: EdgeInsets.zero,
-          elevation: 1,
-          shape: RoundedRectangleBorder(
-            side: BorderSide(color: AppColors.darkGrey16, width: 1),
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
-          child: CachedNetworkImage(
-            imageUrl: widget.memeData.url,
-            imageBuilder: (context, imageProvider) => Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.scaleDown,
-                ),
-              ),
-            ),
-            progressIndicatorBuilder: (context, url, progress) {
-              return Center(
-                child: CircularProgressIndicator.adaptive(
-                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.fuchsia),
-                  value: progress.progress,
-                ),
+        GestureDetector(
+          onTap: () => showDialog(
+            context: context,
+            useSafeArea: false,
+            barrierDismissible: true,
+            builder: (context) {
+              return FullScreenImagesWidget(
+                onEmptyAreaTap: () => Navigator.of(context).pop(),
+                imageData: widget.memeData.url,
               );
             },
-            errorWidget: (context, url, error) => Icon(Icons.error),
+          ),
+          child: Card(
+            margin: EdgeInsets.zero,
+            elevation: 0,
+            color: AppColors.white,
+            shape: RoundedRectangleBorder(
+              side: BorderSide(color: AppColors.darkGrey16, width: 1),
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+            ),
+            child: CachedNetworkImage(
+              imageUrl: widget.memeData.url,
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.scaleDown,
+                  ),
+                ),
+              ),
+              progressIndicatorBuilder: (context, url, progress) {
+                return Center(
+                  child: CircularProgressIndicator.adaptive(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      AppColors.fuchsia,
+                    ),
+                    value: progress.progress,
+                  ),
+                );
+              },
+              errorWidget: (context, url, error) => Icon(Icons.error),
+            ),
           ),
         ),
         Align(
