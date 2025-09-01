@@ -4,7 +4,7 @@ import 'package:memogenerator/features/create_meme/models/meme_parameters.dart';
 import 'package:memogenerator/navigation/navigation_helper.dart';
 import 'package:memogenerator/navigation/navigation_path.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
-import 'package:memogenerator/widgets/remove_dialog.dart';
+import 'package:memogenerator/widgets/confirmation_dialog.dart';
 import 'package:memogenerator/resources/app_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:yx_scope_flutter/yx_scope_flutter.dart';
@@ -118,10 +118,11 @@ class MemePageBodyContent extends StatelessWidget {
                     if (!context.mounted) {
                       return;
                     }
-                    final removeMemeDialog = await showConfirmationRemoveDialog(
+                    final removeMemeDialog = await showConfirmationDialog(
                       context,
                       title: 'Удалить мем?',
                       text: 'Выбранный мем будет удален навсегда',
+                      actionButtonText: 'Удалить'
                     );
                     if ((removeMemeDialog ?? false) == true) {
                       bloc.deleteMeme(items.elementAt(index).memeId);

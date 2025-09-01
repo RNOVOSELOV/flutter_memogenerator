@@ -57,6 +57,16 @@ final lightTheme = _base.copyWith(
     ),
   ),
 
+  progressIndicatorTheme: _base.progressIndicatorTheme.copyWith(
+    color: AppColors.dayAccentColor,
+    circularTrackColor: AppColors.daySurfacesColor,
+  ),
+
+  dialogTheme: _base.dialogTheme.copyWith(
+    backgroundColor: AppColors.daySurfacesTertiaryColor.withValues(alpha: 1.0),
+    barrierColor: AppColors.daySurfacesTertiaryColor.withValues(alpha: 0.58),
+  ),
+
   // textSelectionTheme: _base.textSelectionTheme.copyWith(
   //   selectionColor: AppColors.blueBlue100A30,
   //   cursorColor: AppColors.primaryLightColor,

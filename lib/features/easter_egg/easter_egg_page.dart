@@ -10,10 +10,7 @@ class EasterEggPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.theme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: AppColors.lemon,
-        foregroundColor: AppColors.darkGrey,
-      ),
+      appBar: AppBar(),
       body: const RocketAnimatedBody(),
     );
   }
@@ -52,63 +49,58 @@ class _RocketAnimatedBodyState extends State<RocketAnimatedBody>
       }
     });
 
-    rocketPositionAnimation = AlignmentTween(
-      begin: const Alignment(0, 0.9),
-      end: const Alignment(0, -1),
-    ).animate(
+    rocketPositionAnimation =
+        AlignmentTween(
+          begin: const Alignment(0, 0.9),
+          end: const Alignment(0, -1),
+        ).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: const Interval(0.1, 0.8, curve: Curves.easeInCubic),
+          ),
+        );
+
+    rocketScaleAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
       CurvedAnimation(
         parent: controller,
-        curve: const Interval(
-          0.1,
-          0.8,
-          curve: Curves.easeInCubic,
-        ),
+        curve: const Interval(0.3, 0.8, curve: Curves.easeInCubic),
       ),
     );
 
-    rocketScaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.0,
-    ).animate(
-      CurvedAnimation(
-        parent: controller,
-        curve: const Interval(
-          0.3,
-          0.8,
-          curve: Curves.easeInCubic,
-        ),
-      ),
-    );
+    fireRotationAnimation =
+        TweenSequence([
+          TweenSequenceItem(
+            tween: Tween<double>(begin: 0.005, end: -0.005),
+            weight: 50,
+          ),
+          TweenSequenceItem(
+            tween: Tween<double>(begin: -0.005, end: 0.005),
+            weight: 50,
+          ),
+        ]).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: const Interval(
+              0.0,
+              0.8,
+              curve: SawTooth(animationDurationSeconds * 5),
+            ),
+          ),
+        );
 
-    fireRotationAnimation = TweenSequence([
-      TweenSequenceItem(
-        tween: Tween<double>(begin: 0.005, end: -0.005),
-        weight: 50,
-      ),
-      TweenSequenceItem(
-        tween: Tween<double>(begin: -0.005, end: 0.005),
-        weight: 50,
-      ),
-    ]).animate(CurvedAnimation(
-        parent: controller,
-        curve: const Interval(0.0, 0.8,
-            curve: SawTooth(animationDurationSeconds * 5))));
-
-    glowScaleAnimation = TweenSequence([
-      TweenSequenceItem(
-        tween: Tween<double>(begin: 0.0, end: 1),
-        weight: 50,
-      ),
-      TweenSequenceItem(
-        tween: Tween<double>(begin: 1, end: 0.0),
-        weight: 50,
-      ),
-    ]).animate(CurvedAnimation(
-        parent: controller,
-        curve: const Interval(
-          0.8,
-          0.9,
-        )));
+    glowScaleAnimation =
+        TweenSequence([
+          TweenSequenceItem(
+            tween: Tween<double>(begin: 0.0, end: 1),
+            weight: 50,
+          ),
+          TweenSequenceItem(
+            tween: Tween<double>(begin: 1, end: 0.0),
+            weight: 50,
+          ),
+        ]).animate(
+          CurvedAnimation(parent: controller, curve: const Interval(0.8, 0.9)),
+        );
   }
 
   void animate() {
@@ -139,7 +131,8 @@ class _RocketAnimatedBodyState extends State<RocketAnimatedBody>
                   height: 100,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.vertical(
-                        top: Radius.elliptical(constraints.maxWidth, 200)),
+                      top: Radius.elliptical(constraints.maxWidth, 200),
+                    ),
                     color: Colors.green[700],
                   ),
                 ),
@@ -151,10 +144,7 @@ class _RocketAnimatedBodyState extends State<RocketAnimatedBody>
                     turns: fireRotationAnimation,
                     child: ScaleTransition(
                       scale: rocketScaleAnimation,
-                      child: Image.asset(
-                        AppImages.rocketFire,
-                        height: 200,
-                      ),
+                      child: Image.asset(AppImages.rocketFire, height: 200),
                     ),
                   ),
                 ),
@@ -176,10 +166,7 @@ class _RocketAnimatedBodyState extends State<RocketAnimatedBody>
                 left: constraints.maxWidth / 2 - 50,
                 child: ScaleTransition(
                   scale: glowScaleAnimation,
-                  child: Image.asset(
-                    AppImages.starGlow,
-                    height: 50,
-                  ),
+                  child: Image.asset(AppImages.starGlow, height: 50),
                 ),
               ),
             ],

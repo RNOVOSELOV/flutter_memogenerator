@@ -74,9 +74,7 @@ class TemplatesPageBodyContent extends StatelessWidget {
           slivers: [
             SliverAppBar(
               titleSpacing: 0,
-              title: Text(
-                'Загрузить шаблон',
-              ),
+              title: Text('Загрузить шаблон'),
               floating: isTemplatesDataReceived ? true : false,
               pinned: !isTemplatesDataReceived || (data != null && data.isLeft)
                   ? true
@@ -84,11 +82,7 @@ class TemplatesPageBodyContent extends StatelessWidget {
             ),
             if (!isTemplatesDataReceived || data == null)
               SliverFillRemaining(
-                child: Center(
-                  child: const CircularProgressIndicator(
-                    color: AppColors.fuchsia,
-                  ),
-                ),
+                child: Center(child: const CircularProgressIndicator()),
               ),
             if (data != null && data.isLeft)
               SliverFillRemaining(
@@ -162,9 +156,9 @@ class _GridItemState extends State<GridItem> {
           child: Card(
             margin: EdgeInsets.zero,
             elevation: 0,
-            color: AppColors.white,
+            color: context.color.cardBackgroundColor,
             shape: RoundedRectangleBorder(
-              side: BorderSide(color: AppColors.darkGrey16, width: 1),
+              side: BorderSide(color: context.color.cardBorderColor, width: 1),
               borderRadius: BorderRadius.all(Radius.circular(8)),
             ),
             child: CachedNetworkImage(
@@ -181,9 +175,6 @@ class _GridItemState extends State<GridItem> {
               progressIndicatorBuilder: (context, url, progress) {
                 return Center(
                   child: CircularProgressIndicator.adaptive(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      AppColors.fuchsia,
-                    ),
                     value: progress.progress,
                   ),
                 );

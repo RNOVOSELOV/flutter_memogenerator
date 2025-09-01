@@ -3,7 +3,8 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:memogenerator/features/create_meme/create_meme_bloc.dart';
 import 'package:memogenerator/features/create_meme/meme_text_on_canvas.dart';
 import 'package:memogenerator/features/create_meme/models/meme_text.dart';
-import 'package:memogenerator/widgets/remove_dialog.dart';
+import 'package:memogenerator/theme/extensions/theme_extensions.dart';
+import 'package:memogenerator/widgets/confirmation_dialog.dart';
 import 'package:memogenerator/resources/app_colors.dart';
 import 'package:provider/provider.dart';
 
@@ -40,7 +41,7 @@ class _FontSettingBottomSheetState extends State<FontSettingBottomSheet> {
             height: 4,
             width: 64,
             decoration: BoxDecoration(
-              color: AppColors.darkGrey38,
+              color: Colors.black,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -108,7 +109,7 @@ class Buttons extends StatelessWidget {
         AppButton(
           onTap: () => Navigator.of(context).pop(),
           labelText: "Отмена",
-          color: AppColors.darkGrey,
+          color: context.color.textIconColor,
         ),
         const SizedBox(width: 24),
         AppButton(
@@ -137,7 +138,7 @@ class ColorSelection extends StatelessWidget {
         const SizedBox(width: 16),
         const Text(
           "Color:",
-          style: TextStyle(fontSize: 20, color: AppColors.darkGrey),
+          style: TextStyle(fontSize: 20, color: Colors.black),
         ),
         const SizedBox(width: 16),
         ColorSelectionBox(changeColor: changeColor, color: Colors.white),
@@ -170,13 +171,13 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
           context: context,
           builder: (context) {
             WidgetsBinding.instance.addPostFrameCallback(
-              (_) => setState(() => selectedColor = AppColors.lemon),
+              (_) => setState(() => selectedColor = context.theme.primaryColor,),
             );
             return AlertDialog(
               title: Text('Выберите цвет'),
               content: SingleChildScrollView(
                 child: ColorPicker(
-                  pickerColor: selectedColor ?? AppColors.lemon,
+                  pickerColor: selectedColor ?? context.theme.primaryColor,
                   onColorChanged: (value) =>
                       setState(() => selectedColor = value),
                   labelTypes: [],
@@ -193,7 +194,7 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
                   },
                   child: Text(
                     'Готово'.toUpperCase(),
-                    style: TextStyle(color: AppColors.fuchsia),
+                    style: TextStyle(color: context.color.accentColor),
                   ),
                 ),
               ],
@@ -213,9 +214,9 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    AppColors.white,
-                    AppColors.lemon,
-                    AppColors.fuchsia,
+                    Colors.white,
+                    context.theme.primaryColor,
+                    context.color.accentColor,
                     Colors.black,
                   ],
                 )
@@ -285,18 +286,18 @@ class _FontSizeSliderState extends State<FontSizeSlider> {
           padding: EdgeInsets.only(bottom: 8),
           child: Text(
             "Size:",
-            style: TextStyle(fontSize: 20, color: AppColors.darkGrey),
+            style: TextStyle(fontSize: 20, color: Colors.black),
           ),
         ),
         Expanded(
           child: SliderTheme(
             data: SliderThemeData(
-              activeTrackColor: AppColors.fuchsia,
-              inactiveTrackColor: AppColors.fuchsia38,
+              activeTrackColor: context.color.accentColor,
+              inactiveTrackColor: context.color.accentColor.withValues(alpha: 0.38),
               valueIndicatorShape: const PaddleSliderValueIndicatorShape(),
-              thumbColor: AppColors.fuchsia,
-              inactiveTickMarkColor: AppColors.fuchsia,
-              valueIndicatorColor: AppColors.fuchsia,
+              thumbColor: context.color.accentColor,
+              inactiveTickMarkColor: context.color.accentColor,
+              valueIndicatorColor: context.color.accentColor,
             ),
             child: Slider(
               min: 16,
@@ -350,16 +351,16 @@ class _FontWeightSliderState extends State<FontWeightSlider> {
           padding: EdgeInsets.only(bottom: 8),
           child: Text(
             "Font Weight:",
-            style: TextStyle(fontSize: 20, color: AppColors.darkGrey),
+            style: TextStyle(fontSize: 20, color: Colors.black),
           ),
         ),
         Expanded(
           child: SliderTheme(
             data: SliderThemeData(
-              activeTrackColor: AppColors.fuchsia,
-              inactiveTrackColor: AppColors.fuchsia38,
-              thumbColor: AppColors.fuchsia,
-              inactiveTickMarkColor: AppColors.fuchsia,
+              activeTrackColor: context.color.accentColor,
+              inactiveTrackColor: context.color.accentColor.withValues(alpha: 0.38),
+              thumbColor: context.color.accentColor,
+              inactiveTickMarkColor: context.color.accentColor,
             ),
             child: Slider(
               min: 0,

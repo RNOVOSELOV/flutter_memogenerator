@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 
 import '../../resources/app_colors.dart';
 
@@ -22,7 +23,7 @@ class FullScreenImagesWidget extends StatelessWidget {
           return Container(
             width: double.infinity,
             height: double.infinity,
-            color: AppColors.fuchsia16,
+            color: context.color.accentColor.withValues(alpha: 0.48),
             child: Dismissible(
               key: const Key('1'),
               direction: DismissDirection.vertical,

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import '../resources/app_colors.dart';
 
 class GridItem extends StatelessWidget {
@@ -24,9 +25,9 @@ class GridItem extends StatelessWidget {
         Card(
           margin: EdgeInsets.zero,
           elevation: 0,
-          color: AppColors.white,
+          color: context.color.cardBackgroundColor,
           shape: RoundedRectangleBorder(
-            side: BorderSide(color: AppColors.darkGrey16, width: 1),
+            side: BorderSide(color: context.color.cardBorderColor, width: 1),
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
           child: TextButton(
@@ -35,7 +36,6 @@ class GridItem extends StatelessWidget {
               padding: EdgeInsets.zero,
               elevation: 0,
               shape: RoundedRectangleBorder(
-                side: BorderSide(color: AppColors.darkGrey16, width: 1),
                 borderRadius: BorderRadius.all(Radius.circular(8)),
               ),
             ),
@@ -96,14 +96,14 @@ class _GridItemActionButtonState extends State<GridItemActionButton> {
         style: IconButton.styleFrom(
           alignment: Alignment.center,
           shape: CircleBorder(),
-          backgroundColor: AppColors.fuchsia50,
+          backgroundColor: context.color.accentColor.withValues(alpha: 0.68),
           padding: EdgeInsets.zero,
         ),
         icon: AnimatedScale(
           scale: scale,
           duration: Duration(milliseconds: 200),
           curve: Curves.bounceInOut,
-          child: Icon(widget.icon, color: AppColors.white, size: 16),
+          child: Icon(widget.icon, color: Colors.white, size: 16),
           onEnd: () => setState(() => scale = 1.0),
         ),
       ),

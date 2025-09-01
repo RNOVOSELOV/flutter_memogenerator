@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memogenerator/resources/app_colors.dart';
+import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 
 class MemeTextOnCanvas extends StatelessWidget {
   const MemeTextOnCanvas({
@@ -32,9 +33,9 @@ class MemeTextOnCanvas extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(
           width: 1,
-          color: selected ? AppColors.fuchsia : Colors.transparent,
+          color: selected ? context.color.accentColor : Colors.transparent,
         ),
-        color: selected ? AppColors.darkGrey16 : Colors.transparent,
+        color: selected ? context.color.cardBackgroundColor : Colors.transparent,
       ),
       child: Text(
         text,

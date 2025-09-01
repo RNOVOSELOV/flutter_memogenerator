@@ -41,7 +41,7 @@ final darkTheme = _base.copyWith(
 
   floatingActionButtonTheme: _base.floatingActionButtonTheme.copyWith(
     enableFeedback: true,
-    backgroundColor: AppColors.dayAccentColor,
+    backgroundColor: AppColors.nightAccentColor,
     foregroundColor: AppColors.daySurfacesColor,
     elevation: 3,
   ),
@@ -55,6 +55,16 @@ final darkTheme = _base.copyWith(
       fontSize: 22,
       color: AppColors.nightAppBarForegroundColor,
     ),
+  ),
+
+  progressIndicatorTheme: _base.progressIndicatorTheme.copyWith(
+    color: AppColors.nightAccentColor,
+    circularTrackColor: AppColors.nightSurfacesColor,
+  ),
+
+  dialogTheme: _base.dialogTheme.copyWith(
+    backgroundColor: AppColors.nightSurfacesTertiaryColor.withValues(alpha: 1.0),
+    barrierColor: AppColors.nightSurfacesTertiaryColor.withValues(alpha: 0.58),
   ),
 
   // textSelectionTheme: _base.textSelectionTheme.copyWith(
