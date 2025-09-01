@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:memogenerator/widgets/remove_dialog.dart';
 import 'package:memogenerator/resources/app_colors.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +43,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
     return Provider.value(
       value: bloc,
       child: Scaffold(
+        backgroundColor: context.theme.scaffoldBackgroundColor,
         floatingActionButton: CreateFab(
           text: 'Шаблон',
           onTap: () async {
@@ -51,7 +53,6 @@ class _TemplatesPageState extends State<TemplatesPage> {
             //            await bloc.addTemplate();
           },
         ),
-        backgroundColor: AppColors.backgroundColor,
         body: TemplatesPageBodyContent(),
       ),
     );

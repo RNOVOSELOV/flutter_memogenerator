@@ -12,10 +12,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      elevation: 3,
-      centerTitle: false,
-      backgroundColor: AppColors.backgroundAppbar,
-      foregroundColor: AppColors.foregroundAppBar,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -30,7 +26,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
           SizedBox(width: 12),
-          Text(title, style: GoogleFonts.seymourOne(fontSize: 24)),
+          Text(title,),
         ],
       ),
       floating: true,

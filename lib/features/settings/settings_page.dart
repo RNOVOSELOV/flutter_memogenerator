@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:memogenerator/resources/app_colors.dart';
+import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 
 import '../../resources/app_images.dart';
 
@@ -10,11 +11,8 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: context.theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        centerTitle: false,
-        elevation: 3,
-        backgroundColor: AppColors.backgroundAppbar,
-        foregroundColor: AppColors.foregroundAppBar,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -29,11 +27,10 @@ class SettingsPage extends StatelessWidget {
               ),
             ),
             SizedBox(width: 12),
-            Text("Настройки", style: GoogleFonts.seymourOne(fontSize: 24)),
+            Text("Настройки",),
           ],
         ),
       ),
-      backgroundColor: AppColors.backgroundColor,
       body: SafeArea(child: SizedBox.shrink()),
     );
   }

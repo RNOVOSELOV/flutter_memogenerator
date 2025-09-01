@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:memogenerator/features/template_download/template_download_bloc.dart';
 import 'package:memogenerator/resources/app_colors.dart';
+import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:provider/provider.dart';
 import 'package:yx_scope_flutter/yx_scope_flutter.dart';
 
@@ -42,7 +43,7 @@ class _TemplateDownloadPageState extends State<TemplateDownloadPage> {
     return Provider.value(
       value: bloc,
       child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
+        backgroundColor: context.theme.scaffoldBackgroundColor,
         body: TemplatesPageBodyContent(),
       ),
     );
@@ -72,14 +73,9 @@ class TemplatesPageBodyContent extends StatelessWidget {
         return CustomScrollView(
           slivers: [
             SliverAppBar(
-              elevation: 3,
-              centerTitle: false,
-              backgroundColor: AppColors.backgroundAppbar,
-              foregroundColor: AppColors.foregroundAppBar,
               titleSpacing: 0,
               title: Text(
                 'Загрузить шаблон',
-                style: GoogleFonts.seymourOne(fontSize: 24),
               ),
               floating: isTemplatesDataReceived ? true : false,
               pinned: !isTemplatesDataReceived || (data != null && data.isLeft)

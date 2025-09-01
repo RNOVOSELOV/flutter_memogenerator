@@ -14,9 +14,8 @@ class CreateFab extends StatelessWidget {
     return FloatingActionButton.extended(
       heroTag: Uuid().v1(),
       onPressed: onTap,
-      icon: const Icon(Icons.add, color: AppColors.white),
-      backgroundColor: AppColors.fabColor,
-      label: Text(text, style: TextStyle(color: AppColors.white)),
+      icon: const Icon(Icons.add),
+      label: Text(text),
     );
   }
 }

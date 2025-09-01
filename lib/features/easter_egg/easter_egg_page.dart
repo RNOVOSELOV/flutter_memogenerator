@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:memogenerator/resources/app_colors.dart';
 import 'package:memogenerator/resources/app_images.dart';
+import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 
 class EasterEggPage extends StatelessWidget {
-  const EasterEggPage({Key? key}) : super(key: key);
+  const EasterEggPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: context.theme.scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: AppColors.lemon,
         foregroundColor: AppColors.darkGrey,

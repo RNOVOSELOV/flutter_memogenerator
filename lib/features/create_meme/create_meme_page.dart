@@ -8,6 +8,7 @@ import 'package:memogenerator/features/create_meme/meme_text_on_canvas.dart';
 import 'package:memogenerator/features/create_meme/models/meme_text.dart';
 import 'package:memogenerator/features/create_meme/models/meme_text_with_offset.dart';
 import 'package:memogenerator/features/create_meme/models/meme_text_with_selection.dart';
+import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:memogenerator/widgets/remove_dialog.dart';
 import 'package:memogenerator/resources/app_colors.dart';
 import 'package:provider/provider.dart';
@@ -59,16 +60,12 @@ class _CreateMemePageState extends State<CreateMemePage> {
           return goBack ?? false;
         },
         child: Scaffold(
+          backgroundColor: context.theme.scaffoldBackgroundColor,
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
-            elevation: 3,
-            centerTitle: false,
             titleSpacing: 0,
-            backgroundColor: AppColors.backgroundAppbar,
-            foregroundColor: AppColors.foregroundAppBar,
             title: Text(
               'Редактор',
-              style: GoogleFonts.seymourOne(fontSize: 24),
             ),
             actions: [
               AnimatedIconButton(
@@ -88,7 +85,6 @@ class _CreateMemePageState extends State<CreateMemePage> {
             ],
             //            bottom: const _EditTextBar(),
           ),
-          backgroundColor: AppColors.backgroundColor,
           body: _CreateMemePageContent(),
         ),
       ),
@@ -162,7 +158,7 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton> {
         scale: scale,
         duration: const Duration(milliseconds: 200),
         curve: Curves.bounceInOut,
-        child: Icon(widget.icon, color: AppColors.darkGrey, size: 24),
+        child: Icon(widget.icon, size: 24),
         onEnd: () => setState(() => scale = 1.0),
       ),
     );

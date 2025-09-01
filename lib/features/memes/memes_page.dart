@@ -3,6 +3,7 @@ import 'package:memogenerator/di_sm/app_scope.dart';
 import 'package:memogenerator/features/create_meme/models/meme_parameters.dart';
 import 'package:memogenerator/navigation/navigation_helper.dart';
 import 'package:memogenerator/navigation/navigation_path.dart';
+import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:memogenerator/widgets/remove_dialog.dart';
 import 'package:memogenerator/resources/app_colors.dart';
 import 'package:provider/provider.dart';
@@ -43,6 +44,7 @@ class _MemesPageState extends State<MemesPage> {
     return Provider.value(
       value: bloc,
       child: Scaffold(
+        backgroundColor: context.theme.scaffoldBackgroundColor,
         floatingActionButton: CreateFab(
           text: 'Мем',
           onTap: () async {
@@ -56,7 +58,6 @@ class _MemesPageState extends State<MemesPage> {
             );
           },
         ),
-        backgroundColor: AppColors.backgroundColor,
         body: MemePageBodyContent(),
       ),
     );
