@@ -1,7 +1,7 @@
-import 'status.dart';
+import 'message_status.dart';
 
 class Message {
-  final Status status;
+  final MessageStatus status;
   final String message;
 
   Message({required this.status, required this.message});

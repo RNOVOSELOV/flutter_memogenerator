@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:memogenerator/domain/entities/message.dart';
-import 'package:memogenerator/domain/entities/status.dart';
+import 'package:memogenerator/domain/entities/message_status.dart';
 import 'package:memogenerator/resources/app_colors.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 
@@ -33,7 +33,7 @@ class SnackBarWidget extends StatelessWidget {
   });
 
   final String text;
-  final Status contentState;
+  final MessageStatus contentState;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class SnackBarWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(width: 12),
-              contentState == Status.success
+              contentState == MessageStatus.success
                   ? Icon(
                       Icons.info_outline_rounded,
                       size: 32,

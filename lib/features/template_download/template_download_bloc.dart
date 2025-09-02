@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:either_dart/either.dart';
 import 'package:memogenerator/data/shared_pref/repositories/templates/templates_repository.dart';
 import 'package:memogenerator/domain/interactors/template_interactor.dart';
-import 'package:memogenerator/domain/entities/status.dart';
+import 'package:memogenerator/domain/entities/message_status.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -43,7 +43,7 @@ class TemplateDownloadBloc {
     if (await imageFileExists(filePath)) {
       _messageController.sink.add(
         Message(
-          status: Status.error,
+          status: MessageStatus.error,
           message: 'Загрузка не требуется. Шаблон "${memeData.name}" уже сохранен в галерее.',
         ),
       );
@@ -61,7 +61,7 @@ class TemplateDownloadBloc {
       if (result) {
         _messageController.sink.add(
           Message(
-            status: Status.success,
+            status: MessageStatus.success,
             message: 'Шаблон "${memeData.name}" успешно загружен и сохранен.',
           ),
         );
@@ -70,7 +70,7 @@ class TemplateDownloadBloc {
     }
     _messageController.sink.add(
       Message(
-        status: Status.error,
+        status: MessageStatus.error,
         message: 'Ошибка загрузки шаблона "${memeData.name}".',
       ),
     );

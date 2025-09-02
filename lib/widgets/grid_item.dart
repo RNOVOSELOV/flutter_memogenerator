@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
-import '../resources/app_colors.dart';
 
 class GridItem extends StatelessWidget {
   const GridItem({
