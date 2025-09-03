@@ -1,5 +1,5 @@
-import '../../../../domain/entities/meme.dart';
-import '../../../../domain/repositories/meme_repository.dart';
+import '../entities/meme.dart';
+import '../repositories/meme_repository.dart';
 
 class MemeGet {
   final MemeRepository _memeRepository;

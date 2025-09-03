@@ -5,7 +5,7 @@ class MemeTextOffset extends Equatable {
   final String id;
   final Offset offset;
 
-  MemeTextOffset({required this.id, required this.offset});
+  const MemeTextOffset({required this.id, required this.offset});
 
   @override
   List<Object?> get props => [id, offset];

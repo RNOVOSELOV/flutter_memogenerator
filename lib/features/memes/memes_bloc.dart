@@ -4,10 +4,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:memogenerator/domain/entities/meme.dart';
 import 'package:memogenerator/domain/entities/meme_thumbnail.dart';
 import 'package:memogenerator/domain/usecases/meme_upload.dart';
-import 'package:memogenerator/features/memes/domain/use_cases/meme_delete.dart';
-import 'package:memogenerator/features/memes/domain/use_cases/meme_get.dart';
-import 'package:memogenerator/features/memes/domain/use_cases/meme_thumbnails_get_stream.dart';
-import 'package:memogenerator/features/memes/domain/use_cases/template_save.dart';
+import 'package:memogenerator/features/memes/use_cases/meme_delete.dart';
+import 'package:memogenerator/domain/usecases/meme_get.dart';
+import 'package:memogenerator/features/memes/use_cases/meme_thumbnails_get_stream.dart';
+import 'package:memogenerator/features/memes/use_cases/template_save.dart';
 
 class MemesBloc {
   final MemeThumbnailsGetStream _getMemesThumbnailStream;

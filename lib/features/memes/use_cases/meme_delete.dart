@@ -1,5 +1,5 @@
-import '../../../../domain/entities/meme_thumbnail.dart';
-import '../../../../domain/repositories/meme_repository.dart';
+import '../../../domain/entities/meme_thumbnail.dart';
+import '../../../domain/repositories/meme_repository.dart';
 
 class MemeDelete {
   final MemeRepository _memeRepository;

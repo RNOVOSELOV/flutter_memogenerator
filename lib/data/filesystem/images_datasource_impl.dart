@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:collection/collection.dart';
 import 'package:path_provider/path_provider.dart';
@@ -41,6 +43,20 @@ class FileSystemDatasource implements ImagesDatasource {
       return await file.readAsBytes();
     }
     return null;
+  }
+
+  @override
+  Future<bool> saveMemeThumbnailBytesData({
+    required String memeId,
+    required Uint8List thumbnailBinaryData,
+  }) async {
+    final docDocs = await getApplicationDocumentsDirectory();
+    final imageFile = File(
+      "${docDocs.absolute.path}${Platform.pathSeparator}$memeId.png",
+    );
+    await imageFile.create();
+    await imageFile.writeAsBytes(thumbnailBinaryData);
+    return true;
   }
 
   @override
@@ -117,5 +133,32 @@ class FileSystemDatasource implements ImagesDatasource {
         "$directoryForImages${Platform.pathSeparator}$newFileImageName";
     await _saveToFile(bytes: fileBytesData, filePath: correctedNewImagePath);
     return newFileImageName;
+  }
+
+  @override
+  Future<({Uint8List imageBinary, double aspectRatio})?> getImageData({
+    required String directoryWithFile,
+    required String fileName,
+  }) async {
+    final docsPath = await _getDocumentsDirectory();
+    final directoryForImages = "$docsPath$directoryWithFile";
+    final fileImagePath =
+        "$directoryForImages${Platform.pathSeparator}$fileName";
+    final file = File(fileImagePath);
+    if (await file.exists()) {
+      final data = await file.readAsBytes();
+      final aspectRatio = await _getAspectRatio(data);
+      return (imageBinary: data, aspectRatio: aspectRatio);
+    }
+    return null;
+  }
+
+  Future<double> _getAspectRatio(Uint8List imageBinary) async {
+    final completer = Completer<ui.Image>();
+    ui.decodeImageFromList(imageBinary, completer.complete);
+    final image = await completer.future;
+    final ratio = image.width / image.height;
+    image.dispose();
+    return ratio;
   }
 }

@@ -11,8 +11,6 @@ import '../data/http/api_datasource.dart';
 import '../data/shared_pref/datasources/memes/meme_datasource_impl.dart';
 import '../data/shared_pref/datasources/templates/templates_datasource_impl.dart';
 import '../data/shared_pref/shared_preference_data.dart';
-import '../data/interactors/meme_interactor.dart';
-import '../data/interactors/screenshot_interactor.dart';
 import '../data/interactors/template_interactor.dart';
 import 'scope_observer.dart' show diObserver;
 
@@ -30,16 +28,7 @@ class AppScopeContainer extends ScopeContainer {
   late final fileSystemDatasourceDep = dep(() => FileSystemDatasource());
 
   late final copyFileInteractorDep = dep(() => CopyUniqueFileInteractor());
-  late final screenshotInteractorDep = dep(
-    () => ScreenshotInteractor(talker: talkerDep.get),
-  );
-  late final memesInteractorDep = dep(
-    () => MemeInteractor(
-      memeRepository: memeDatasourceDep.get,
-      copyUniqueFileInteractor: copyFileInteractorDep.get,
-      screenshotInteractor: screenshotInteractorDep.get,
-    ),
-  );
+
   late final templatesInteractorDep = dep(
     () => TemplateInteractor(
       templateRepository: templateDatasourceDep.get,

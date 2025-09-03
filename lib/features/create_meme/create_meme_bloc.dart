@@ -1,24 +1,24 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui';
 
-import 'package:flutter/material.dart';
-import 'package:image/image.dart' as img;
-import 'package:memogenerator/features/create_meme/models/meme_text_offset.dart';
-import 'package:memogenerator/features/create_meme/models/meme_text.dart';
-import 'package:memogenerator/features/create_meme/models/meme_text_with_offset.dart';
-import 'package:memogenerator/features/create_meme/models/meme_text_with_selection.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:intl/intl.dart';
+import 'package:memogenerator/domain/usecases/meme_get.dart';
+import 'package:memogenerator/features/create_meme/use_cases/meme_get_binary.dart';
+import 'package:memogenerator/features/create_meme/use_cases/meme_save.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:collection/collection.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:uuid/uuid.dart';
+import 'package:share_plus/share_plus.dart';
 
-import '../../data/shared_pref/datasources/memes/meme_datasource_impl.dart';
-import '../../data/interactors/meme_interactor.dart';
-import '../../data/interactors/screenshot_interactor.dart';
 import '../../domain/entities/meme.dart';
 import '../../domain/entities/position.dart';
 import '../../domain/entities/text_with_position.dart';
+import 'entities/meme_text.dart';
+import 'entities/meme_text_offset.dart';
+import 'entities/meme_text_with_offset.dart';
+import 'entities/meme_text_with_selection.dart';
+import 'use_cases/meme_save_thumbnail.dart';
 
 class CreateMemeBloc {
   final memeTextsSubject = BehaviorSubject<List<MemeText>>.seeded(<MemeText>[]);
@@ -27,11 +27,9 @@ class CreateMemeBloc {
     <MemeTextOffset>[],
   );
   final memePathSubject =
-      BehaviorSubject<(String path, double aspectRatio)?>.seeded(null);
-
-  // final screenshotControllerSubject =
-  //     BehaviorSubject<ScreenshotController>.seeded(ScreenshotController());
-
+      BehaviorSubject<({Uint8List imageBinary, double aspectRatio})?>.seeded(
+        null,
+      );
   final newMemeTextOffsetSubject = BehaviorSubject<MemeTextOffset?>.seeded(
     null,
   );
@@ -39,103 +37,87 @@ class CreateMemeBloc {
   StreamSubscription<MemeTextOffset?>? newMemeTextOffsetSubscription;
   StreamSubscription<bool>? saveMemeSubscription;
   StreamSubscription<Meme?>? existentMemeSubscription;
-  StreamSubscription<void>? shareMemeSubscription;
 
-  final String _id;
-  final MemesDataSourceImpl _memeRepository;
-  final MemeInteractor _memeInteractor;
-  final ScreenshotInteractor _screenshotInteractor;
+
+  final Meme _meme;
+  final MemeGetBinary _getBinary;
+  final MemeGet _getMeme;
+  final MemeSave _saveMeme;
+  final MemeSaveThumbnail _saveMemeThumbnail;
+
   final ScreenshotController _screenshotController;
 
   CreateMemeBloc({
-    required final String selectedMemePath,
-    final String? savedId,
-    required final ScreenshotInteractor screenshotInteractor,
-    required final MemeInteractor memeInteractor,
-    required final MemesDataSourceImpl memeRepository,
-  }) : _id = savedId ?? const Uuid().v4(),
-       _memeRepository = memeRepository,
-       _memeInteractor = memeInteractor,
-       _screenshotInteractor = screenshotInteractor,
+    required final Meme meme,
+    required final MemeGetBinary getBinary,
+    required final MemeGet getMeme,
+    required final MemeSave saveMeme,
+    required final MemeSaveThumbnail saveMemeThumbnail,
+  }) : _meme = meme,
+       _getBinary = getBinary,
+       _getMeme = getMeme,
+       _saveMeme = saveMeme,
+       _saveMemeThumbnail = saveMemeThumbnail,
        _screenshotController = ScreenshotController() {
-    getAspectRatio(
-      File(selectedMemePath),
-    ).then((value) => memePathSubject.add((selectedMemePath, value)));
     _subscribeToNewMemTextOffset();
     _subscribeToExistentMeme();
   }
 
-  Future<double> getAspectRatio(File imageFile) async {
-    final bytes = await imageFile.readAsBytes();
-    final decodedImage = img.decodeImage(bytes);
-    if (decodedImage == null) {
-      // TODO
-      throw Exception('Не удалось декодировать изображение');
-      return 1;
-    }
-    final width = decodedImage.width;
-    final height = decodedImage.height;
-    return width / height;
-  }
-
   void _subscribeToExistentMeme() {
-    existentMemeSubscription = _memeRepository
-        .getItem()
-        .asStream()
-        .map(
-          (memesModel) => memesModel?.memes.firstWhereOrNull(
-            (element) => element.id == _id,
-          ),
-        )
-        .map((memeModel) => memeModel?.meme)
-        .listen(
-          (meme) {
-            if (meme != null) {
-              final memeTexts = meme.texts.map((textWithPosition) {
-                return MemeText.createFromTextWithPosition(textWithPosition);
-              }).toList();
-              final memeTextOffset = meme.texts.map((textWithPosition) {
-                return MemeTextOffset(
-                  id: textWithPosition.id,
-                  offset: Offset(
-                    textWithPosition.position.left,
-                    textWithPosition.position.top,
-                  ),
-                );
-              }).toList();
-              memeTextsSubject.add(memeTexts);
-              memeTextOffsetSubject.add(memeTextOffset);
-              if (meme.memePath != null) {
-                getApplicationDocumentsDirectory().then((docsDirectory) {
-                  final onlyImageName = meme.memePath!
-                      .split(Platform.pathSeparator)
-                      .last;
-                  final fullImagePath =
-                      "${docsDirectory.absolute.path}${Platform.pathSeparator}${MemeInteractor.memesPathName}${Platform.pathSeparator}$onlyImageName";
-                  getAspectRatio(File(fullImagePath)).then(
-                    (value) => memePathSubject.add((fullImagePath, value)),
-                  );
-                });
-              }
-            }
-          },
-          onError: (error, stacktrace) =>
-              print("Error in existentMemeSubscription: $error, $stacktrace"),
-        );
+    existentMemeSubscription = _getMeme(id: _meme.id).asStream().listen(
+      (memeData) {
+        // Если мема нет в сторе, то берем его из входяжих параметров
+        final meme = memeData ?? _meme;
+        final memeTexts = meme.texts.map((textWithPosition) {
+          return MemeText.createFromTextWithPosition(textWithPosition);
+        }).toList();
+        final memeTextOffset = meme.texts.map((textWithPosition) {
+          return MemeTextOffset(
+            id: textWithPosition.id,
+            offset: Offset(
+              textWithPosition.position.left,
+              textWithPosition.position.top,
+            ),
+          );
+        }).toList();
+        memeTextsSubject.add(memeTexts);
+        memeTextOffsetSubject.add(memeTextOffset);
+
+        _getBinary(fileName: meme.fileName).then((value) {
+          if (value != null) {
+            memePathSubject.add((
+              imageBinary: value.imageBinary,
+              aspectRatio: value.aspectRatio,
+            ));
+          }
+        });
+      },
+      onError: (error, stacktrace) =>
+          print("Error in existentMemeSubscription: $error, $stacktrace"),
+    );
   }
 
-  void shareMeme() {
+  Future<void> shareMeme() async {
     // TODO remove shareMemeSubscription. Use direct call
     // TODO _screenshotInteractor.shareScreenshoot(_screenshotController)
-    shareMemeSubscription?.cancel();
-    shareMemeSubscription = _screenshotInteractor
-        .shareScreenshoot(_screenshotController)
-        .asStream()
-        .listen(
-          (event) {},
-          onError: (error, stacktrace) =>
-              print("Error in shareMemeSubscription: $error, $stacktrace"),
-        );
+    final imageBinaryData = await _screenshotController.capture();
+    if (imageBinaryData == null) {
+      // TODO add loggining
+      // _talker.error(
+      //   'ScreenshotInteractor: Error get image from screenshot controller',
+      // );
+      return;
+    }
+    final currentDt = DateTime.now();
+    final XFile captureFile = XFile.fromData(
+      imageBinaryData,
+      name: 'capture_${DateFormat('yyyy_MM_dd_HH_mm_ss').format(currentDt)}',
+      lastModified: currentDt,
+      mimeType: 'image/png',
+    );
+    await SharePlus.instance.share(
+      ShareParams(text: 'Мой новый мем!', files: [captureFile]),
+    );
   }
 
   void changeFontSettings(
@@ -183,28 +165,23 @@ class CreateMemeBloc {
     return textsWithPosition;
   }
 
-  void saveMeme() {
-    saveMemeSubscription = _memeInteractor
-        .saveMeme(
-          id: _id,
-          textWithPositions: generateTextWithPositionsForMeme(),
-          imagePath: memePathSubject.value?.$1,
-          screenshotController: _screenshotController,
-        )
-        .asStream()
-        .listen(
-          (saved) {
-            print("Meme saved: $saved");
-          },
-          onError: (error, stacktrace) =>
-              print("Error in saveMemeSubscription: $error, $stacktrace"),
-        );
+  Future<bool> saveMeme() async {
+    final binaryImageData = await screenshotController.capture();
+    if (binaryImageData != null) {
+      final memeThumbnailSaveResult = await _saveMemeThumbnail(
+        memeId: _meme.id,
+        thumbnailBinaryData: binaryImageData,
+      );
+      final memeSaveResult = await _saveMeme(
+        meme: _meme.copyWith(texts: generateTextWithPositionsForMeme()),
+      );
+      return memeThumbnailSaveResult && memeSaveResult;
+    }
+    return false;
   }
 
   Future<bool> memeIsSaved() async {
-    final savedMeme = (await _memeRepository.getItem())?.memes
-        .firstWhereOrNull((element) => element.id == _id)
-        ?.meme;
+    final savedMeme = await _getMeme(id: _meme.id);
     if (savedMeme == null) {
       return false;
     }
@@ -298,7 +275,7 @@ class CreateMemeBloc {
     selectedMemeTextSubject.add(null);
   }
 
-  Stream<(String path, double aspectRatio)?> observeMemePath() =>
+  Stream<({Uint8List? imageBinary, double aspectRatio})?> observeMemePath() =>
       memePathSubject.distinct();
 
   Stream<List<MemeText>> observeMemeTexts() => memeTextsSubject.distinct(
@@ -335,10 +312,6 @@ class CreateMemeBloc {
 
   ScreenshotController get screenshotController => _screenshotController;
 
-  // TODO remove
-  // Stream<ScreenshotController> observeScreenShotController() =>
-  //     screenshotControllerSubject.distinct();
-
   Stream<List<MemeTextWithSelection>> observeMemeTextsWithSelection() {
     return Rx.combineLatest2<
       List<MemeText>,
@@ -363,10 +336,8 @@ class CreateMemeBloc {
     memeTextOffsetSubject.close();
     newMemeTextOffsetSubject.close();
     memePathSubject.close();
-    // screenshotControllerSubject.close();
     existentMemeSubscription?.cancel();
     newMemeTextOffsetSubscription?.cancel();
     saveMemeSubscription?.cancel();
-    shareMemeSubscription?.cancel();
   }
 }

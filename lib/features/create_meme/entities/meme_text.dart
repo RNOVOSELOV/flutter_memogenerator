@@ -5,11 +5,10 @@ import 'package:uuid/uuid.dart';
 
 import '../../../domain/entities/text_with_position.dart';
 
-
 class MemeText extends Equatable {
-  static const defaultColor = AppColors.dayTextColor;
-  static const defaultFontSize = 24.0;
-  static const defaultFontWeight = FontWeight.normal;
+  static const _defaultColor = AppColors.dayTextColor;
+  static const _defaultFontSize = 24.0;
+  static const _defaultFontWeight = FontWeight.normal;
 
   final String id;
   final String text;
@@ -26,27 +25,32 @@ class MemeText extends Equatable {
   });
 
   factory MemeText.createFromTextWithPosition(
-      TextWithPosition textWithPosition) {
+    TextWithPosition textWithPosition,
+  ) {
     return MemeText(
       id: textWithPosition.id,
       text: textWithPosition.text,
-      color: textWithPosition.color ?? defaultColor,
-      fontSize: textWithPosition.fontSize ?? defaultFontSize,
-      fontWeight: textWithPosition.fontWeight ?? defaultFontWeight,
+      color: textWithPosition.color ?? _defaultColor,
+      fontSize: textWithPosition.fontSize ?? _defaultFontSize,
+      fontWeight: textWithPosition.fontWeight ?? _defaultFontWeight,
     );
   }
 
   MemeText copyWithChangedText(final String newText) {
     return MemeText(
-        id: id,
-        text: newText,
-        color: color,
-        fontSize: fontSize,
-        fontWeight: fontWeight);
+      id: id,
+      text: newText,
+      color: color,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+    );
   }
 
-  MemeText copyWithChangedFontSettings(final Color newColor,
-      final double newFontSize, final FontWeight newFontWeight) {
+  MemeText copyWithChangedFontSettings(
+    final Color newColor,
+    final double newFontSize,
+    final FontWeight newFontWeight,
+  ) {
     return MemeText(
       id: id,
       text: text,
@@ -60,9 +64,9 @@ class MemeText extends Equatable {
     return MemeText(
       id: const Uuid().v4(),
       text: "",
-      color: defaultColor,
-      fontSize: defaultFontSize,
-      fontWeight: defaultFontWeight,
+      color: _defaultColor,
+      fontSize: _defaultFontSize,
+      fontWeight: _defaultFontWeight,
     );
   }
 

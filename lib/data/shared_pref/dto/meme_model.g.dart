@@ -11,7 +11,7 @@ MemeModel _$MemeModelFromJson(Map<String, dynamic> json) => MemeModel(
   texts: (json['texts'] as List<dynamic>)
       .map((e) => TextWithPositionModel.fromJson(e as Map<String, dynamic>))
       .toList(),
-  memePath: json['meme_path'] as String?,
+  memePath: json['meme_path'] as String,
 );
 
 Map<String, dynamic> _$MemeModelToJson(MemeModel instance) => <String, dynamic>{

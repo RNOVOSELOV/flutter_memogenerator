@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:memogenerator/widgets/confirmation_dialog.dart';
-import 'package:memogenerator/resources/app_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:yx_scope_flutter/yx_scope_flutter.dart';
 
@@ -11,7 +10,6 @@ import '../../navigation/navigation_path.dart';
 import '../../widgets/custom_appbar.dart';
 import '../../widgets/fab_widget.dart';
 import '../../widgets/grid_item.dart';
-import '../create_meme/models/meme_parameters.dart';
 import 'templates_bloc.dart';
 import 'domain/models/template_full.dart';
 
@@ -103,13 +101,13 @@ class TemplatesPageBodyContent extends StatelessWidget {
                     if (!context.mounted) {
                       return;
                     }
-                    CustomNavigationHelper.instance.router.pushNamed(
-                      NavigationPagePath.editMemePage.name,
-                      extra: MemeArgs(
-                        id: items.elementAt(index).id,
-                        path: items.elementAt(index).fullImagePath,
-                      ),
-                    );
+                    // CustomNavigationHelper.instance.router.pushNamed(
+                    //   NavigationPagePath.editMemePage.name,
+                    //   extra: MemeArgs(
+                    //     id: items.elementAt(index).id,
+                    //     path: items.elementAt(index).fullImagePath,
+                    //   ),
+                    // );
                   },
                   onDelete: () async {
                     await Future.delayed(Duration(milliseconds: 200), () {});

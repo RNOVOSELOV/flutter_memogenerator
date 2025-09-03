@@ -1,14 +1,11 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:memogenerator/di_sm/app_scope.dart';
 import 'package:memogenerator/domain/entities/meme.dart';
 import 'package:memogenerator/domain/usecases/meme_upload.dart';
-import 'package:memogenerator/features/memes/domain/use_cases/meme_delete.dart';
-import 'package:memogenerator/features/memes/domain/use_cases/meme_get.dart';
-import 'package:memogenerator/features/memes/domain/use_cases/meme_thumbnails_get_stream.dart';
-import 'package:memogenerator/features/create_meme/models/meme_parameters.dart';
-import 'package:memogenerator/features/memes/domain/use_cases/template_save.dart';
+import 'package:memogenerator/features/memes/use_cases/meme_delete.dart';
+import 'package:memogenerator/domain/usecases/meme_get.dart';
+import 'package:memogenerator/features/memes/use_cases/meme_thumbnails_get_stream.dart';
+import 'package:memogenerator/features/memes/use_cases/template_save.dart';
 import 'package:memogenerator/navigation/navigation_helper.dart';
 import 'package:memogenerator/navigation/navigation_path.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
@@ -72,7 +69,7 @@ class _MemesPageState extends State<MemesPage> {
             if (fileName != null) {
               CustomNavigationHelper.instance.router.pushNamed(
                 NavigationPagePath.editMemePage.name,
-                extra: Meme(id: Uuid().v4(), texts: [], memePath: fileName),
+                extra: Meme(id: const Uuid().v4(), texts: [], fileName: fileName),
               );
             }
           },

@@ -10,9 +10,13 @@ part 'meme_model.g.dart';
 class MemeModel extends Equatable {
   final String id;
   final List<TextWithPositionModel> texts;
-  final String? memePath;
+  final String memePath;
 
-  const MemeModel({required this.id, required this.texts, this.memePath});
+  const MemeModel({
+    required this.id,
+    required this.texts,
+    required this.memePath,
+  });
 
   factory MemeModel.fromJson(final Map<String, dynamic> json) =>
       _$MemeModelFromJson(json);
@@ -22,7 +26,7 @@ class MemeModel extends Equatable {
   Meme get meme => Meme(
     id: id,
     texts: texts.map((text) => text.textWithPosition).toList(),
-    memePath: memePath,
+    fileName: memePath,
   );
 
   factory MemeModel.fromMeme({required final Meme meme}) {
@@ -31,7 +35,7 @@ class MemeModel extends Equatable {
       texts: meme.texts
           .map((text) => TextWithPositionModel.fromTemplate(data: text))
           .toList(),
-      memePath: meme.memePath,
+      memePath: meme.fileName,
     );
   }
 
