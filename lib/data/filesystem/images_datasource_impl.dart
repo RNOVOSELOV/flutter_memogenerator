@@ -161,4 +161,35 @@ class FileSystemDatasource implements ImagesDatasource {
     image.dispose();
     return ratio;
   }
+
+  @override
+  Future<Uint8List?> getTemplatesBytesData({
+    required String templateImageName,
+    required final String templateDirectory,
+  }) async {
+    final docDirectory = await _getDocumentsDirectory();
+    final fullTemplatePath =
+        "$docDirectory$templateDirectory${Platform.pathSeparator}$templateImageName";
+    final file = File(fullTemplatePath);
+    if (await file.exists()) {
+      return await file.readAsBytes();
+    }
+    return null;
+  }
+
+  @override
+  Future<String?> saveTemplateToMemesImages({
+    required templateFileName,
+    required String templateDirectory,
+    required String memeDirectory,
+  }) async {
+    final docDirectory = await _getDocumentsDirectory();
+    final fullTemplatePath =
+        '$docDirectory$templateDirectory${Platform.pathSeparator}$templateFileName';
+    final fullMemePath =
+        '$docDirectory$memeDirectory${Platform.pathSeparator}$templateFileName';
+    final tempFile = File(fullTemplatePath);
+    await tempFile.copy(fullMemePath);
+    return templateFileName;
+  }
 }

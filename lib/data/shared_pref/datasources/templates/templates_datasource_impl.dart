@@ -41,4 +41,8 @@ class TemplatesDataSourceImpl
   }) async {
     return await setItem(TemplatesModel(templates: templates));
   }
+
+  @override
+  Stream<List<TemplateModel>> observeTemplatesList() =>
+      observeItem().map((model) => model == null ? [] : model.templates);
 }

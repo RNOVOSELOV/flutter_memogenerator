@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:memogenerator/domain/usecases/template_upload.dart';
+import 'package:memogenerator/features/templates/use_cases/template_delete.dart';
+import 'package:memogenerator/features/templates/use_cases/templates_get_stream.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:memogenerator/widgets/confirmation_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 import 'package:yx_scope_flutter/yx_scope_flutter.dart';
 
 import '../../di_sm/app_scope.dart';
+import '../../domain/entities/meme.dart';
 import '../../navigation/navigation_helper.dart';
 import '../../navigation/navigation_path.dart';
 import '../../widgets/custom_appbar.dart';
 import '../../widgets/fab_widget.dart';
 import '../../widgets/grid_item.dart';
 import 'templates_bloc.dart';
-import 'domain/models/template_full.dart';
+import '../../domain/entities/template_full.dart';
 
 class TemplatesPage extends StatefulWidget {
   const TemplatesPage({super.key});
@@ -31,8 +36,15 @@ class _TemplatesPageState extends State<TemplatesPage> {
       listen: false,
     );
     bloc = TemplatesBloc(
-      templatesRepository: appScopeHolder.scope!.templateDatasourceDep.get,
-      templateInteractor: appScopeHolder.scope!.templatesInteractorDep.get,
+      getTemplatesStream: TemplatesGetStream(
+        templatesRepository: appScopeHolder.scope!.templateRepositoryImpl.get,
+      ),
+      deleteTemplate: TemplateDelete(
+        templatesRepository: appScopeHolder.scope!.templateRepositoryImpl.get,
+      ),
+      uploadTemplateToMeme: TemplateToMemeUpload(
+        templateRepository: appScopeHolder.scope!.templateRepositoryImpl.get,
+      ),
     );
   }
 
@@ -48,7 +60,6 @@ class _TemplatesPageState extends State<TemplatesPage> {
             CustomNavigationHelper.instance.router.pushNamed(
               NavigationPagePath.templateDownloadPage.name,
             );
-            //            await bloc.addTemplate();
           },
         ),
         body: TemplatesPageBodyContent(),
@@ -95,32 +106,37 @@ class TemplatesPageBodyContent extends StatelessWidget {
                 itemCount: items.length,
                 itemBuilder: (context, index) => GridItem(
                   fileId: items.elementAt(index).id,
-                  fileUri: items.elementAt(index).fullImagePath,
+                  fileBytes: items.elementAt(index).templateImageBytes,
                   onPress: () async {
                     await Future.delayed(Duration(milliseconds: 200), () {});
                     if (!context.mounted) {
                       return;
                     }
-                    // CustomNavigationHelper.instance.router.pushNamed(
-                    //   NavigationPagePath.editMemePage.name,
-                    //   extra: MemeArgs(
-                    //     id: items.elementAt(index).id,
-                    //     path: items.elementAt(index).fullImagePath,
-                    //   ),
-                    // );
+                    final fileName = await bloc.uploadTemplateToMeme(
+                      templateId: items.elementAt(index).id,
+                    );
+                    if (fileName != null) {
+                      CustomNavigationHelper.instance.router.pushNamed(
+                        NavigationPagePath.editMemePage.name,
+                        extra: Meme(
+                          id: const Uuid().v4(),
+                          texts: [],
+                          fileName: fileName,
+                        ),
+                      );
+                    }
                   },
                   onDelete: () async {
                     await Future.delayed(Duration(milliseconds: 200), () {});
                     if (!context.mounted) {
                       return;
                     }
-                    final removeTemplateDialog =
-                        await showConfirmationDialog(
-                          context,
-                          title: 'Удалить шаблон?',
-                          text: 'Выбранный шаблон будет удален навсегда',
-                          actionButtonText: 'Удалить'
-                        );
+                    final removeTemplateDialog = await showConfirmationDialog(
+                      context,
+                      title: 'Удалить шаблон?',
+                      text: 'Выбранный шаблон будет удален навсегда',
+                      actionButtonText: 'Удалить',
+                    );
                     if ((removeTemplateDialog ?? false) == true) {
                       bloc.deleteTemplate(items.elementAt(index).id);
                     }

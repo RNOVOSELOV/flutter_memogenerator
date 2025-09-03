@@ -8,15 +8,12 @@ class GridItem extends StatelessWidget {
     super.key,
     required this.onPress,
     required this.onDelete,
-    required this.fileUri,
-    this.fileBytes,
+    required this.fileBytes,
     required this.fileId,
   });
 
   final VoidCallback onPress;
   final VoidCallback onDelete;
-  @Deprecated('Need to remove. Use fileBytes')
-  final String fileUri;
   final Uint8List? fileBytes;
   final String fileId;
 

@@ -12,7 +12,7 @@ class MemeRepositoryImp implements MemeRepository {
   final MemeDatasource _memeDataSource;
   final ImagesDatasource _imagesDatasource;
 
-  static const _memesPathName = "memes";
+  static const memesPathName = "memes";
 
   MemeRepositoryImp({
     required MemeDatasource memeDatasource,
@@ -36,31 +36,6 @@ class MemeRepositoryImp implements MemeRepository {
           }
           return thumbnails;
         });
-
-    // TODO Обновить мемы в списке, использовать функцию combineLatest3, где в терий стрим клаcть например null
-    // TODO для перегенерации всей комбинации
-    // return Rx.combineLatest2<List<Meme>, Directory, List<MemeThumbnail>>(
-    //   _memeDataSourceImpl.observeItem().map(
-    //     (memeModels) => memeModels == null
-    //         ? []
-    //         : memeModels.memes.map((memeModel) => memeModel.meme).toList(),
-    //   ),
-    //   getApplicationDocumentsDirectory().asStream(),
-    //   (memes, docDirectory) {
-    //     return memes.map((meme) {
-    //       final fullImagePath =
-    //           "${docDirectory.absolute.path}${Platform.pathSeparator}${meme.id}.png";
-    //       return MemeThumbnail(memeId: meme.id, imageBytes: fullImagePath);
-    //     }).toList();
-    //   },
-    // );
-  }
-
-  @override
-  void updateMemesThumbnails() {
-    // TODO: implement updateMemesThumbnails
-    // TODO Обновить мемы в списке, использовать функцию combineLatest3, где в терий стрим клаcть например null
-    // TODO для перегенерации всей комбинации
   }
 
   @override
@@ -94,7 +69,7 @@ class MemeRepositoryImp implements MemeRepository {
     required Uint8List fileBinaryData,
   }) async {
     final newFileName = await _imagesDatasource.saveFileDataAndReturnItName(
-      directoryWithFiles: _memesPathName,
+      directoryWithFiles: memesPathName,
       filePath: fileFullName,
       fileBytesData: fileBinaryData,
     );
@@ -106,7 +81,7 @@ class MemeRepositoryImp implements MemeRepository {
     required String fileName,
   }) async {
     return await _imagesDatasource.getImageData(
-      directoryWithFile: _memesPathName,
+      directoryWithFile: memesPathName,
       fileName: fileName,
     );
   }

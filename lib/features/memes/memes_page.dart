@@ -134,7 +134,6 @@ class _MemeItem extends StatelessWidget {
     return GridItem(
       fileId: memeThumbnail.memeId,
       fileBytes: memeThumbnail.imageBytes,
-      fileUri: '',
       onPress: () async {
         final MemesBloc bloc = Provider.of<MemesBloc>(context, listen: false);
         await Future.delayed(Duration(milliseconds: 200), () {});

@@ -26,6 +26,4 @@ abstract interface class MemeRepository {
   Future<({Uint8List imageBinary, double aspectRatio})?> getImageBinaryData({
     required String fileName,
   });
-
-  void updateMemesThumbnails();
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:typed_data';
 import 'dart:ui';
 
@@ -67,7 +68,9 @@ class CreateMemeBloc {
     existentMemeSubscription = _getMeme(id: _meme.id).asStream().listen(
       (memeData) {
         // Если мема нет в сторе, то берем его из входяжих параметров
+        log('MEMEFILENAME: ${memeData?.fileName}');
         final meme = memeData ?? _meme;
+        log('MEMEFILENAME: ${meme.fileName}');
         final memeTexts = meme.texts.map((textWithPosition) {
           return MemeText.createFromTextWithPosition(textWithPosition);
         }).toList();

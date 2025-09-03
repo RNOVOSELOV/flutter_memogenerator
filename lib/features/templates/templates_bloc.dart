@@ -1,44 +1,46 @@
-import 'dart:io';
+import 'package:memogenerator/domain/entities/template_full.dart';
+import 'package:memogenerator/domain/usecases/template_upload.dart';
 
-import 'package:memogenerator/domain/entities/template.dart';
-import 'package:memogenerator/data/interactors/template_interactor.dart';
-import 'package:memogenerator/features/templates/domain/models/template_full.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:rxdart/rxdart.dart';
-
-import '../../data/shared_pref/datasources/templates/templates_datasource_impl.dart';
+import 'use_cases/template_delete.dart';
+import 'use_cases/templates_get_stream.dart';
 
 class TemplatesBloc {
-  final TemplatesDataSourceImpl _templatesRepository;
-  final TemplateInteractor _templateInteractor;
+  final TemplatesGetStream _getTemplatesStream;
+  final TemplateDelete _deleteTemplate;
+  final TemplateToMemeUpload _uploadTemplateToMeme;
 
   TemplatesBloc({
-    required TemplatesDataSourceImpl templatesRepository,
-    required TemplateInteractor templateInteractor,
-  }) : _templatesRepository = templatesRepository,
-       _templateInteractor = templateInteractor;
+    required TemplatesGetStream getTemplatesStream,
+    required TemplateToMemeUpload uploadTemplateToMeme,
+    required TemplateDelete deleteTemplate,
+  }) : _getTemplatesStream = getTemplatesStream,
+       _deleteTemplate = deleteTemplate,
+       _uploadTemplateToMeme = uploadTemplateToMeme;
 
-  Stream<List<TemplateFull>> observeTemplates() =>
-      Rx.combineLatest2<List<Template>, Directory, List<TemplateFull>>(
-        _templatesRepository.observeItem().map(
-          (templateModels) => templateModels == null
-              ? []
-              : templateModels.templates
-                    .map((templateModel) => templateModel.template)
-                    .toList(),
-        ),
-        getApplicationDocumentsDirectory().asStream(),
-        (templates, docDirectory) {
-          return templates.map((template) {
-            final fullImagePath =
-                "${docDirectory.absolute.path}${Platform.pathSeparator}${TemplateInteractor.templatesPathName}${Platform.pathSeparator}${template.imageName}";
-            return TemplateFull(id: template.id, fullImagePath: fullImagePath);
-          }).toList();
-        },
-      );
+  Stream<List<TemplateFull>> observeTemplates() => _getTemplatesStream();
 
-  void deleteTemplate(final String templateId) {
-    _templateInteractor.deleteTemplate(id: templateId);
+  Future<bool> deleteTemplate(final String templateId) async {
+    return await _deleteTemplate(templateId: templateId);
+  }
+
+  Future<String?> uploadTemplateToMeme({required String templateId}) async {
+    final result = _uploadTemplateToMeme (templateId: templateId);
+    return result;
+
+    // final data = await xFile.readAsBytes();
+    // final result = await _saveTemplate(
+    //   fileName: xFile.path,
+    //   fileBytesData: data,
+    // );
+    // if (result) {
+    //   final newFileName = await _uploadMemeFile(
+    //     fileName: xFile.path,
+    //     binaryData: data,
+    //   );
+    //   return newFileName;
+    // }
+    //
+    // return null;
   }
 
   void dispose() {}
