@@ -1,7 +1,7 @@
 import 'package:either_dart/either.dart';
 
-import '../model/memes_response.dart';
-import 'entities/api_error.dart';
+import '../http/dto/memes_response.dart';
+import '../http/models/api_error.dart';
 
 abstract interface class ApiDataProvider {
   Future<Either<ApiError, MemesResponse>> getMemes();

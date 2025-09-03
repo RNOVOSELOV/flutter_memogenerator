@@ -1,22 +1,22 @@
-import 'package:memogenerator/data/shared_pref/models/meme_model.dart';
-import 'package:memogenerator/data/shared_pref/models/memes_model.dart';
-import 'package:memogenerator/domain/interactors/copy_unique_file_interactor.dart';
-import 'package:memogenerator/domain/interactors/screenshot_interactor.dart';
+import 'package:memogenerator/data/interactors/copy_unique_file_interactor.dart';
+import 'package:memogenerator/data/interactors/screenshot_interactor.dart';
 import 'package:screenshot/screenshot.dart';
 
-import '../../data/shared_pref/repositories/memes/memes_repository.dart';
-import '../entities/meme.dart';
-import '../entities/text_with_position.dart';
+import '../../domain/entities/meme.dart';
+import '../../domain/entities/text_with_position.dart';
+import '../shared_pref/dto/meme_model.dart';
+import '../shared_pref/dto/memes_model.dart';
+import '../shared_pref/datasources/memes/meme_datasource_impl.dart';
 
 class MemeInteractor {
   static const memesPathName = "memes";
 
-  final MemesRepository _memeRepository;
+  final MemesDataSourceImpl _memeRepository;
   final CopyUniqueFileInteractor _copyUniqueFileInteractor;
   final ScreenshotInteractor _screenshotInteractor;
 
   MemeInteractor({
-    required MemesRepository memeRepository,
+    required MemesDataSourceImpl memeRepository,
     required CopyUniqueFileInteractor copyUniqueFileInteractor,
     required ScreenshotInteractor screenshotInteractor,
   }) : _memeRepository = memeRepository,
@@ -34,8 +34,7 @@ class MemeInteractor {
         meme: Meme(id: id, texts: textWithPositions),
       );
     }
-    // TODO check saving thumbnails
-    _screenshotInteractor.saveThumbnail(id, screenshotController);
+    await _screenshotInteractor.saveThumbnail(id, screenshotController);
     final newImagePath = await _copyUniqueFileInteractor.copyUniqueFile(
       directoryWithFiles: memesPathName,
       filePath: imagePath,
@@ -45,11 +44,7 @@ class MemeInteractor {
     );
   }
 
-  Future<bool> deleteMeme({required final String id}) async {
-    final savedData = (await _memeRepository.getItem())?.memes ?? [];
-    savedData.removeWhere((element) => element.id == id);
-    return await _memeRepository.setItem(MemesModel(memes: savedData));
-  }
+
 
   Future<bool> _insertMemeOrReplaceById({required final Meme meme}) async {
     final savedData = (await _memeRepository.getItem())?.memes ?? [];

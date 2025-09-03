@@ -39,7 +39,7 @@ class _CreateMemePageState extends State<CreateMemePage> {
     bloc = CreateMemeBloc(
       savedId: widget.memeArgs.id,
       selectedMemePath: widget.memeArgs.path,
-      memeRepository: appScopeHolder.scope!.memeRepositoryDep.get,
+      memeRepository: appScopeHolder.scope!.memeDatasourceDep.get,
       memeInteractor: appScopeHolder.scope!.memesInteractorDep.get,
       screenshotInteractor: appScopeHolder.scope!.screenshotInteractorDep.get,
     );

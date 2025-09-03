@@ -2,22 +2,23 @@ import 'dart:io';
 
 import 'package:equatable/equatable.dart';
 
-import '../../model/meme_dto.dart';
+import '../dto/meme_dto.dart';
 
-class MemeData extends Equatable {
+
+class MemeApiData extends Equatable {
   final String fileName;
   final double aspectRatio;
   final String url;
   final String name;
 
-  const MemeData({
+  const MemeApiData({
     required this.fileName,
     required this.aspectRatio,
     required this.url,
     required this.name,
   });
 
-  MemeData.fromApi({required MemeDto memeDto})
+  MemeApiData.fromApi({required MemeDto memeDto})
     : this(
         fileName:
             '${memeDto.id}_${memeDto.url.split(Platform.pathSeparator).last}',

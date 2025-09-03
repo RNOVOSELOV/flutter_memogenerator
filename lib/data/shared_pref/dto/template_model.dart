@@ -16,10 +16,10 @@ class TemplateModel extends Equatable {
 
   Map<String, dynamic> toJson() => _$TemplateModelToJson(this);
 
-  Template get template => Template(id: id, imageUrl: imageUrl);
+  Template get template => Template(id: id, imageName: imageUrl);
 
   factory TemplateModel.fromTemplate({required final Template template}) {
-    return TemplateModel(id: template.id, imageUrl: template.imageUrl);
+    return TemplateModel(id: template.id, imageUrl: template.imageName);
   }
 
   @override

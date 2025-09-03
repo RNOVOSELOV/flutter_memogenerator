@@ -3,7 +3,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'memes_data.dart';
 
-
 part 'memes_response.g.dart';
 
 @JsonSerializable()

@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:either_dart/either.dart';
-import 'domain/api_data_provider.dart';
-import 'domain/entities/api_error.dart';
-import 'model/memes_response.dart';
-import 'base_api_service.dart';
+import '../http/api_data_provider.dart';
+import '../http/base_api_service.dart';
+import '../http/dto/memes_response.dart';
+import '../http/models/api_error.dart';
 
 class ApiService extends BaseApiService implements ApiDataProvider {
   final Dio _dio;

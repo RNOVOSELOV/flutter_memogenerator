@@ -1,17 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:either_dart/either.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:memogenerator/domain/entities/message.dart';
 import 'package:memogenerator/features/template_download/template_download_bloc.dart';
-import 'package:memogenerator/resources/app_colors.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:memogenerator/widgets/snackbar_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:yx_scope_flutter/yx_scope_flutter.dart';
 
-import '../../data/http/domain/entities/api_error.dart';
-import '../../data/http/domain/entities/meme_data.dart';
+import '../../data/http/models/api_error.dart';
+import '../../data/http/models/meme_data.dart';
 import '../../di_sm/app_scope.dart';
 import '../../widgets/grid_item.dart';
 import 'fullscreen_image_widget.dart';
@@ -34,9 +32,9 @@ class _TemplateDownloadPageState extends State<TemplateDownloadPage> {
       listen: false,
     );
     bloc = TemplateDownloadBloc(
-      templatesRepository: appScopeHolder.scope!.templateRepositoryDep.get,
+      templatesRepository: appScopeHolder.scope!.templateDatasourceDep.get,
       templateInteractor: appScopeHolder.scope!.templatesInteractorDep.get,
-      apiRepository: appScopeHolder.scope!.memeApiRepositoryDep.get,
+      apiRepository: appScopeHolder.scope!.memeApiDatasourceDep.get,
     );
   }
 
@@ -83,7 +81,7 @@ class TemplatesPageBodyContent extends StatelessWidget {
       context,
       listen: false,
     );
-    return FutureBuilder<Either<ApiError, List<MemeData>>>(
+    return FutureBuilder<Either<ApiError, List<MemeApiData>>>(
       future: bloc.getMemes(),
       builder: (context, snapshot) {
         final isTemplatesDataReceived = snapshot.hasData;
@@ -148,7 +146,7 @@ class GridItem extends StatefulWidget {
   const GridItem({super.key, required this.onDownload, required this.memeData});
 
   final VoidCallback onDownload;
-  final MemeData memeData;
+  final MemeApiData memeData;
 
   @override
   State<GridItem> createState() => _GridItemState();

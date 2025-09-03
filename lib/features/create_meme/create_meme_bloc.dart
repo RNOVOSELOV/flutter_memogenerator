@@ -4,8 +4,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
-import 'package:memogenerator/domain/interactors/meme_interactor.dart';
-import 'package:memogenerator/domain/interactors/screenshot_interactor.dart';
 import 'package:memogenerator/features/create_meme/models/meme_text_offset.dart';
 import 'package:memogenerator/features/create_meme/models/meme_text.dart';
 import 'package:memogenerator/features/create_meme/models/meme_text_with_offset.dart';
@@ -16,7 +14,9 @@ import 'package:collection/collection.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../data/shared_pref/repositories/memes/memes_repository.dart';
+import '../../data/shared_pref/datasources/memes/meme_datasource_impl.dart';
+import '../../data/interactors/meme_interactor.dart';
+import '../../data/interactors/screenshot_interactor.dart';
 import '../../domain/entities/meme.dart';
 import '../../domain/entities/position.dart';
 import '../../domain/entities/text_with_position.dart';
@@ -43,7 +43,7 @@ class CreateMemeBloc {
   StreamSubscription<void>? shareMemeSubscription;
 
   final String _id;
-  final MemesRepository _memeRepository;
+  final MemesDataSourceImpl _memeRepository;
   final MemeInteractor _memeInteractor;
   final ScreenshotInteractor _screenshotInteractor;
   final ScreenshotController _screenshotController;
@@ -53,7 +53,7 @@ class CreateMemeBloc {
     final String? savedId,
     required final ScreenshotInteractor screenshotInteractor,
     required final MemeInteractor memeInteractor,
-    required final MemesRepository memeRepository,
+    required final MemesDataSourceImpl memeRepository,
   }) : _id = savedId ?? const Uuid().v4(),
        _memeRepository = memeRepository,
        _memeInteractor = memeInteractor,

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
 
-abstract class ReactiveRepository<T> {
+abstract class ReactiveSharedPreferencesDatasource<T> {
   final updater = PublishSubject<Null>();
 
   @protected

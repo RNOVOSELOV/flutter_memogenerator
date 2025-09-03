@@ -6,6 +6,7 @@ class CopyUniqueFileInteractor {
 
   CopyUniqueFileInteractor ();
 
+  @Deprecated('message')
   Future<String> copyUniqueFile({
     required final String directoryWithFiles,
     required final String filePath,
@@ -76,6 +77,7 @@ class CopyUniqueFileInteractor {
     return newFileImageName;
   }
 
+  @Deprecated('message')
   String _getFileNameByPath(String imagePath) =>
       imagePath.split(Platform.pathSeparator).last;
 }

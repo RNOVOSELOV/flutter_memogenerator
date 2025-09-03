@@ -1,5 +1,6 @@
-import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:memogenerator/resources/app_colors.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 
 class GridItem extends StatelessWidget {
@@ -8,17 +9,19 @@ class GridItem extends StatelessWidget {
     required this.onPress,
     required this.onDelete,
     required this.fileUri,
+    this.fileBytes,
     required this.fileId,
   });
 
   final VoidCallback onPress;
   final VoidCallback onDelete;
+  @Deprecated('Need to remove. Use fileBytes')
   final String fileUri;
+  final Uint8List? fileBytes;
   final String fileId;
 
   @override
   Widget build(BuildContext context) {
-    final imageFile = File(fileUri);
     return Stack(
       children: [
         Card(
@@ -38,17 +41,50 @@ class GridItem extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(8)),
               ),
             ),
-            child: imageFile.existsSync()
-                ? ClipRRect(
+            child: fileBytes == null
+                ? Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.warning_amber_outlined,
+                          size: 38,
+                          color: AppColors.errorColor,
+                        ),
+                        SizedBox(height: 6),
+                        Text(
+                          'Ошибка загрузки изображения',
+                          textAlign: TextAlign.center,
+                          style: context.theme.memeRegular12.copyWith(
+                            fontSize: 10,
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          fileId,
+                          textAlign: TextAlign.center,
+                          style: context.theme.memeRegular12.copyWith(
+                            fontSize: 8,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(8)),
-                    child: Image.file(
-                      imageFile,
+                    child: Image.memory(
+                      fileBytes!,
                       height: double.infinity,
                       width: double.infinity,
                       fit: BoxFit.scaleDown,
+                      gaplessPlayback: true,
                     ),
-                  )
-                : Text(fileId),
+                  ),
           ),
         ),
         Align(

@@ -1,58 +1,40 @@
-import 'dart:io';
+import 'dart:async';
 
 import 'package:image_picker/image_picker.dart';
-import 'package:memogenerator/domain/interactors/meme_interactor.dart';
-import 'package:memogenerator/domain/interactors/template_interactor.dart';
-import 'package:memogenerator/features/memes/domain/models/meme_thumbnail.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:rxdart/rxdart.dart';
-
-import '../../data/shared_pref/repositories/memes/memes_repository.dart';
-import '../../domain/entities/meme.dart';
+import 'package:memogenerator/domain/entities/meme_thumbnail.dart';
+import 'package:memogenerator/features/memes/domain/use_cases/meme_delete.dart';
+import 'package:memogenerator/features/memes/domain/use_cases/meme_thumbnails_get_stream.dart';
+import 'package:memogenerator/features/memes/domain/use_cases/template_save.dart';
 
 class MemesBloc {
-  final MemesRepository _memesRepository;
-  final MemeInteractor _memeInteractor;
-  final TemplateInteractor _templateInteractor;
+  final MemeThumbnailsGetStream _getMemesThumbnailStream;
+  final MemeDelete _deleteMeme;
+  final TemplateSave _saveTemplate;
 
   MemesBloc({
-    required MemesRepository memeRepository,
-    required MemeInteractor memeInteractor,
-    required TemplateInteractor templateInteractor,
-  }) : _memesRepository = memeRepository,
-       _memeInteractor = memeInteractor,
-       _templateInteractor = templateInteractor;
+    required MemeThumbnailsGetStream getMemeThumbnailsStream,
+    required MemeDelete deleteMeme,
+    required TemplateSave saveTemplate,
+  }) : _getMemesThumbnailStream = getMemeThumbnailsStream,
+       _deleteMeme = deleteMeme,
+       _saveTemplate = saveTemplate;
 
-  // TODO Обновить мемы в списке, использовать функцию combineLatest3, где в терий стрим клаcть например null
-  // TODO для перегенерации всей комбинации
-  Stream<List<MemeThumbnail>>
-  observeMemes() => Rx.combineLatest2<List<Meme>, Directory, List<MemeThumbnail>>(
-    _memesRepository.observeItem().map(
-      (memeModels) => memeModels == null
-          ? []
-          : memeModels.memes.map((memeModel) => memeModel.meme).toList(),
-    ),
-    getApplicationDocumentsDirectory().asStream(),
-    (memes, docDirectory) {
-      return memes.map((meme) {
-        final fullImagePath =
-            "${docDirectory.absolute.path}${Platform.pathSeparator}${meme.id}.png";
-        return MemeThumbnail(memeId: meme.id, fullImageUrl: fullImagePath);
-      }).toList();
-    },
-  );
+  Stream<List<MemeThumbnail>> observeMemesThumbnails() =>
+      _getMemesThumbnailStream().distinct((previous, next) => previous.length == next.length,);
 
   Future<String?> selectMeme() async {
     final xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-    final imagePath = xFile?.path;
-    if (imagePath != null) {
-      await _templateInteractor.saveTemplate(imagePath: imagePath);
+    if (xFile != null) {
+      final data = await xFile.readAsBytes();
+      await _saveTemplate(fileName: xFile.path, fileBytesData: data);
     }
-    return imagePath;
+    return null;
   }
 
   void deleteMeme(final String memeId) {
-    _memeInteractor.deleteMeme(id: memeId);
+    _deleteMeme(memeId: memeId).then((value) {
+      // TODO show message about result
+    });
   }
 
   void dispose() {}

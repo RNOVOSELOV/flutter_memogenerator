@@ -1,6 +1,5 @@
-import 'package:memogenerator/data/http/model/api_error_response.dart';
-
 import '../../../../../resources/app_constants.dart';
+import '../dto/api_error_response.dart';
 
 class ApiError {
   final String description;

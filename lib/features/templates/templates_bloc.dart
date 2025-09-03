@@ -1,21 +1,19 @@
-import 'dart:developer';
 import 'dart:io';
 
-import 'package:image_picker/image_picker.dart';
-import 'package:memogenerator/data/shared_pref/repositories/templates/templates_repository.dart';
-import 'package:memogenerator/data/shared_pref/shared_preference_data.dart';
 import 'package:memogenerator/domain/entities/template.dart';
-import 'package:memogenerator/domain/interactors/template_interactor.dart';
+import 'package:memogenerator/data/interactors/template_interactor.dart';
 import 'package:memogenerator/features/templates/domain/models/template_full.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../data/shared_pref/datasources/templates/templates_datasource_impl.dart';
+
 class TemplatesBloc {
-  final TemplatesRepository _templatesRepository;
+  final TemplatesDataSourceImpl _templatesRepository;
   final TemplateInteractor _templateInteractor;
 
   TemplatesBloc({
-    required TemplatesRepository templatesRepository,
+    required TemplatesDataSourceImpl templatesRepository,
     required TemplateInteractor templateInteractor,
   }) : _templatesRepository = templatesRepository,
        _templateInteractor = templateInteractor;
@@ -33,7 +31,7 @@ class TemplatesBloc {
         (templates, docDirectory) {
           return templates.map((template) {
             final fullImagePath =
-                "${docDirectory.absolute.path}${Platform.pathSeparator}${TemplateInteractor.templatesPathName}${Platform.pathSeparator}${template.imageUrl}";
+                "${docDirectory.absolute.path}${Platform.pathSeparator}${TemplateInteractor.templatesPathName}${Platform.pathSeparator}${template.imageName}";
             return TemplateFull(id: template.id, fullImagePath: fullImagePath);
           }).toList();
         },

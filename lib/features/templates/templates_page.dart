@@ -33,7 +33,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
       listen: false,
     );
     bloc = TemplatesBloc(
-      templatesRepository: appScopeHolder.scope!.templateRepositoryDep.get,
+      templatesRepository: appScopeHolder.scope!.templateDatasourceDep.get,
       templateInteractor: appScopeHolder.scope!.templatesInteractorDep.get,
     );
   }

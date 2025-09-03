@@ -1,21 +1,22 @@
 import 'package:either_dart/either.dart';
 
-import 'api_data_provider.dart';
-import 'entities/api_error.dart';
-import 'entities/meme_data.dart';
+import '../http/api_data_provider.dart';
+import '../http/models/api_error.dart';
+import '../http/models/meme_data.dart';
 
-class ApiRepository {
+@Deprecated('TODO REMOVE USE API DATA PROVIDER INSTEAD')
+class ApiDatasource {
   final ApiDataProvider _apiDataProvider;
 
-  ApiRepository({required ApiDataProvider dataProvider})
+  ApiDatasource({required ApiDataProvider dataProvider})
     : _apiDataProvider = dataProvider;
 
-  final List<MemeData> memeCache = [];
+  final List<MemeApiData> memeCache = [];
 
   /// Get memes request
   ///
-  /// Return [ApiError] if some error happens or List of [MemeData]
-  Future<Either<ApiError, List<MemeData>>> getMemeTemplates() async {
+  /// Return [ApiError] if some error happens or List of [MemeApiData]
+  Future<Either<ApiError, List<MemeApiData>>> getMemeTemplates() async {
     if (memeCache.isNotEmpty) return Right(memeCache);
 
     final data = await _apiDataProvider.getMemes();
@@ -23,7 +24,7 @@ class ApiRepository {
       return Left(data.left);
     }
     memeCache.addAll(
-      data.right.memesData.memes.map((meme) => MemeData.fromApi(memeDto: meme)),
+      data.right.memesData.memes.map((meme) => MemeApiData.fromApi(memeDto: meme)),
     );
     return Right(memeCache);
   }

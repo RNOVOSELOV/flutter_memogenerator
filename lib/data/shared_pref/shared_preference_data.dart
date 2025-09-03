@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'repositories/memes/meme_data_provider.dart';
-import 'repositories/templates/template_data_provider.dart';
+import 'datasources/memes/meme_data_provider.dart';
+import 'datasources/templates/template_data_provider.dart';
 
 class SharedPreferenceData implements MemeDataProvider, TemplateDataProvider {
   static const _memeKey = "meme_key";
@@ -26,12 +26,14 @@ class SharedPreferenceData implements MemeDataProvider, TemplateDataProvider {
     required final String key,
     required final String? item,
   }) async {
+    // TODO move sp instance to constructor
     final sp = await SharedPreferences.getInstance();
     final result = sp.setString(key, item ?? '');
     return result;
   }
 
   Future<String?> _getItem(final String key) async {
+    // TODO move sp instance to constructor
     final sp = await SharedPreferences.getInstance();
     return sp.getString(key);
   }

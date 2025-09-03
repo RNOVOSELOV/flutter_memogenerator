@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import 'meme_dto.dart';
+import '../../http/dto/meme_dto.dart';
 
 part 'memes_data.g.dart';
 
