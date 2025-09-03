@@ -15,12 +15,12 @@ import 'package:screenshot/screenshot.dart';
 import 'package:yx_scope_flutter/yx_scope_flutter.dart';
 
 import '../../di_sm/app_scope.dart';
-import 'models/meme_parameters.dart';
+import '../../domain/entities/meme.dart';
 
 class CreateMemePage extends StatefulWidget {
-  final MemeArgs memeArgs;
+  final Meme meme;
 
-  const CreateMemePage({super.key, required this.memeArgs});
+  const CreateMemePage({super.key, required this.meme});
 
   @override
   State<CreateMemePage> createState() => _CreateMemePageState();
@@ -37,8 +37,8 @@ class _CreateMemePageState extends State<CreateMemePage> {
       listen: false,
     );
     bloc = CreateMemeBloc(
-      savedId: widget.memeArgs.id,
-      selectedMemePath: widget.memeArgs.path,
+      savedId: widget.meme.id,
+      selectedMemePath: widget.meme.memePath ?? '',
       memeRepository: appScopeHolder.scope!.memeDatasourceDep.get,
       memeInteractor: appScopeHolder.scope!.memesInteractorDep.get,
       screenshotInteractor: appScopeHolder.scope!.screenshotInteractorDep.get,

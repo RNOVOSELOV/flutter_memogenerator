@@ -1,12 +1,11 @@
 import 'dart:developer';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:memogenerator/data/filesystem/images_datasource_impl.dart';
-import 'package:memogenerator/data/repositories/meme_repository_impl.dart';
-import 'package:memogenerator/data/repositories/template_repository_impl.dart';
 import 'package:memogenerator/di_sm/app_scope.dart';
+import 'package:memogenerator/domain/entities/meme.dart';
+import 'package:memogenerator/domain/usecases/meme_upload.dart';
 import 'package:memogenerator/features/memes/domain/use_cases/meme_delete.dart';
+import 'package:memogenerator/features/memes/domain/use_cases/meme_get.dart';
 import 'package:memogenerator/features/memes/domain/use_cases/meme_thumbnails_get_stream.dart';
 import 'package:memogenerator/features/create_meme/models/meme_parameters.dart';
 import 'package:memogenerator/features/memes/domain/use_cases/template_save.dart';
@@ -15,6 +14,7 @@ import 'package:memogenerator/navigation/navigation_path.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:memogenerator/widgets/confirmation_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 import 'package:yx_scope_flutter/yx_scope_flutter.dart';
 
 import '../../widgets/custom_appbar.dart';
@@ -41,8 +41,13 @@ class _MemesPageState extends State<MemesPage> {
       listen: false,
     );
     bloc = MemesBloc(
-      // TODO change scoupes
       getMemeThumbnailsStream: MemeThumbnailsGetStream(
+        memeRepository: appScopeHolder.scope!.memeRepositoryImpl.get,
+      ),
+      getMeme: MemeGet(
+        memeRepository: appScopeHolder.scope!.memeRepositoryImpl.get,
+      ),
+      uploadMemeFile: MemeUploadFile(
         memeRepository: appScopeHolder.scope!.memeRepositoryImpl.get,
       ),
       deleteMeme: MemeDelete(
@@ -63,14 +68,13 @@ class _MemesPageState extends State<MemesPage> {
         floatingActionButton: CreateFab(
           text: 'Мем',
           onTap: () async {
-            final selectedMemePath = await bloc.selectMeme();
-            if (selectedMemePath == null) {
-              return;
+            final fileName = await bloc.selectMeme();
+            if (fileName != null) {
+              CustomNavigationHelper.instance.router.pushNamed(
+                NavigationPagePath.editMemePage.name,
+                extra: Meme(id: Uuid().v4(), texts: [], memePath: fileName),
+              );
             }
-            CustomNavigationHelper.instance.router.pushNamed(
-              NavigationPagePath.editMemePage.name,
-              extra: MemeArgs(path: selectedMemePath),
-            );
           },
         ),
         body: MemePageBodyContent(),
@@ -135,19 +139,18 @@ class _MemeItem extends StatelessWidget {
       fileBytes: memeThumbnail.imageBytes,
       fileUri: '',
       onPress: () async {
+        final MemesBloc bloc = Provider.of<MemesBloc>(context, listen: false);
         await Future.delayed(Duration(milliseconds: 200), () {});
         if (!context.mounted) {
           return;
         }
-        CustomNavigationHelper.instance.router.pushNamed(
-          NavigationPagePath.editMemePage.name,
-          extra: MemeArgs(
-            id: memeThumbnail.memeId,
-            // TODO FIX
-            //path: items.elementAt(index).fullImageUrl,
-            path: '',
-          ),
-        );
+        final meme = await bloc.getMeme(id: memeThumbnail.memeId);
+        if (meme != null) {
+          CustomNavigationHelper.instance.router.pushNamed(
+            NavigationPagePath.editMemePage.name,
+            extra: meme,
+          );
+        }
       },
       onDelete: () async {
         final MemesBloc bloc = Provider.of<MemesBloc>(context, listen: false);
