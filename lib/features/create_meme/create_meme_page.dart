@@ -1,13 +1,14 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:memogenerator/domain/usecases/meme_get.dart';
 import 'package:memogenerator/features/create_meme/create_meme_bloc.dart';
 import 'package:memogenerator/features/create_meme/font_settings_bottom_sheet.dart';
 import 'package:memogenerator/features/create_meme/meme_text_on_canvas.dart';
-import 'package:memogenerator/features/create_meme/models/meme_text.dart';
-import 'package:memogenerator/features/create_meme/models/meme_text_with_offset.dart';
-import 'package:memogenerator/features/create_meme/models/meme_text_with_selection.dart';
+import 'package:memogenerator/features/create_meme/use_cases/meme_get_binary.dart';
+import 'package:memogenerator/features/create_meme/use_cases/meme_save.dart';
+import 'package:memogenerator/features/create_meme/use_cases/meme_save_thumbnail.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:memogenerator/widgets/confirmation_dialog.dart';
 import 'package:provider/provider.dart';
@@ -15,12 +16,15 @@ import 'package:screenshot/screenshot.dart';
 import 'package:yx_scope_flutter/yx_scope_flutter.dart';
 
 import '../../di_sm/app_scope.dart';
-import 'models/meme_parameters.dart';
+import '../../domain/entities/meme.dart';
+import 'entities/meme_text.dart';
+import 'entities/meme_text_with_offset.dart';
+import 'entities/meme_text_with_selection.dart';
 
 class CreateMemePage extends StatefulWidget {
-  final MemeArgs memeArgs;
+  final Meme meme;
 
-  const CreateMemePage({super.key, required this.memeArgs});
+  const CreateMemePage({super.key, required this.meme});
 
   @override
   State<CreateMemePage> createState() => _CreateMemePageState();
@@ -37,11 +41,19 @@ class _CreateMemePageState extends State<CreateMemePage> {
       listen: false,
     );
     bloc = CreateMemeBloc(
-      savedId: widget.memeArgs.id,
-      selectedMemePath: widget.memeArgs.path,
-      memeRepository: appScopeHolder.scope!.memeRepositoryDep.get,
-      memeInteractor: appScopeHolder.scope!.memesInteractorDep.get,
-      screenshotInteractor: appScopeHolder.scope!.screenshotInteractorDep.get,
+      meme: widget.meme,
+      getBinary: MemeGetBinary(
+        memeRepository: appScopeHolder.scope!.memeRepositoryImpl.get,
+      ),
+      getMeme: MemeGet(
+        memeRepository: appScopeHolder.scope!.memeRepositoryImpl.get,
+      ),
+      saveMeme: MemeSave(
+        memeRepository: appScopeHolder.scope!.memeRepositoryImpl.get,
+      ),
+      saveMemeThumbnail: MemeSaveThumbnail(
+        memeRepository: appScopeHolder.scope!.memeRepositoryImpl.get,
+      ),
     );
   }
 
@@ -368,7 +380,9 @@ class BottomMemeText extends StatelessWidget {
         height: 48,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         alignment: Alignment.centerLeft,
-        color: item.selected ? context.color.cardBackgroundColor : Colors.transparent,
+        color: item.selected
+            ? context.color.cardBackgroundColor
+            : Colors.transparent,
         child: Row(
           children: [
             const SizedBox(width: 16),
@@ -452,7 +466,11 @@ class _BottomMemeTextActionState extends State<BottomMemeTextAction> {
         scale: scale,
         duration: Duration(milliseconds: 200),
         curve: Curves.bounceInOut,
-        child: Icon(widget.icon, color: context.color.iconSelectedColor, size: 24),
+        child: Icon(
+          widget.icon,
+          color: context.color.iconSelectedColor,
+          size: 24,
+        ),
         onEnd: () => setState(() => scale = 1.0),
       ),
     );
@@ -475,33 +493,38 @@ class MemeCanvasWidget extends StatelessWidget {
           children: [
             Align(
               alignment: Alignment.center,
-              child: StreamBuilder<(String path, double aspectRatio)?>(
-                stream: bloc.observeMemePath(),
-                builder: (context, snapshot) {
-                  final imageData = snapshot.hasData ? snapshot.data : null;
-                  if (imageData == null) {
-                    return AspectRatio(
-                      aspectRatio: 1,
-                      child: Container(
-                        color: context.color.cardBackgroundColor,
-                      ),
-                    );
-                  }
-                  final file = File(imageData.$1);
-                  return AspectRatio(
-                    aspectRatio: imageData.$2,
-                    child: Screenshot(
-                      controller: bloc.screenshotController,
-                      child: Stack(
-                        children: [
-                          Image.file(file, fit: BoxFit.scaleDown),
-                          MemeTexts(),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
+              child:
+                  StreamBuilder<
+                    ({Uint8List? imageBinary, double aspectRatio})?
+                  >(
+                    stream: bloc.observeMemePath(),
+                    builder: (context, snapshot) {
+                      final imageData = snapshot.hasData ? snapshot.data : null;
+                      if (imageData == null) {
+                        return AspectRatio(
+                          aspectRatio: 1,
+                          child: Container(
+                            color: context.color.cardBackgroundColor,
+                          ),
+                        );
+                      }
+                      return AspectRatio(
+                        aspectRatio: imageData.aspectRatio,
+                        child: Screenshot(
+                          controller: bloc.screenshotController,
+                          child: Stack(
+                            children: [
+                              Image.memory(
+                                imageData.imageBinary!,
+                                fit: BoxFit.scaleDown,
+                              ),
+                              MemeTexts(),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
             ),
             StreamBuilder<MemeText?>(
               stream: bloc.observeSelectedMemeText(),

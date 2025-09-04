@@ -1,79 +1,32 @@
-import 'dart:io';
-
 import 'package:either_dart/either.dart';
-import 'package:memogenerator/data/shared_pref/repositories/templates/templates_repository.dart';
-import 'package:memogenerator/domain/interactors/template_interactor.dart';
-import 'package:memogenerator/domain/entities/message_status.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:memogenerator/features/template_download/use_cases/template_download.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../data/http/domain/api_repository.dart';
-import '../../data/http/domain/entities/api_error.dart';
-import '../../data/http/domain/entities/meme_data.dart';
+import '../../data/http/models/api_error.dart';
+import '../../data/http/models/meme_data.dart';
 import '../../domain/entities/message.dart';
+import 'use_cases/templates_get_from_api.dart';
 
 class TemplateDownloadBloc {
-  final TemplatesRepository _templatesRepository;
-  final TemplateInteractor _templateInteractor;
-  final ApiRepository _apiRepository;
+  final TemplatesGetFromApi _getTemplatesFromApi;
+  final TemplateDownload _downloadTemplate;
 
   final _messageController = PublishSubject<Message>();
 
   TemplateDownloadBloc({
-    required TemplatesRepository templatesRepository,
-    required TemplateInteractor templateInteractor,
-    required ApiRepository apiRepository,
-  }) : _templatesRepository = templatesRepository,
-       _templateInteractor = templateInteractor,
-       _apiRepository = apiRepository;
+    required final TemplatesGetFromApi getTemplatesFromApi,
+    required final TemplateDownload downloadTemplate,
+  }) : _getTemplatesFromApi = getTemplatesFromApi,
+       _downloadTemplate = downloadTemplate;
 
-  Future<Either<ApiError, List<MemeData>>> getMemes() =>
-      _apiRepository.getMemeTemplates();
+  Future<Either<ApiError, List<MemeApiData>>> getMemeTemplates() =>
+      _getTemplatesFromApi();
 
   Stream<Message> get messageStream => _messageController.stream;
 
-  Future<bool> imageFileExists(String fileName) async {
-    final file = File(fileName);
-    return await file.exists();
-  }
-
-  Future<void> saveTemplate({required final MemeData memeData}) async {
-    final filePath =
-        '${(await getApplicationCacheDirectory()).absolute.path}${Platform.pathSeparator}${memeData.fileName}';
-    if (await imageFileExists(filePath)) {
-      _messageController.sink.add(
-        Message(
-          status: MessageStatus.error,
-          message: 'Загрузка не требуется. Шаблон "${memeData.name}" уже сохранен в галерее.',
-        ),
-      );
-      return;
-    }
-
-    final result = await _apiRepository.downloadTemplate(
-      url: memeData.url,
-      filePath: filePath,
-    );
-    if (result.isRight) {
-      final result = await _templateInteractor.saveTemplate(
-        imagePath: filePath,
-      );
-      if (result) {
-        _messageController.sink.add(
-          Message(
-            status: MessageStatus.success,
-            message: 'Шаблон "${memeData.name}" успешно загружен и сохранен.',
-          ),
-        );
-        return;
-      }
-    }
-    _messageController.sink.add(
-      Message(
-        status: MessageStatus.error,
-        message: 'Ошибка загрузки шаблона "${memeData.name}".',
-      ),
-    );
+  Future<void> saveTemplate({required final MemeApiData memeData}) async {
+    final result = await _downloadTemplate(memeData: memeData);
+    _messageController.sink.add(result);
   }
 
   void dispose() {

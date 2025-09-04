@@ -2,11 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:memogenerator/features/create_meme/create_meme_page.dart';
-import 'package:memogenerator/features/create_meme/models/meme_parameters.dart';
 import 'package:memogenerator/features/settings/settings_page.dart';
 import 'package:memogenerator/navigation/navigation_path.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
+import '../domain/entities/meme.dart';
 import '../features/main/main_page.dart';
 import '../features/template_download/template_download_page.dart';
 import '../features/templates/templates_page.dart';
@@ -52,9 +52,9 @@ class CustomNavigationHelper {
           name: NavigationPagePath.editMemePage.name,
           path: NavigationPagePath.editMemePage.path,
           pageBuilder: (context, state) {
-            final arguments = state.extra as MemeArgs;
+            final arguments = state.extra as Meme;
             return getPage(
-              child: CreateMemePage(memeArgs: arguments),
+              child: CreateMemePage(meme: arguments),
               state: state,
             );
           },

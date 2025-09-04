@@ -21,10 +21,10 @@ class DioBuilder {
         TalkerDioLogger(
           talker: talker,
           settings: const TalkerDioLoggerSettings(
-            printResponseData: true,
-            printRequestExtra: true,
+            printResponseData: false,
+            printRequestExtra: false,
             printResponseHeaders: true,
-            printResponseMessage: true,
+            printResponseMessage: false,
             printRequestData: true,
             printRequestHeaders: true,
           ),

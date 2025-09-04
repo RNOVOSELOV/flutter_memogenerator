@@ -1,42 +1,37 @@
-import 'package:memogenerator/data/http/api_service.dart';
+import 'package:memogenerator/data/filesystem/images_datasource_impl.dart';
 import 'package:memogenerator/data/http/dio_builder.dart';
-import 'package:memogenerator/data/shared_pref/repositories/memes/memes_repository.dart';
-import 'package:memogenerator/data/shared_pref/repositories/templates/templates_repository.dart';
-import 'package:memogenerator/data/shared_pref/shared_preference_data.dart';
-import 'package:memogenerator/domain/interactors/copy_unique_file_interactor.dart';
-import 'package:memogenerator/domain/interactors/screenshot_interactor.dart';
+import 'package:memogenerator/data/interactors/copy_unique_file_interactor.dart';
+import 'package:memogenerator/data/repositories/meme_repository_impl.dart';
+import 'package:memogenerator/data/repositories/template_repository_impl.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:yx_scope/yx_scope.dart';
 
-import '../data/http/domain/api_repository.dart';
-import '../domain/interactors/meme_interactor.dart';
-import '../domain/interactors/template_interactor.dart';
+import '../data/http/api_service.dart';
+import '../data/http/api_datasource_impl.dart';
+import '../data/shared_pref/datasources/memes/meme_datasource_impl.dart';
+import '../data/shared_pref/datasources/templates/templates_datasource_impl.dart';
+import '../data/shared_pref/shared_preference_data.dart';
+import '../data/interactors/template_interactor.dart';
 import 'scope_observer.dart' show diObserver;
 
 class AppScopeContainer extends ScopeContainer {
   late final talkerDep = dep(() => TalkerFlutter.init());
   late final _sharedPreferencesDep = dep(() => SharedPreferenceData());
-  late final memeRepositoryDep = dep(
-    () => MemesRepository(memeDataProvider: _sharedPreferencesDep.get),
+  late final memeDatasourceDep = dep(
+    () => MemesDataSourceImpl(memeDataProvider: _sharedPreferencesDep.get),
   );
-  late final templateRepositoryDep = dep(
-    () => TemplatesRepository(templateDataProvider: _sharedPreferencesDep.get),
-  );
-
-  late final copyFileInteractorDep = dep(() => CopyUniqueFileInteractor());
-  late final screenshotInteractorDep = dep(
-    () => ScreenshotInteractor(talker: talkerDep.get),
-  );
-  late final memesInteractorDep = dep(
-    () => MemeInteractor(
-      memeRepository: memeRepositoryDep.get,
-      copyUniqueFileInteractor: copyFileInteractorDep.get,
-      screenshotInteractor: screenshotInteractorDep.get,
+  late final templateDatasourceDep = dep(
+    () => TemplatesDataSourceImpl(
+      templateDataProvider: _sharedPreferencesDep.get,
     ),
   );
+  late final fileSystemDatasourceDep = dep(() => FileSystemDatasource());
+
+  late final copyFileInteractorDep = dep(() => CopyUniqueFileInteractor());
+
   late final templatesInteractorDep = dep(
     () => TemplateInteractor(
-      templateRepository: templateRepositoryDep.get,
+      templateRepository: templateDatasourceDep.get,
       copyUniqueFileInteractor: copyFileInteractorDep.get,
     ),
   );
@@ -49,8 +44,22 @@ class AppScopeContainer extends ScopeContainer {
       talker: talkerDep.get,
     ),
   );
-  late final memeApiRepositoryDep = dep(
-    () => ApiRepository(dataProvider: _apiServiceDep.get),
+  late final memeApiDatasourceDep = dep(
+    () => ApiDatasourceImpl(dataProvider: _apiServiceDep.get),
+  );
+
+  late final memeRepositoryImpl = dep(
+    () => MemeRepositoryImp(
+      memeDatasource: memeDatasourceDep.get,
+      imageDatasource: fileSystemDatasourceDep.get,
+    ),
+  );
+  late final templateRepositoryImpl = dep(
+    () => TemplateRepositoryImp(
+      apiDatasource: memeApiDatasourceDep.get,
+      templateDatasource: templateDatasourceDep.get,
+      imageDatasource: fileSystemDatasourceDep.get,
+    ),
   );
 }
 

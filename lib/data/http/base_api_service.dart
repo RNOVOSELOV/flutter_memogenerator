@@ -3,8 +3,8 @@ import 'package:either_dart/either.dart';
 import 'package:flutter/foundation.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
-import 'domain/entities/api_error.dart';
-import 'model/api_error_response.dart';
+import 'dto/api_error_response.dart';
+import 'models/api_error.dart';
 
 class BaseApiService {
   final Talker _talker;
