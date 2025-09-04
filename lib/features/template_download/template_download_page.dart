@@ -3,6 +3,8 @@ import 'package:either_dart/either.dart';
 import 'package:flutter/material.dart';
 import 'package:memogenerator/domain/entities/message.dart';
 import 'package:memogenerator/features/template_download/template_download_bloc.dart';
+import 'package:memogenerator/features/template_download/use_cases/template_download.dart';
+import 'package:memogenerator/features/template_download/use_cases/templates_get_from_api.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:memogenerator/widgets/snackbar_widget.dart';
 import 'package:provider/provider.dart';
@@ -32,9 +34,12 @@ class _TemplateDownloadPageState extends State<TemplateDownloadPage> {
       listen: false,
     );
     bloc = TemplateDownloadBloc(
-      templatesRepository: appScopeHolder.scope!.templateDatasourceDep.get,
-      templateInteractor: appScopeHolder.scope!.templatesInteractorDep.get,
-      apiRepository: appScopeHolder.scope!.memeApiDatasourceDep.get,
+      getTemplatesFromApi: TemplatesGetFromApi(
+        templateRepository: appScopeHolder.scope!.templateRepositoryImpl.get,
+      ),
+      downloadTemplate: TemplateDownload(
+        templateRepository: appScopeHolder.scope!.templateRepositoryImpl.get,
+      ),
     );
   }
 
@@ -82,7 +87,7 @@ class TemplatesPageBodyContent extends StatelessWidget {
       listen: false,
     );
     return FutureBuilder<Either<ApiError, List<MemeApiData>>>(
-      future: bloc.getMemes(),
+      future: bloc.getMemeTemplates(),
       builder: (context, snapshot) {
         final isTemplatesDataReceived = snapshot.hasData;
         final data = snapshot.data;

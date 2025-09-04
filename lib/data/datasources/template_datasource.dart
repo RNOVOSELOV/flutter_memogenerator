@@ -5,5 +5,7 @@ abstract interface class TemplateDatasource {
 
   Future<List<TemplateModel>> getTemplates();
 
+  Future<bool> isTemplateContains({required final String fileName});
+
   Future<bool> setTemplates({required final List<TemplateModel> templates});
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:memogenerator/data/datasources/template_datasource.dart';
 import 'package:memogenerator/data/shared_pref/dto/template_model.dart';
 
@@ -45,4 +46,13 @@ class TemplatesDataSourceImpl
   @override
   Stream<List<TemplateModel>> observeTemplatesList() =>
       observeItem().map((model) => model == null ? [] : model.templates);
+
+  @override
+  Future<bool> isTemplateContains({required String fileName}) async {
+    final data = await getTemplates();
+    final template = data.firstWhereOrNull(
+      (element) => element.imageUrl == fileName,
+    );
+    return template != null;
+  }
 }

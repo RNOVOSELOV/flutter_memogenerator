@@ -29,4 +29,9 @@ abstract interface class ImagesDatasource {
     required String directoryWithFile,
     required String fileName,
   });
+
+  Future<bool> isTemplateFileExists({
+    required final String templateFilename,
+    required final String templatesDirectory,
+  });
 }

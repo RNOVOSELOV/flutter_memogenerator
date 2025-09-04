@@ -1,14 +1,16 @@
+import 'dart:typed_data';
+
 import 'package:either_dart/either.dart';
+import 'package:memogenerator/data/datasources/api_datasource.dart';
 
 import '../http/api_data_provider.dart';
 import '../http/models/api_error.dart';
 import '../http/models/meme_data.dart';
 
-@Deprecated('TODO REMOVE USE API DATA PROVIDER INSTEAD')
-class ApiDatasource {
+class ApiDatasourceImpl implements ApiDatasource {
   final ApiDataProvider _apiDataProvider;
 
-  ApiDatasource({required ApiDataProvider dataProvider})
+  ApiDatasourceImpl({required ApiDataProvider dataProvider})
     : _apiDataProvider = dataProvider;
 
   final List<MemeApiData> memeCache = [];
@@ -16,6 +18,7 @@ class ApiDatasource {
   /// Get memes request
   ///
   /// Return [ApiError] if some error happens or List of [MemeApiData]
+  @override
   Future<Either<ApiError, List<MemeApiData>>> getMemeTemplates() async {
     if (memeCache.isNotEmpty) return Right(memeCache);
 
@@ -24,22 +27,21 @@ class ApiDatasource {
       return Left(data.left);
     }
     memeCache.addAll(
-      data.right.memesData.memes.map((meme) => MemeApiData.fromApi(memeDto: meme)),
+      data.right.memesData.memes.map(
+        (meme) => MemeApiData.fromApi(memeDto: meme),
+      ),
     );
     return Right(memeCache);
   }
 
-  Future<Either<ApiError, bool>> downloadTemplate({
+  @override
+  Future<Either<ApiError, Uint8List>> downloadTemplate({
     required final String url,
-    required final String filePath,
   }) async {
-    final data = await _apiDataProvider.getMemeTemplate(
-      url: url,
-      filePath: filePath,
-    );
+    final data = await _apiDataProvider.getMemeTemplate(url: url);
     if (data.isLeft) {
       return Left(data.left);
     }
-    return Right(true);
+    return Right(data.right);
   }
 }

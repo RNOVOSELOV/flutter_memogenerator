@@ -83,7 +83,6 @@ class FileSystemDatasource implements ImagesDatasource {
       await _saveToFile(bytes: fileBytesData, filePath: newImagePath);
       return imageName;
     }
-    log('!!! FILENAME: $filePath');
     final tempFile = File(filePath);
     final oldFileLength = await (oldFileWithTheSameName as File).length();
     final newFileLength = await tempFile.length();
@@ -184,6 +183,9 @@ class FileSystemDatasource implements ImagesDatasource {
     required String memeDirectory,
   }) async {
     final docDirectory = await _getDocumentsDirectory();
+    final directoryForFiles = '$docDirectory$memeDirectory';
+    final filesDirectory = Directory(directoryForFiles);
+    await filesDirectory.create(recursive: true);
     final fullTemplatePath =
         '$docDirectory$templateDirectory${Platform.pathSeparator}$templateFileName';
     final fullMemePath =
@@ -191,5 +193,17 @@ class FileSystemDatasource implements ImagesDatasource {
     final tempFile = File(fullTemplatePath);
     await tempFile.copy(fullMemePath);
     return templateFileName;
+  }
+
+  @override
+  Future<bool> isTemplateFileExists({
+    required String templateFilename,
+    required String templatesDirectory,
+  }) async {
+    String docDirectory = await _getDocumentsDirectory();
+    String fillFileName =
+        '$docDirectory$templatesDirectory${Platform.pathSeparator}$templateFilename';
+    final file = File(fillFileName);
+    return await file.exists();
   }
 }

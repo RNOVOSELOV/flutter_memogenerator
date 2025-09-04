@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 import 'package:either_dart/either.dart';
 import '../http/api_data_provider.dart';
@@ -27,23 +29,19 @@ class ApiService extends BaseApiService implements ApiDataProvider {
   }
 
   @override
-  Future<Either<ApiError, bool>> getMemeTemplate({
+  Future<Either<ApiError, Uint8List>> getMemeTemplate({
     required final String url,
-    required final String filePath,
   }) async {
     try {
-      final response = await _dio.download(
+      final response = await _dio.get<Uint8List>(
         url,
-        filePath,
-        // onReceiveProgress: (received, total) {
-        //   if (total != -1) {
-        //     final progress = (received / total * 100).toStringAsFixed(0);
-        //     print('Прогресс: $progress%');
-        //   }
-        // },
+        options: Options(
+          responseType: ResponseType.bytes,
+          followRedirects: true,
+        ),
       );
-      if (response.statusCode == 200) {
-        return Right(true);
+      if (response.data != null) {
+        return Right(response.data!);
       } else {
         return Left(
           ApiError.fromErrorType(errorType: ApiErrorType.downloadFileError),

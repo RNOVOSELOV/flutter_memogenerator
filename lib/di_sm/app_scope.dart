@@ -7,7 +7,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 import 'package:yx_scope/yx_scope.dart';
 
 import '../data/http/api_service.dart';
-import '../data/http/api_datasource.dart';
+import '../data/http/api_datasource_impl.dart';
 import '../data/shared_pref/datasources/memes/meme_datasource_impl.dart';
 import '../data/shared_pref/datasources/templates/templates_datasource_impl.dart';
 import '../data/shared_pref/shared_preference_data.dart';
@@ -45,7 +45,7 @@ class AppScopeContainer extends ScopeContainer {
     ),
   );
   late final memeApiDatasourceDep = dep(
-    () => ApiDatasource(dataProvider: _apiServiceDep.get),
+    () => ApiDatasourceImpl(dataProvider: _apiServiceDep.get),
   );
 
   late final memeRepositoryImpl = dep(
@@ -56,12 +56,11 @@ class AppScopeContainer extends ScopeContainer {
   );
   late final templateRepositoryImpl = dep(
     () => TemplateRepositoryImp(
+      apiDatasource: memeApiDatasourceDep.get,
       templateDatasource: templateDatasourceDep.get,
       imageDatasource: fileSystemDatasourceDep.get,
     ),
   );
-
-
 }
 
 class AppScopeHolder extends ScopeHolder<AppScopeContainer> {
