@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
@@ -7,7 +6,6 @@ import 'package:memogenerator/data/datasources/api_datasource.dart';
 import 'package:memogenerator/data/datasources/template_datasource.dart';
 import 'package:memogenerator/data/http/models/api_error.dart';
 import 'package:memogenerator/data/http/models/meme_data.dart';
-import 'package:memogenerator/data/repositories/meme_repository_impl.dart';
 import 'package:memogenerator/domain/entities/message.dart';
 import 'package:memogenerator/domain/entities/template_full.dart';
 import 'package:memogenerator/domain/repositories/templates_repository.dart';
@@ -15,6 +13,7 @@ import 'package:uuid/uuid.dart';
 import '../../domain/entities/message_status.dart';
 import '../../domain/entities/template.dart';
 import '../datasources/images_datasource.dart';
+import '../image_type_enum.dart';
 import '../shared_pref/dto/template_model.dart';
 
 class TemplateRepositoryImp implements TemplatesRepository {
@@ -22,7 +21,7 @@ class TemplateRepositoryImp implements TemplatesRepository {
   final ImagesDatasource _imagesDatasource;
   final ApiDatasource _apiDatasource;
 
-  static const _templatesPathName = "templates";
+  final String _templatesPathName;
 
   TemplateRepositoryImp({
     required TemplateDatasource templateDatasource,
@@ -30,7 +29,8 @@ class TemplateRepositoryImp implements TemplatesRepository {
     required ApiDatasource apiDatasource,
   }) : _templateDatasource = templateDatasource,
        _imagesDatasource = imageDatasource,
-       _apiDatasource = apiDatasource;
+       _apiDatasource = apiDatasource,
+       _templatesPathName = ImageTypeEnum.template.path;
 
   @override
   Stream<List<TemplateFull>> observeTemplates() {
@@ -45,7 +45,7 @@ class TemplateRepositoryImp implements TemplatesRepository {
           for (Template template in templates) {
             final bt = await _imagesDatasource.getTemplatesBytesData(
               templateImageName: template.imageName,
-              templateDirectory: _templatesPathName,
+              pathName: _templatesPathName,
             );
             if (bt == null) continue;
             final tm = TemplateFull(id: template.id, templateImageBytes: bt);
@@ -82,8 +82,8 @@ class TemplateRepositoryImp implements TemplatesRepository {
     required final String fileName,
   }) async {
     final newFileName = await _imagesDatasource.saveFileDataAndReturnItName(
-      directoryWithFiles: _templatesPathName,
-      filePath: fileName,
+      fileNewParentPath: _templatesPathName,
+      fileFullName: fileName,
       fileBytesData: fileBytes,
     );
     return await _insertTemplateOrReplaceById(
@@ -127,8 +127,8 @@ class TemplateRepositoryImp implements TemplatesRepository {
     if (value != null) {
       final result = await _imagesDatasource.saveTemplateToMemesImages(
         templateFileName: value.imageUrl,
-        templateDirectory: _templatesPathName,
-        memeDirectory: MemeRepositoryImp.memesPathName,
+        templatePath: _templatesPathName,
+        memePath: ImageTypeEnum.meme.path,
       );
       return result;
     }
@@ -141,12 +141,10 @@ class TemplateRepositoryImp implements TemplatesRepository {
 
   @override
   Future<Message> downloadTemplate({required MemeApiData memeData}) async {
-    log('!!! DOWNLOAD TEMPLATE: $memeData');
-    if (!await _imagesDatasource.isTemplateFileExists(
-      templateFilename: memeData.fileName,
-      templatesDirectory: _templatesPathName,
+    if (!await _imagesDatasource.isImageExists(
+      fileName: memeData.fileName,
+      filePath: _templatesPathName,
     )) {
-      log('!!! DOWNLOAD TEMPLATE: FILE NOT EXIST');
       final downloadTemplatesResult = await _apiDatasource.downloadTemplate(
         url: memeData.url,
       );

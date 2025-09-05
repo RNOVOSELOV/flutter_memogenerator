@@ -115,8 +115,6 @@ void downloadFile(Uint8List bytes, String filename) {
   }
 
   Future<void> shareMeme() async {
-    // TODO remove shareMemeSubscription. Use direct call
-    // TODO _screenshotInteractor.shareScreenshoot(_screenshotController)
     final imageBinaryData = await _screenshotController.capture();
     if (imageBinaryData == null) {
       // TODO add loggining

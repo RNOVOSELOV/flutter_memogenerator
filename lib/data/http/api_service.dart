@@ -19,7 +19,6 @@ class ApiService extends BaseApiService implements ApiDataProvider {
   Future<Either<ApiError, MemesResponse>> getMemes() async {
     return responseOrError(() async {
       final response = await _dio.get('/get_memes');
-
       return parseApiResponse(
         apiResponse: response,
         responseTransformer: ({required response}) =>

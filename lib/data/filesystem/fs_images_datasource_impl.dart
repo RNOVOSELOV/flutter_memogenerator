@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
@@ -9,10 +8,10 @@ import 'package:path_provider/path_provider.dart';
 
 import '../datasources/images_datasource.dart';
 
-class FileSystemDatasource implements ImagesDatasource {
+class FileSystemDatasourceImpl implements ImagesDatasource {
   String documentDirectoryPath = '';
 
-  FileSystemDatasource();
+  FileSystemDatasourceImpl();
 
   Future<String> _getDocumentsDirectory() async {
     if (documentDirectoryPath.isNotEmpty) {
@@ -61,17 +60,17 @@ class FileSystemDatasource implements ImagesDatasource {
 
   @override
   Future<String> saveFileDataAndReturnItName({
-    required final String directoryWithFiles,
-    required final String filePath,
+    required final String fileNewParentPath,
+    required final String fileFullName,
     required final Uint8List fileBytesData,
   }) async {
     final docsPath = await _getDocumentsDirectory();
-    final directoryForImages = "$docsPath$directoryWithFiles";
+    final directoryForImages = "$docsPath$fileNewParentPath";
     final filesDirectory = Directory(directoryForImages);
     await filesDirectory.create(recursive: true);
     final currentFiles = filesDirectory.listSync();
 
-    final imageName = _getFileNameByPath(filePath);
+    final imageName = _getFileNameByPath(fileFullName);
     final oldFileWithTheSameName = currentFiles.firstWhereOrNull((element) {
       return _getFileNameByPath(element.path) == imageName && element is File;
     });
@@ -83,7 +82,7 @@ class FileSystemDatasource implements ImagesDatasource {
       await _saveToFile(bytes: fileBytesData, filePath: newImagePath);
       return imageName;
     }
-    final tempFile = File(filePath);
+    final tempFile = File(fileFullName);
     final oldFileLength = await (oldFileWithTheSameName as File).length();
     final newFileLength = await tempFile.length();
     // такой файл уже существует, не сохраняем его заново
@@ -136,11 +135,11 @@ class FileSystemDatasource implements ImagesDatasource {
 
   @override
   Future<({Uint8List imageBinary, double aspectRatio})?> getImageData({
-    required String directoryWithFile,
+    required String pathName,
     required String fileName,
   }) async {
     final docsPath = await _getDocumentsDirectory();
-    final directoryForImages = "$docsPath$directoryWithFile";
+    final directoryForImages = "$docsPath$pathName";
     final fileImagePath =
         "$directoryForImages${Platform.pathSeparator}$fileName";
     final file = File(fileImagePath);
@@ -164,11 +163,11 @@ class FileSystemDatasource implements ImagesDatasource {
   @override
   Future<Uint8List?> getTemplatesBytesData({
     required String templateImageName,
-    required final String templateDirectory,
+    required final String pathName,
   }) async {
     final docDirectory = await _getDocumentsDirectory();
     final fullTemplatePath =
-        "$docDirectory$templateDirectory${Platform.pathSeparator}$templateImageName";
+        "$docDirectory$pathName${Platform.pathSeparator}$templateImageName";
     final file = File(fullTemplatePath);
     if (await file.exists()) {
       return await file.readAsBytes();
@@ -179,30 +178,30 @@ class FileSystemDatasource implements ImagesDatasource {
   @override
   Future<String?> saveTemplateToMemesImages({
     required templateFileName,
-    required String templateDirectory,
-    required String memeDirectory,
+    required String templatePath,
+    required String memePath,
   }) async {
     final docDirectory = await _getDocumentsDirectory();
-    final directoryForFiles = '$docDirectory$memeDirectory';
+    final directoryForFiles = '$docDirectory$memePath';
     final filesDirectory = Directory(directoryForFiles);
     await filesDirectory.create(recursive: true);
     final fullTemplatePath =
-        '$docDirectory$templateDirectory${Platform.pathSeparator}$templateFileName';
+        '$docDirectory$templatePath${Platform.pathSeparator}$templateFileName';
     final fullMemePath =
-        '$docDirectory$memeDirectory${Platform.pathSeparator}$templateFileName';
+        '$docDirectory$memePath${Platform.pathSeparator}$templateFileName';
     final tempFile = File(fullTemplatePath);
     await tempFile.copy(fullMemePath);
     return templateFileName;
   }
 
   @override
-  Future<bool> isTemplateFileExists({
-    required String templateFilename,
-    required String templatesDirectory,
+  Future<bool> isImageExists({
+    required String fileName,
+    required String filePath,
   }) async {
     String docDirectory = await _getDocumentsDirectory();
     String fillFileName =
-        '$docDirectory$templatesDirectory${Platform.pathSeparator}$templateFilename';
+        '$docDirectory$filePath${Platform.pathSeparator}$fileName';
     final file = File(fillFileName);
     return await file.exists();
   }
