@@ -13,6 +13,8 @@
 
 Помни! Мемы сами себя не сделают!
 
+Web версия опубликована на  [gh_pages](https://rnovoselov.github.io/flutter_memogenerator/). 
+
 ## Развитие проекта
 
 ### Версия 1.1
