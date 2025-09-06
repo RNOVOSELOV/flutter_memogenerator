@@ -23,15 +23,25 @@ class ApiDatasourceImpl implements ApiDatasource {
     if (memeCache.isNotEmpty) return Right(memeCache);
 
     final data = await _apiDataProvider.getMemes();
-    if (data.isLeft) {
-      return Left(data.left);
+    if (data.isRight) {
+      memeCache.addAll(
+        data.right.memesData.memes.map(
+          (meme) => MemeApiData.fromApi(memeDto: meme),
+        ),
+      );
     }
-    memeCache.addAll(
-      data.right.memesData.memes.map(
-        (meme) => MemeApiData.fromApi(memeDto: meme),
-      ),
-    );
-    return Right(memeCache);
+    final dataAlternative = await _apiDataProvider.getAltMemes();
+    if (dataAlternative.isRight) {
+      memeCache.addAll(
+        dataAlternative.right.map(
+          (meme) => MemeApiData.fromAltApi(memeDto: meme),
+        ),
+      );
+    }
+    if (memeCache.isNotEmpty) {
+      return Right(memeCache);
+    }
+    return Left(ApiError.fromErrorType(errorType: ApiErrorType.unknown));
   }
 
   @override

@@ -64,6 +64,20 @@ class CreateMemeBloc {
     _subscribeToExistentMeme();
   }
 
+  /*
+  save file to downloads
+  import 'dart:html' as html;
+
+void downloadFile(Uint8List bytes, String filename) {
+  final blob = html.Blob([bytes]);
+  final url = html.Url.createObjectUrlFromBlob(blob);
+  final anchor = html.AnchorElement(href: url)
+    ..download = filename
+    ..click();
+  html.Url.revokeObjectUrl(url);
+}
+   */
+
   void _subscribeToExistentMeme() {
     existentMemeSubscription = _getMeme(id: _meme.id).asStream().listen(
       (memeData) {
@@ -101,8 +115,6 @@ class CreateMemeBloc {
   }
 
   Future<void> shareMeme() async {
-    // TODO remove shareMemeSubscription. Use direct call
-    // TODO _screenshotInteractor.shareScreenshoot(_screenshotController)
     final imageBinaryData = await _screenshotController.capture();
     if (imageBinaryData == null) {
       // TODO add loggining

@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:memogenerator/data/datasources/meme_datasource.dart';
+import 'package:memogenerator/data/image_type_enum.dart';
 import 'package:memogenerator/domain/entities/meme_thumbnail.dart';
 import 'package:memogenerator/domain/repositories/meme_repository.dart';
 import '../../domain/entities/meme.dart';
@@ -12,13 +13,14 @@ class MemeRepositoryImp implements MemeRepository {
   final MemeDatasource _memeDataSource;
   final ImagesDatasource _imagesDatasource;
 
-  static const memesPathName = "memes";
+  final String memesPathName;
 
   MemeRepositoryImp({
     required MemeDatasource memeDatasource,
     required ImagesDatasource imageDatasource,
   }) : _memeDataSource = memeDatasource,
-       _imagesDatasource = imageDatasource;
+       _imagesDatasource = imageDatasource,
+       memesPathName = ImageTypeEnum.meme.path;
 
   @override
   Stream<List<MemeThumbnail>> observeMemesThumbnails() {
@@ -69,8 +71,8 @@ class MemeRepositoryImp implements MemeRepository {
     required Uint8List fileBinaryData,
   }) async {
     final newFileName = await _imagesDatasource.saveFileDataAndReturnItName(
-      directoryWithFiles: memesPathName,
-      filePath: fileFullName,
+      fileNewParentPath: memesPathName,
+      fileFullName: fileFullName,
       fileBytesData: fileBinaryData,
     );
     return newFileName;
@@ -81,7 +83,7 @@ class MemeRepositoryImp implements MemeRepository {
     required String fileName,
   }) async {
     return await _imagesDatasource.getImageData(
-      directoryWithFile: memesPathName,
+      pathName: memesPathName,
       fileName: fileName,
     );
   }

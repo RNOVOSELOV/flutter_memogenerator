@@ -1,6 +1,8 @@
-import 'package:memogenerator/data/filesystem/images_datasource_impl.dart';
+import 'package:flutter/foundation.dart';
+import 'package:memogenerator/data/browser/sp_images_datasource.dart';
+import 'package:memogenerator/data/browser/sp_images_datasource_impl.dart';
+import 'package:memogenerator/data/filesystem/fs_images_datasource_impl.dart';
 import 'package:memogenerator/data/http/dio_builder.dart';
-import 'package:memogenerator/data/interactors/copy_unique_file_interactor.dart';
 import 'package:memogenerator/data/repositories/meme_repository_impl.dart';
 import 'package:memogenerator/data/repositories/template_repository_impl.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -11,7 +13,6 @@ import '../data/http/api_datasource_impl.dart';
 import '../data/shared_pref/datasources/memes/meme_datasource_impl.dart';
 import '../data/shared_pref/datasources/templates/templates_datasource_impl.dart';
 import '../data/shared_pref/shared_preference_data.dart';
-import '../data/interactors/template_interactor.dart';
 import 'scope_observer.dart' show diObserver;
 
 class AppScopeContainer extends ScopeContainer {
@@ -25,17 +26,7 @@ class AppScopeContainer extends ScopeContainer {
       templateDataProvider: _sharedPreferencesDep.get,
     ),
   );
-  late final fileSystemDatasourceDep = dep(() => FileSystemDatasource());
-
-  late final copyFileInteractorDep = dep(() => CopyUniqueFileInteractor());
-
-  late final templatesInteractorDep = dep(
-    () => TemplateInteractor(
-      templateRepository: templateDatasourceDep.get,
-      copyUniqueFileInteractor: copyFileInteractorDep.get,
-    ),
-  );
-
+  late final fileSystemDatasourceDep = dep(() => FileSystemDatasourceImpl());
   late final _apiServiceDep = dep(
     () => ApiService(
       dio: DioBuilder(
@@ -44,6 +35,12 @@ class AppScopeContainer extends ScopeContainer {
       talker: talkerDep.get,
     ),
   );
+  late final spImagesDatasourceDep = dep(
+    () => SpImagesDatasourceImpl(
+      sharedPreferenceImageData: SharedPreferenceImageData(),
+    ),
+  );
+
   late final memeApiDatasourceDep = dep(
     () => ApiDatasourceImpl(dataProvider: _apiServiceDep.get),
   );
@@ -51,14 +48,18 @@ class AppScopeContainer extends ScopeContainer {
   late final memeRepositoryImpl = dep(
     () => MemeRepositoryImp(
       memeDatasource: memeDatasourceDep.get,
-      imageDatasource: fileSystemDatasourceDep.get,
+      imageDatasource: kIsWeb
+          ? spImagesDatasourceDep.get
+          : fileSystemDatasourceDep.get,
     ),
   );
   late final templateRepositoryImpl = dep(
     () => TemplateRepositoryImp(
       apiDatasource: memeApiDatasourceDep.get,
       templateDatasource: templateDatasourceDep.get,
-      imageDatasource: fileSystemDatasourceDep.get,
+      imageDatasource: kIsWeb
+          ? spImagesDatasourceDep.get
+          : fileSystemDatasourceDep.get,
     ),
   );
 }
