@@ -11,8 +11,9 @@ class DioBuilder {
     _dio = Dio(
       BaseOptions(
         baseUrl: AppConstants.baseApiUrl,
-        connectTimeout: const Duration(seconds: 16),
-        receiveTimeout: const Duration(seconds: 16),
+        connectTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 10),
+        sendTimeout: kIsWeb ? null : const Duration(seconds: 10),
       ),
     );
     if (kDebugMode) {
