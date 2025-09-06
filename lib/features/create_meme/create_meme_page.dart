@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -501,25 +502,24 @@ class MemeCanvasWidget extends StatelessWidget {
                     builder: (context, snapshot) {
                       final imageData = snapshot.hasData ? snapshot.data : null;
                       if (imageData == null) {
-                        return AspectRatio(
-                          aspectRatio: 1,
-                          child: Container(
-                            color: context.color.cardBackgroundColor,
-                          ),
-                        );
+                        return SizedBox.shrink();
                       }
-                      return AspectRatio(
-                        aspectRatio: imageData.aspectRatio,
-                        child: Screenshot(
-                          controller: bloc.screenshotController,
-                          child: Stack(
-                            children: [
-                              Image.memory(
-                                imageData.imageBinary!,
-                                fit: BoxFit.scaleDown,
-                              ),
-                              MemeTexts(),
-                            ],
+                      return Center(
+                        child: AspectRatio(
+                          aspectRatio: imageData.aspectRatio,
+                          child: Screenshot(
+                            controller: bloc.screenshotController,
+                            child: Stack(
+                              children: [
+                                SizedBox.expand(
+                                  child: Image.memory(
+                                    imageData.imageBinary!,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                                MemeTexts(),
+                              ],
+                            ),
                           ),
                         ),
                       );

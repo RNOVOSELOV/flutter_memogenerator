@@ -317,8 +317,8 @@ class _FontSizeSliderState extends State<FontSizeSlider> {
             ),
             child: Slider(
               min: 16,
-              max: 32,
-              divisions: 10,
+              max: 72,
+              divisions: 40,
               label: fontSize.round().toString(),
               value: fontSize,
               onChanged: (value) {
