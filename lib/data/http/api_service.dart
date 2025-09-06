@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:either_dart/either.dart';
+import 'package:memogenerator/data/http/dto/alt_meme_dto.dart';
 import '../http/api_data_provider.dart';
 import '../http/base_api_service.dart';
 import '../http/dto/memes_response.dart';
@@ -23,6 +24,23 @@ class ApiService extends BaseApiService implements ApiDataProvider {
         apiResponse: response,
         responseTransformer: ({required response}) =>
             MemesResponse.fromJson(response.data),
+      );
+    });
+  }
+
+  /// Get memes list from API
+  ///
+  /// Return [ApiError] if some error happens or [MemesResponse]
+  @override
+  Future<Either<ApiError, List<AltMemeDto>>> getAltMemes() async {
+    return responseOrError(() async {
+      final response = await _dio.get('https://api.memegen.link/templates');
+      return parseApiResponse(
+        apiResponse: response,
+        responseTransformer: ({required response}) =>
+            (response.data as List<dynamic>)
+                .map((e) => AltMemeDto.fromJson(e as Map<String, dynamic>))
+                .toList(),
       );
     });
   }
