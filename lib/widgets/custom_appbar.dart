@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-import '../resources/app_colors.dart';
 import '../resources/app_images.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -26,7 +23,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
           SizedBox(width: 12),
-          Text(title,),
+          Text(title),
         ],
       ),
       floating: true,

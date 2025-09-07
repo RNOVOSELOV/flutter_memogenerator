@@ -6,6 +6,7 @@ import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:memogenerator/widgets/confirmation_dialog.dart';
 import 'package:provider/provider.dart';
 
+import '../../generated/l10n.dart';
 import 'entities/meme_text.dart';
 
 class FontSettingBottomSheet extends StatefulWidget {
@@ -114,7 +115,7 @@ class Buttons extends StatelessWidget {
             }
           },
           fontSize: 18,
-          labelText: "Отмена",
+          labelText: S.of(context).cancel,
           color: context.color.textIconColor,
         ),
         AppButton(
@@ -126,7 +127,7 @@ class Buttons extends StatelessWidget {
             }
           },
           fontSize: 18,
-          labelText: "Сохранить",
+          labelText: S.of(context).save,
           color: context.color.accentColor,
         ),
         const SizedBox(width: 16),
@@ -143,11 +144,12 @@ class ColorSelection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         const SizedBox(width: 16),
         Text(
-          "Цвет:",
+          S.of(context).editor_color,
           style: TextStyle(
             fontSize: 20,
             color: context.color.textSecondaryColor,
@@ -187,7 +189,7 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
               (_) => setState(() => selectedColor = context.theme.primaryColor),
             );
             return AlertDialog(
-              title: Text('Выберите цвет'),
+              title: Text(S.of(context).editor_select_color),
               content: SingleChildScrollView(
                 child: ColorPicker(
                   pickerColor: selectedColor ?? context.theme.primaryColor,
@@ -206,7 +208,7 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
                     Navigator.of(context).pop();
                   },
                   child: Text(
-                    'Готово'.toUpperCase(),
+                    S.of(context).apply.toUpperCase(),
                     style: TextStyle(color: context.color.accentColor),
                   ),
                 ),
@@ -296,7 +298,7 @@ class _FontSizeSliderState extends State<FontSizeSlider> {
         Padding(
           padding: EdgeInsets.only(bottom: 8),
           child: Text(
-            "Размер:",
+            S.of(context).editor_size,
             style: TextStyle(
               fontSize: 20,
               color: context.color.textSecondaryColor,
@@ -366,7 +368,7 @@ class _FontWeightSliderState extends State<FontWeightSlider> {
         Padding(
           padding: EdgeInsets.only(bottom: 8),
           child: Text(
-            "Толщина:",
+            S.of(context).editor_weight,
             style: TextStyle(
               fontSize: 20,
               color: context.color.textSecondaryColor,

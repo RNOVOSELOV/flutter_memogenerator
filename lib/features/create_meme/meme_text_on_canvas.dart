@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:memogenerator/resources/app_colors.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 
 class MemeTextOnCanvas extends StatelessWidget {

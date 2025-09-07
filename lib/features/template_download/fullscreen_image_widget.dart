@@ -25,7 +25,7 @@ class FullScreenImagesWidget extends StatelessWidget {
             height: double.infinity,
             color: context.color.accentColor.withValues(alpha: 0.48),
             child: Dismissible(
-              key: const Key('1'),
+              key: const ValueKey('imageConstKey'),
               direction: DismissDirection.vertical,
               onDismissed: (direction) => onEmptyAreaTap(),
               child: GestureDetector(
@@ -56,28 +56,6 @@ class FullScreenImagesWidget extends StatelessWidget {
                         );
                       },
                     ),
-                    // child: PinchZoom(
-                    //   maxScale: 5,
-                    //   zoomEnabled: true,
-                    //   child: Builder(builder: (context) {
-                    //     if (isNetworkData) {
-                    //       return CachedNetworkImage(
-                    //         imageUrl: imageData,
-                    //         imageBuilder: (context, imageProvider) => Container(
-                    //           decoration: BoxDecoration(
-                    //             image: DecorationImage(
-                    //               image: imageProvider,
-                    //               fit: BoxFit.scaleDown,
-                    //             ),
-                    //             borderRadius:
-                    //             const BorderRadius.all(Radius.circular(16)),
-                    //           ),
-                    //         ),
-                    //       );
-                    //     }
-                    //     return _Base64Image(content: imageData);
-                    //   }),
-                    // ),
                   ),
                 ),
               ),

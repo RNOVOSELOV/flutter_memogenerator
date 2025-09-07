@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:memogenerator/resources/app_colors.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 
+import '../../generated/l10n.dart';
 import '../../resources/app_images.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -27,7 +26,7 @@ class SettingsPage extends StatelessWidget {
               ),
             ),
             SizedBox(width: 12),
-            Text("Настройки",),
+            Text(S.of(context).settings),
           ],
         ),
       ),

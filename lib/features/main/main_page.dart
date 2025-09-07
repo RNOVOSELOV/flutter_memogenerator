@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
+import '../../generated/l10n.dart';
 import '../../resources/app_icons.dart';
 
 class MainPage extends StatelessWidget {
@@ -25,7 +26,7 @@ class MainPage extends StatelessWidget {
               icon: AppIcons.iconMeme,
               color: context.color.iconSelectedColor,
             ),
-            label: 'Мемы',
+            label: S.of(context).memes,
           ),
           BottomNavigationBarItem(
             icon: _BottomNavBarIconWidget(
@@ -36,7 +37,7 @@ class MainPage extends StatelessWidget {
               icon: AppIcons.iconTemplate,
               color: context.color.iconSelectedColor,
             ),
-            label: 'Шаблоны',
+            label: S.of(context).templates,
           ),
           BottomNavigationBarItem(
             icon: _BottomNavBarIconWidget(
@@ -47,7 +48,7 @@ class MainPage extends StatelessWidget {
               icon: AppIcons.iconSettings,
               color: context.color.iconSelectedColor,
             ),
-            label: 'Настройки',
+            label: S.of(context).settings,
           ),
         ],
         currentIndex: navigationShell.currentIndex,

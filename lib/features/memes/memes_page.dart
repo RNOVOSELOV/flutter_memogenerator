@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:yx_scope_flutter/yx_scope_flutter.dart';
 
+import '../../generated/l10n.dart';
 import '../../widgets/custom_appbar.dart';
 import '../../widgets/fab_widget.dart';
 import '../../widgets/grid_item.dart';
@@ -63,13 +64,17 @@ class _MemesPageState extends State<MemesPage> {
       child: Scaffold(
         backgroundColor: context.theme.scaffoldBackgroundColor,
         floatingActionButton: CreateFab(
-          text: 'Мем',
+          text: S.of(context).meme,
           onTap: () async {
             final fileName = await bloc.selectMeme();
             if (fileName != null) {
               CustomNavigationHelper.instance.router.pushNamed(
                 NavigationPagePath.editMemePage.name,
-                extra: Meme(id: const Uuid().v4(), texts: [], fileName: fileName),
+                extra: Meme(
+                  id: const Uuid().v4(),
+                  texts: [],
+                  fileName: fileName,
+                ),
               );
             }
           },
@@ -102,7 +107,7 @@ class MemePageBodyContent extends StatelessWidget {
         final items = snapshot.requireData;
         return CustomScrollView(
           slivers: [
-            CustomAppBar(title: 'Мемогенератор'),
+            CustomAppBar(title: S.of(context).meme_generator),
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
               sliver: SliverGrid.builder(
@@ -156,9 +161,9 @@ class _MemeItem extends StatelessWidget {
         }
         final removeMemeDialog = await showConfirmationDialog(
           context,
-          title: 'Удалить мем?',
-          text: 'Выбранный мем будет удален навсегда',
-          actionButtonText: 'Удалить',
+          title: S.of(context).remove_meme,
+          text: S.of(context).remove_meme_desc,
+          actionButtonText: S.of(context).remove,
         );
         if ((removeMemeDialog ?? false) == true) {
           bloc.deleteMeme(memeThumbnail.memeId);

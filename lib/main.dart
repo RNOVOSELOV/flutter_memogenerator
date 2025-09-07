@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:memogenerator/navigation/navigation_helper.dart';
 import 'package:memogenerator/theme/dark_theme.dart';
 import 'package:memogenerator/theme/light_theme.dart';
@@ -8,6 +9,7 @@ import 'package:yx_state/yx_state.dart';
 
 import 'di_sm/app_scope.dart';
 import 'di_sm/state_observer.dart';
+import 'generated/l10n.dart';
 
 void main() async {
   EquatableConfig.stringify = true;
@@ -51,6 +53,14 @@ class _MyAppState extends State<MyApp> {
           return MaterialApp.router(
             title: 'Memegenerator',
             debugShowCheckedModeBanner: false,
+            localizationsDelegates: const [
+              S.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: S.delegate.supportedLocales,
+
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode: ThemeMode.light,
