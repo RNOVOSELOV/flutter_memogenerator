@@ -95,6 +95,21 @@ class S {
     return Intl.message('Delete', name: 'remove', desc: '', args: []);
   }
 
+  /// `Cancel`
+  String get cancel {
+    return Intl.message('Cancel', name: 'cancel', desc: '', args: []);
+  }
+
+  /// `Save`
+  String get save {
+    return Intl.message('Save', name: 'save', desc: '', args: []);
+  }
+
+  /// `Apply`
+  String get apply {
+    return Intl.message('Apply', name: 'apply', desc: '', args: []);
+  }
+
   /// `Delete meme?`
   String get remove_meme {
     return Intl.message(
@@ -153,6 +168,91 @@ class S {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Error loading image`
+  String get error_image_loading {
+    return Intl.message(
+      'Error loading image',
+      name: 'error_image_loading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Exit`
+  String get exit {
+    return Intl.message('Exit', name: 'exit', desc: '', args: []);
+  }
+
+  /// `Do you want to exit?`
+  String get exit_action {
+    return Intl.message(
+      'Do you want to exit?',
+      name: 'exit_action',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You will lose unsaved changes`
+  String get exit_action_desc {
+    return Intl.message(
+      'You will lose unsaved changes',
+      name: 'exit_action_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Editor`
+  String get editor {
+    return Intl.message('Editor', name: 'editor', desc: '', args: []);
+  }
+
+  /// `Enter text`
+  String get editor_text_hint {
+    return Intl.message(
+      'Enter text',
+      name: 'editor_text_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add text`
+  String get editor_add_text {
+    return Intl.message(
+      'Add text',
+      name: 'editor_add_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Color: `
+  String get editor_color {
+    return Intl.message('Color: ', name: 'editor_color', desc: '', args: []);
+  }
+
+  /// `Select color`
+  String get editor_select_color {
+    return Intl.message(
+      'Select color',
+      name: 'editor_select_color',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Size: `
+  String get editor_size {
+    return Intl.message('Size: ', name: 'editor_size', desc: '', args: []);
+  }
+
+  /// `Weight: `
+  String get editor_weight {
+    return Intl.message('Weight: ', name: 'editor_weight', desc: '', args: []);
   }
 
   // skipped getter for the '' key

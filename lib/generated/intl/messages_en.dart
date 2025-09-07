@@ -22,6 +22,23 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "apply": MessageLookupByLibrary.simpleMessage("Apply"),
+    "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "editor": MessageLookupByLibrary.simpleMessage("Editor"),
+    "editor_add_text": MessageLookupByLibrary.simpleMessage("Add text"),
+    "editor_color": MessageLookupByLibrary.simpleMessage("Color: "),
+    "editor_select_color": MessageLookupByLibrary.simpleMessage("Select color"),
+    "editor_size": MessageLookupByLibrary.simpleMessage("Size: "),
+    "editor_text_hint": MessageLookupByLibrary.simpleMessage("Enter text"),
+    "editor_weight": MessageLookupByLibrary.simpleMessage("Weight: "),
+    "error_image_loading": MessageLookupByLibrary.simpleMessage(
+      "Error loading image",
+    ),
+    "exit": MessageLookupByLibrary.simpleMessage("Exit"),
+    "exit_action": MessageLookupByLibrary.simpleMessage("Do you want to exit?"),
+    "exit_action_desc": MessageLookupByLibrary.simpleMessage(
+      "You will lose unsaved changes",
+    ),
     "meme": MessageLookupByLibrary.simpleMessage("Meme"),
     "meme_generator": MessageLookupByLibrary.simpleMessage("Meme generator"),
     "memes": MessageLookupByLibrary.simpleMessage("Memes"),
@@ -34,6 +51,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "remove_template_desc": MessageLookupByLibrary.simpleMessage(
       "The selected template will be deleted permanently",
     ),
+    "save": MessageLookupByLibrary.simpleMessage("Save"),
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
     "template": MessageLookupByLibrary.simpleMessage("Template"),
     "template_download": MessageLookupByLibrary.simpleMessage(

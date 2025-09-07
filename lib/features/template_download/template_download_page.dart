@@ -13,6 +13,7 @@ import 'package:yx_scope_flutter/yx_scope_flutter.dart';
 import '../../data/http/models/api_error.dart';
 import '../../data/http/models/meme_data.dart';
 import '../../di_sm/app_scope.dart';
+import '../../generated/l10n.dart';
 import '../../widgets/grid_item.dart';
 import 'fullscreen_image_widget.dart';
 
@@ -95,7 +96,7 @@ class TemplatesPageBodyContent extends StatelessWidget {
           slivers: [
             SliverAppBar(
               titleSpacing: 0,
-              title: Text('Загрузить шаблон'),
+              title: Text(S.of(context).template_download),
               floating: isTemplatesDataReceived ? true : false,
               pinned: !isTemplatesDataReceived || (data != null && data.isLeft)
                   ? true
@@ -111,7 +112,7 @@ class TemplatesPageBodyContent extends StatelessWidget {
               ),
             if (data != null && data.isRight)
               data.right.isEmpty
-                  ? Center(child: Text('Получен пустой список шаблонов'))
+                  ? Center(child: Text(S.of(context).templates_empty))
                   : SliverPadding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 8,

@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -18,6 +17,7 @@ import 'package:yx_scope_flutter/yx_scope_flutter.dart';
 
 import '../../di_sm/app_scope.dart';
 import '../../domain/entities/meme.dart';
+import '../../generated/l10n.dart';
 import 'entities/meme_text.dart';
 import 'entities/meme_text_with_offset.dart';
 import 'entities/meme_text_with_selection.dart';
@@ -71,9 +71,9 @@ class _CreateMemePageState extends State<CreateMemePage> {
           if (!context.mounted) return true;
           final goBack = await showConfirmationDialog(
             context,
-            title: 'Хотите выйти?',
-            text: 'Вы потеряете несохраненные изменения',
-            actionButtonText: 'Выйти',
+            title: S.of(context).exit_action,
+            text: S.of(context).exit_action_desc,
+            actionButtonText: S.of(context).exit,
           );
           return goBack ?? false;
         },
@@ -82,7 +82,7 @@ class _CreateMemePageState extends State<CreateMemePage> {
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             titleSpacing: 0,
-            title: Text('Редактор'),
+            title: Text(S.of(context).editor),
             actions: [
               AnimatedIconButton(
                 onTap: () {
@@ -222,7 +222,7 @@ class _EditTextBarState extends State<_EditTextBar> {
             letterSpacing: 0.4,
           ),
           decoration: InputDecoration(
-            hintText: 'Введите текст',
+            hintText: S.of(context).editor_text_hint,
             filled: true,
             fillColor: context.color.accentColor.withValues(alpha: 0.38),
           ),
@@ -281,7 +281,7 @@ class _CreateMemePageContentState extends State<_CreateMemePageContent> {
 }
 
 class _BottomList extends StatelessWidget {
-  const _BottomList({super.key});
+  const _BottomList();
 
   @override
   Widget build(BuildContext context) {
@@ -299,7 +299,7 @@ class _BottomList extends StatelessWidget {
             itemCount: items.length + 1,
             separatorBuilder: (BuildContext context, int index) {
               if (index == 0) {
-                return const SizedBox.shrink(); //SizedBox(height: 0,);
+                return const SizedBox.shrink();
               }
               return const _BottomSeparator();
             },
@@ -328,7 +328,7 @@ class _BottomList extends StatelessWidget {
                             Icon(Icons.add, color: context.color.accentColor),
                             SizedBox(width: 12),
                             Text(
-                              'Добавить текст'.toUpperCase(),
+                              S.of(context).editor_add_text.toUpperCase(),
                               style: TextStyle(
                                 color: context.color.accentColor,
                                 fontSize: 18,
@@ -354,7 +354,7 @@ class _BottomList extends StatelessWidget {
 }
 
 class _BottomSeparator extends StatelessWidget {
-  const _BottomSeparator({super.key});
+  const _BottomSeparator();
 
   @override
   Widget build(BuildContext context) {

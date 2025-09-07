@@ -10,6 +10,7 @@ import 'package:yx_scope_flutter/yx_scope_flutter.dart';
 
 import '../../di_sm/app_scope.dart';
 import '../../domain/entities/meme.dart';
+import '../../generated/l10n.dart';
 import '../../navigation/navigation_helper.dart';
 import '../../navigation/navigation_path.dart';
 import '../../widgets/custom_appbar.dart';
@@ -55,7 +56,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
       child: Scaffold(
         backgroundColor: context.theme.scaffoldBackgroundColor,
         floatingActionButton: CreateFab(
-          text: 'Шаблон',
+          text: S.of(context).template,
           onTap: () async {
             CustomNavigationHelper.instance.router.pushNamed(
               NavigationPagePath.templateDownloadPage.name,
@@ -93,7 +94,7 @@ class TemplatesPageBodyContent extends StatelessWidget {
         final items = snapshot.requireData;
         return CustomScrollView(
           slivers: [
-            CustomAppBar(title: 'Шаблоны'),
+            CustomAppBar(title: S.of(context).templates),
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
               sliver: SliverGrid.builder(
@@ -133,9 +134,9 @@ class TemplatesPageBodyContent extends StatelessWidget {
                     }
                     final removeTemplateDialog = await showConfirmationDialog(
                       context,
-                      title: 'Удалить шаблон?',
-                      text: 'Выбранный шаблон будет удален навсегда',
-                      actionButtonText: 'Удалить',
+                      title: S.of(context).remove_template,
+                      text: S.of(context).remove_meme_desc,
+                      actionButtonText: S.of(context).remove,
                     );
                     if ((removeTemplateDialog ?? false) == true) {
                       bloc.deleteTemplate(items.elementAt(index).id);

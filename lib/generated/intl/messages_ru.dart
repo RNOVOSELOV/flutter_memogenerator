@@ -22,6 +22,25 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "apply": MessageLookupByLibrary.simpleMessage("Выбрать"),
+    "cancel": MessageLookupByLibrary.simpleMessage("Отмена"),
+    "editor": MessageLookupByLibrary.simpleMessage("Редактор"),
+    "editor_add_text": MessageLookupByLibrary.simpleMessage("Добавить текст"),
+    "editor_color": MessageLookupByLibrary.simpleMessage("Цвет: "),
+    "editor_select_color": MessageLookupByLibrary.simpleMessage(
+      "Выберите цвет",
+    ),
+    "editor_size": MessageLookupByLibrary.simpleMessage("Размер: "),
+    "editor_text_hint": MessageLookupByLibrary.simpleMessage("Введите текст"),
+    "editor_weight": MessageLookupByLibrary.simpleMessage("Толщина: "),
+    "error_image_loading": MessageLookupByLibrary.simpleMessage(
+      "Ошибка загрузки изображения",
+    ),
+    "exit": MessageLookupByLibrary.simpleMessage("Выйти"),
+    "exit_action": MessageLookupByLibrary.simpleMessage(" Хотите выйти?"),
+    "exit_action_desc": MessageLookupByLibrary.simpleMessage(
+      "Вы потеряете несохраненные изменения",
+    ),
     "meme": MessageLookupByLibrary.simpleMessage("Мем"),
     "meme_generator": MessageLookupByLibrary.simpleMessage("Мемогенератор"),
     "memes": MessageLookupByLibrary.simpleMessage("Мемы"),
@@ -34,6 +53,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "remove_template_desc": MessageLookupByLibrary.simpleMessage(
       "Выбранный шаблон будет удален навсегда",
     ),
+    "save": MessageLookupByLibrary.simpleMessage("Сохранить"),
     "settings": MessageLookupByLibrary.simpleMessage("Настройки"),
     "template": MessageLookupByLibrary.simpleMessage("Шаблон"),
     "template_download": MessageLookupByLibrary.simpleMessage(

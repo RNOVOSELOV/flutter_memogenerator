@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:memogenerator/resources/app_colors.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 
+import '../generated/l10n.dart';
+
 class GridItem extends StatelessWidget {
   const GridItem({
     super.key,
@@ -55,7 +57,7 @@ class GridItem extends StatelessWidget {
                         ),
                         SizedBox(height: 6),
                         Text(
-                          'Ошибка загрузки изображения',
+                          S.of(context).error_image_loading,
                           textAlign: TextAlign.center,
                           style: context.theme.memeRegular12.copyWith(
                             fontSize: 10,
