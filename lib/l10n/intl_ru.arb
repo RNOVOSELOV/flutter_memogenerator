@@ -1,0 +1,16 @@
+{
+  "meme_generator": "Мемогенератор",
+  "memes": "Мемы",
+  "meme": "Мем",
+  "templates": "Шаблоны",
+  "template": "Шаблон",
+  "settings": "Настройки",
+  "remove": "Удалить",
+  "remove_meme": "Удалить мем?",
+  "remove_meme_desc": "Выбранный мем будет удален навсегда",
+  "template_download": "Загрузить шаблон",
+  "templates_empty": "Получен пустой список шаблонов",
+  "remove_template": "Удалить шаблон?",
+  "remove_template_desc": "Выбранный шаблон будет удален навсегда",
+  "": ""
+}

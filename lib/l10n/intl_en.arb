@@ -1,0 +1,16 @@
+{
+  "meme_generator": "Meme generator",
+  "memes": "Memes",
+  "meme": "Meme",
+  "templates": "Templates",
+  "template": "Template",
+  "settings": "Settings",
+  "remove": "Delete",
+  "remove_meme": "Delete meme?",
+  "remove_meme_desc": "The selected meme will be deleted permanently",
+  "template_download": "Download template",
+  "templates_empty": "Empty list of templates received",
+  "remove_template": "Delete template?",
+  "remove_template_desc": "The selected template will be deleted permanently",
+  "": ""
+}
