@@ -83,6 +83,7 @@ class _CreateMemePageState extends State<CreateMemePage> {
           appBar: AppBar(
             titleSpacing: 0,
             title: Text(S.of(context).editor),
+            actionsPadding: EdgeInsets.zero,
             actions: [
               AnimatedIconButton(
                 onTap: () {
@@ -91,6 +92,13 @@ class _CreateMemePageState extends State<CreateMemePage> {
                 },
                 icon: Icons.save,
               ),
+              // TODO save to gallery
+              // AnimatedIconButton(
+              //   onTap: () {
+              //
+              //   },
+              //   icon: Icons.save_alt_outlined,
+              // ),
               AnimatedIconButton(
                 onTap: () {
                   bloc.deselectMemeText();
@@ -137,9 +145,7 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton> {
         setState(() => scale = 1.5);
         widget.onTap();
       },
-      style: IconButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      ),
+      style: IconButton.styleFrom(padding: EdgeInsets.zero),
       icon: AnimatedScale(
         scale: scale,
         duration: const Duration(milliseconds: 200),
@@ -611,10 +617,16 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
     super.initState();
     top =
         widget.memeTextWithOffset.offset?.dy ??
-        widget.parentConstraints.maxHeight / 2 - padding - 15;
+        calculatePercentByPosition(
+          widget.parentConstraints.maxHeight / 2 - padding - 15,
+          widget.parentConstraints.maxHeight,
+        );
     left =
         widget.memeTextWithOffset.offset?.dx ??
-        widget.parentConstraints.maxWidth / 3;
+        calculatePercentByPosition(
+          widget.parentConstraints.maxWidth / 3,
+          widget.parentConstraints.maxWidth,
+        );
     if (widget.memeTextWithOffset.offset == null) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
@@ -630,8 +642,8 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
   Widget build(BuildContext context) {
     final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
     return Positioned(
-      top: top,
-      left: left,
+      top: calculatePositionByPercent(top, widget.parentConstraints.maxHeight),
+      left: calculatePositionByPercent(left, widget.parentConstraints.maxWidth),
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () => bloc.selectMemeText(widget.memeTextWithOffset.memeText.id),
@@ -669,24 +681,47 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
   }
 
   double calculateTop(DragUpdateDetails details) {
-    final rawTop = top + details.delta.dy;
+    double rawTop =
+        calculatePositionByPercent(top, widget.parentConstraints.maxHeight) +
+        details.delta.dy;
     if (rawTop < 0) {
       return 0;
     }
-    if (rawTop > widget.parentConstraints.maxHeight - padding * 2 - 30) {
-      return widget.parentConstraints.maxHeight - padding * 2 - 30;
+    final maxTopValue =
+        widget.parentConstraints.maxHeight -
+        padding * 2 -
+        widget.memeTextWithOffset.memeText.fontSize;
+    if (rawTop > maxTopValue) {
+      rawTop = maxTopValue;
     }
-    return rawTop;
+    return calculatePercentByPosition(
+      rawTop,
+      widget.parentConstraints.maxHeight,
+    );
   }
 
   double calculateLeft(DragUpdateDetails details) {
-    final rawLeft = left + details.delta.dx;
+    double rawLeft =
+        calculatePositionByPercent(left, widget.parentConstraints.maxWidth) +
+        details.delta.dx;
     if (rawLeft < 0) {
       return 0;
     }
-    if (rawLeft > widget.parentConstraints.maxWidth - padding * 2 - 10) {
-      return widget.parentConstraints.maxWidth - padding * 2 - 10;
+    final maxLeftValue = widget.parentConstraints.maxWidth - padding * 2 - 20;
+    if (rawLeft > maxLeftValue) {
+      rawLeft = maxLeftValue;
     }
-    return rawLeft;
+    return calculatePercentByPosition(
+      rawLeft,
+      widget.parentConstraints.maxWidth,
+    );
+  }
+
+  double calculatePercentByPosition(double position, double maxValue) {
+    return 1 - (maxValue - position) / maxValue;
+  }
+
+  double calculatePositionByPercent(double percent, double maxValue) {
+    return percent * maxValue;
   }
 }

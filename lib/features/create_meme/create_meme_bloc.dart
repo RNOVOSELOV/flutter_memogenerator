@@ -39,7 +39,6 @@ class CreateMemeBloc {
   StreamSubscription<bool>? saveMemeSubscription;
   StreamSubscription<Meme?>? existentMemeSubscription;
 
-
   final Meme _meme;
   final MemeGetBinary _getBinary;
   final MemeGet _getMeme;
@@ -257,6 +256,9 @@ void downloadFile(Uint8List bytes, String filename) {
     final currentMemeTexts = [...memeTextsSubject.value];
     currentMemeTexts.removeWhere((element) => element.id == id);
     memeTextsSubject.add(currentMemeTexts);
+    final currentMemeOffsets = [...memeTextOffsetSubject.value];
+    currentMemeOffsets.removeWhere((element) => element.id == id);
+    memeTextOffsetSubject.add(currentMemeOffsets);
   }
 
   void addNewText() {
