@@ -196,6 +196,9 @@ void downloadFile(Uint8List bytes, String filename) {
 
   Future<bool> memeIsSaved() async {
     final savedMeme = await _getMeme(id: _meme.id);
+    if (savedMeme == null && memeTextsSubject.value.isEmpty) {
+      return true;
+    }
     if (savedMeme == null) {
       return false;
     }
