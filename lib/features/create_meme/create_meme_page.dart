@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:memogenerator/features/create_meme/widgets/meme_text_on_canvas.d
 import 'package:memogenerator/features/create_meme/use_cases/meme_get_binary.dart';
 import 'package:memogenerator/features/create_meme/use_cases/meme_save.dart';
 import 'package:memogenerator/features/create_meme/use_cases/meme_save_thumbnail.dart';
+import 'package:memogenerator/navigation/navigation_helper.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:memogenerator/widgets/confirmation_dialog.dart';
 import 'package:provider/provider.dart';
@@ -60,64 +62,86 @@ class _CreateMemePageState extends State<CreateMemePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Provider.value(
-      value: bloc,
-      child: WillPopScope(
-        onWillPop: () async {
-          final allSaved = await bloc.memeIsSaved();
-          if (allSaved) {
-            return true;
-          }
-          if (!context.mounted) return true;
-          final goBack = await showConfirmationDialog(
-            context,
-            title: S.of(context).exit_action,
-            text: S.of(context).exit_action_desc,
-            actionButtonText: S.of(context).exit,
-          );
-          return goBack ?? false;
-        },
-        child: Scaffold(
-          backgroundColor: context.theme.scaffoldBackgroundColor,
-          resizeToAvoidBottomInset: false,
-          appBar: AppBar(
-            titleSpacing: 0,
-            title: Text(S.of(context).editor),
-            actionsPadding: EdgeInsets.zero,
-            actions: [
-              AnimatedIconButton(
-                onTap: () {
-                  bloc.deselectMemeText();
-                  bloc.saveMeme();
-                },
-                icon: Icons.save,
-              ),
-              // TODO save to gallery
-              // AnimatedIconButton(
-              //   onTap: () {
-              //
-              //   },
-              //   icon: Icons.save_alt_outlined,
-              // ),
-              AnimatedIconButton(
-                onTap: () {
-                  bloc.deselectMemeText();
-                  bloc.shareMeme();
-                },
-                icon: Icons.share,
-              ),
-            ],
-          ),
-          body: _CreateMemePageContent(),
-        ),
-      ),
-    );
+    return Provider.value(value: bloc, child: _CreateMemePopWidget());
   }
 
   @override
   void dispose() {
     bloc.dispose();
     super.dispose();
+  }
+}
+
+class _CreateMemePopWidget extends StatelessWidget {
+  const _CreateMemePopWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) return;
+        final allSaved = await bloc.memeIsSaved();
+        if (allSaved && context.mounted) {
+          CustomNavigationHelper.instance.router.pop();
+          return;
+        }
+        if (!context.mounted) return;
+        final goBack = await showConfirmationDialog(
+          context,
+          title: S.of(context).exit_action,
+          text: S.of(context).exit_action_desc,
+          actionButtonText: S.of(context).exit,
+        );
+        if (goBack == true && context.mounted) {
+          CustomNavigationHelper.instance.router.pop();
+        }
+      },
+      child: _CreateMemePageWidget(),
+    );
+  }
+}
+
+class _CreateMemePageWidget extends StatelessWidget {
+  const _CreateMemePageWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
+    return Scaffold(
+      backgroundColor: context.theme.scaffoldBackgroundColor,
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        titleSpacing: 0,
+        title: Text(S.of(context).editor),
+        actionsPadding: EdgeInsets.zero,
+        actions: [
+          AnimatedIconButton(
+            onTap: () {
+              bloc.deselectMemeText();
+              bloc.saveMeme();
+            },
+            icon: Icons.save,
+          ),
+          // TODO save to gallery
+          // AnimatedIconButton(
+          //   onTap: () {
+          //
+          //   },
+          //   icon: Icons.save_alt_outlined,
+          // ),
+          AnimatedIconButton(
+            onTap: () {
+              bloc.deselectMemeText();
+              bloc.shareMeme();
+            },
+            icon: Icons.share,
+          ),
+        ],
+      ),
+      body: _CreateMemePageContent(),
+    );
   }
 }
 
