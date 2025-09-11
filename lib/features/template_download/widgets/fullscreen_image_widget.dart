@@ -2,8 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 
-import '../../resources/app_colors.dart';
-
 class FullScreenImagesWidget extends StatelessWidget {
   const FullScreenImagesWidget({
     super.key,

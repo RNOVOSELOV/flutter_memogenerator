@@ -31,6 +31,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "editor_size": MessageLookupByLibrary.simpleMessage("Size: "),
     "editor_text_hint": MessageLookupByLibrary.simpleMessage("Enter text"),
     "editor_weight": MessageLookupByLibrary.simpleMessage("Weight: "),
+    "empty_data": MessageLookupByLibrary.simpleMessage(
+      "Empty templates list received",
+    ),
     "error_image_loading": MessageLookupByLibrary.simpleMessage(
       "Error loading image",
     ),
@@ -41,6 +44,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "meme": MessageLookupByLibrary.simpleMessage("Meme"),
     "meme_generator": MessageLookupByLibrary.simpleMessage("Meme generator"),
+    "meme_remove_error": MessageLookupByLibrary.simpleMessage(
+      "Error deleting meme",
+    ),
+    "meme_remove_success": MessageLookupByLibrary.simpleMessage(
+      "Meme successfully deleted",
+    ),
     "memes": MessageLookupByLibrary.simpleMessage("Memes"),
     "remove": MessageLookupByLibrary.simpleMessage("Delete"),
     "remove_meme": MessageLookupByLibrary.simpleMessage("Delete meme?"),
@@ -56,6 +65,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "template": MessageLookupByLibrary.simpleMessage("Template"),
     "template_download": MessageLookupByLibrary.simpleMessage(
       "Download template",
+    ),
+    "template_remove_error": MessageLookupByLibrary.simpleMessage(
+      "Error deleting template",
+    ),
+    "template_remove_success": MessageLookupByLibrary.simpleMessage(
+      "Template successfully deleted",
     ),
     "templates": MessageLookupByLibrary.simpleMessage("Templates"),
     "templates_empty": MessageLookupByLibrary.simpleMessage(

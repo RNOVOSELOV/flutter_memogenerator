@@ -1,8 +1,8 @@
 import 'package:memogenerator/domain/entities/template_full.dart';
 import 'package:memogenerator/domain/usecases/template_upload.dart';
 
-import 'use_cases/template_delete.dart';
-import 'use_cases/templates_get_stream.dart';
+import '../use_cases/template_delete.dart';
+import '../use_cases/templates_get_stream.dart';
 
 class TemplatesBloc {
   final TemplatesGetStream _getTemplatesStream;

@@ -10,13 +10,16 @@ import 'package:yx_scope_flutter/yx_scope_flutter.dart';
 
 import '../../di_sm/app_scope.dart';
 import '../../domain/entities/meme.dart';
+import '../../domain/entities/message.dart';
+import '../../domain/entities/message_status.dart';
 import '../../generated/l10n.dart';
 import '../../navigation/navigation_helper.dart';
 import '../../navigation/navigation_path.dart';
 import '../../widgets/custom_appbar.dart';
 import '../../widgets/fab_widget.dart';
 import '../../widgets/grid_item.dart';
-import 'templates_bloc.dart';
+import '../../widgets/snackbar_widget.dart';
+import 'sm/templates_bloc.dart';
 import '../../domain/entities/template_full.dart';
 
 class TemplatesPage extends StatefulWidget {
@@ -128,6 +131,8 @@ class TemplatesPageBodyContent extends StatelessWidget {
                     }
                   },
                   onDelete: () async {
+                    final successString = S.of(context).template_remove_success;
+                    final errorString = S.of(context).template_remove_error;
                     await Future.delayed(Duration(milliseconds: 200), () {});
                     if (!context.mounted) {
                       return;
@@ -139,7 +144,16 @@ class TemplatesPageBodyContent extends StatelessWidget {
                       actionButtonText: S.of(context).remove,
                     );
                     if ((removeTemplateDialog ?? false) == true) {
-                      bloc.deleteTemplate(items.elementAt(index).id);
+                      final result = await bloc.deleteTemplate(items.elementAt(index).id);
+                      final message = Message(
+                        status: result ? MessageStatus.success : MessageStatus.error,
+                        message: result ? successString : errorString,
+                      );
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          generateSnackBarWidget(context: context, message: message),
+                        );
+                      });
                     }
                   },
                 ),

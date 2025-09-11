@@ -1,4 +1,5 @@
 {
+  "@@locale": "en",
   "meme_generator": "Meme generator",
   "memes": "Memes",
   "meme": "Meme",
@@ -26,5 +27,9 @@
   "editor_select_color": "Select color",
   "editor_size": "Size: ",
   "editor_weight": "Weight: ",
-  "": ""
+  "meme_remove_success": "Meme successfully deleted",
+  "meme_remove_error": "Error deleting meme",
+  "template_remove_success": "Template successfully deleted",
+  "template_remove_error": "Error deleting template",
+  "empty_data": "Empty templates list received"
 }

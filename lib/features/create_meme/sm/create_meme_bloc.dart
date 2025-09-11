@@ -12,14 +12,14 @@ import 'package:collection/collection.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../domain/entities/meme.dart';
-import '../../domain/entities/position.dart';
-import '../../domain/entities/text_with_position.dart';
-import 'entities/meme_text.dart';
-import 'entities/meme_text_offset.dart';
-import 'entities/meme_text_with_offset.dart';
-import 'entities/meme_text_with_selection.dart';
-import 'use_cases/meme_save_thumbnail.dart';
+import '../../../domain/entities/meme.dart';
+import '../../../domain/entities/position.dart';
+import '../../../domain/entities/text_with_position.dart';
+import '../entities/meme_text.dart';
+import '../entities/meme_text_offset.dart';
+import '../entities/meme_text_with_offset.dart';
+import '../entities/meme_text_with_selection.dart';
+import '../use_cases/meme_save_thumbnail.dart';
 
 class CreateMemeBloc {
   final memeTextsSubject = BehaviorSubject<List<MemeText>>.seeded(<MemeText>[]);

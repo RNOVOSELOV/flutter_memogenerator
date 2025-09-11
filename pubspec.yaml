@@ -31,7 +31,7 @@ dependencies:
   cached_network_image: ^3.4.1
   screenshot: ^3.0.0
   share_plus: ^11.1.0
-  flutter_svg: ^2.2.0
+  flutter_svg: ^2.2.1
   flutter_colorpicker: ^1.1.0
   yx_scope: ^1.1.2
   yx_scope_flutter: ^1.1.2

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:memogenerator/di_sm/app_scope.dart';
 import 'package:memogenerator/domain/entities/meme.dart';
+import 'package:memogenerator/domain/entities/message.dart';
+import 'package:memogenerator/domain/entities/message_status.dart';
 import 'package:memogenerator/domain/usecases/meme_upload.dart';
 import 'package:memogenerator/features/memes/use_cases/meme_delete.dart';
 import 'package:memogenerator/domain/usecases/meme_get.dart';
@@ -10,6 +12,7 @@ import 'package:memogenerator/navigation/navigation_helper.dart';
 import 'package:memogenerator/navigation/navigation_path.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:memogenerator/widgets/confirmation_dialog.dart';
+import 'package:memogenerator/widgets/snackbar_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:yx_scope_flutter/yx_scope_flutter.dart';
@@ -19,7 +22,7 @@ import '../../widgets/custom_appbar.dart';
 import '../../widgets/fab_widget.dart';
 import '../../widgets/grid_item.dart';
 import '../../domain/entities/meme_thumbnail.dart';
-import 'memes_bloc.dart';
+import 'sm/memes_bloc.dart';
 
 class MemesPage extends StatefulWidget {
   const MemesPage({super.key});
@@ -66,7 +69,7 @@ class _MemesPageState extends State<MemesPage> {
         floatingActionButton: CreateFab(
           text: S.of(context).meme,
           onTap: () async {
-            final fileName = await bloc.selectMeme();
+            final fileName = await bloc.selectImageInGallery();
             if (fileName != null) {
               CustomNavigationHelper.instance.router.pushNamed(
                 NavigationPagePath.editMemePage.name,
@@ -155,6 +158,8 @@ class _MemeItem extends StatelessWidget {
       },
       onDelete: () async {
         final MemesBloc bloc = Provider.of<MemesBloc>(context, listen: false);
+        final successString = S.of(context).meme_remove_success;
+        final errorString = S.of(context).meme_remove_error;
         await Future.delayed(Duration(milliseconds: 200), () {});
         if (!context.mounted) {
           return;
@@ -166,7 +171,16 @@ class _MemeItem extends StatelessWidget {
           actionButtonText: S.of(context).remove,
         );
         if ((removeMemeDialog ?? false) == true) {
-          bloc.deleteMeme(memeThumbnail.memeId);
+          final result = await bloc.deleteMeme(memeThumbnail.memeId);
+          final message = Message(
+            status: result ? MessageStatus.success : MessageStatus.error,
+            message: result ? successString : errorString,
+          );
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              generateSnackBarWidget(context: context, message: message),
+            );
+          });
         }
       },
     );
