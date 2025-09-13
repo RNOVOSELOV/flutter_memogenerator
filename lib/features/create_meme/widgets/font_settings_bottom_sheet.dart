@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:memogenerator/features/create_meme/create_meme_bloc.dart';
-import 'package:memogenerator/features/create_meme/meme_text_on_canvas.dart';
+import 'package:memogenerator/features/create_meme/sm/create_meme_state_manager.dart';
+import 'package:memogenerator/features/create_meme/widgets/meme_text_on_canvas.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:memogenerator/widgets/confirmation_dialog.dart';
 import 'package:provider/provider.dart';
 
-import '../../generated/l10n.dart';
-import 'entities/meme_text.dart';
+import '../../../generated/l10n.dart';
+import '../entities/meme_text.dart';
 
 class FontSettingBottomSheet extends StatefulWidget {
   const FontSettingBottomSheet({super.key, required this.memeText});
@@ -103,7 +103,7 @@ class Buttons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
+    final sm = Provider.of<CreateMemeStateManager>(context, listen: false);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -122,7 +122,12 @@ class Buttons extends StatelessWidget {
           onTap: () async {
             await Future.delayed(Duration(milliseconds: 200), () {});
             if (context.mounted) {
-              bloc.changeFontSettings(memeId, color, fontSize, fontWeight);
+              sm.changeFontSettings(
+                memeId: memeId,
+                color: color,
+                fontSize: fontSize,
+                fontWeight: fontWeight,
+              );
               Navigator.of(context).pop();
             }
           },

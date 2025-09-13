@@ -1,21 +1,23 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:either_dart/either.dart';
 import 'package:flutter/material.dart';
-import 'package:memogenerator/domain/entities/message.dart';
-import 'package:memogenerator/features/template_download/template_download_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:memogenerator/features/template_download/sm/template_download_state.dart';
+import 'package:memogenerator/features/template_download/sm/template_download_state_manager.dart';
 import 'package:memogenerator/features/template_download/use_cases/template_download.dart';
 import 'package:memogenerator/features/template_download/use_cases/templates_get_from_api.dart';
+import 'package:memogenerator/features/template_download/widgets/progress_widget.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:memogenerator/widgets/snackbar_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:yx_scope_flutter/yx_scope_flutter.dart';
+import 'package:yx_state_flutter/yx_state_flutter.dart';
 
-import '../../data/http/models/api_error.dart';
 import '../../data/http/models/meme_data.dart';
 import '../../di_sm/app_scope.dart';
 import '../../generated/l10n.dart';
+import '../../resources/app_icons.dart';
 import '../../widgets/grid_item.dart';
-import 'fullscreen_image_widget.dart';
+import 'widgets/fullscreen_image_widget.dart';
 
 class TemplateDownloadPage extends StatefulWidget {
   const TemplateDownloadPage({super.key});
@@ -25,7 +27,7 @@ class TemplateDownloadPage extends StatefulWidget {
 }
 
 class _TemplateDownloadPageState extends State<TemplateDownloadPage> {
-  late TemplateDownloadBloc bloc;
+  late final TemplateDownloadStateManager manager;
 
   @override
   void initState() {
@@ -34,38 +36,39 @@ class _TemplateDownloadPageState extends State<TemplateDownloadPage> {
       context,
       listen: false,
     );
-    bloc = TemplateDownloadBloc(
-      getTemplatesFromApi: TemplatesGetFromApi(
+    manager = TemplateDownloadStateManager(
+      DownloadProgressState(),
+      ucGetTemplatesFromApi: TemplatesGetFromApi(
         templateRepository: appScopeHolder.scope!.templateRepositoryImpl.get,
       ),
-      downloadTemplate: TemplateDownload(
+      ucDownloadTemplate: TemplateDownload(
         templateRepository: appScopeHolder.scope!.templateRepositoryImpl.get,
       ),
-    );
+    )..getTemplates();
   }
 
   @override
   Widget build(BuildContext context) {
     return Provider.value(
-      value: bloc,
-      child: StreamProvider<Message?>(
-        create: (BuildContext context) => bloc.messageStream,
-        initialData: null,
-        child: Consumer<Message?>(
-          builder: (BuildContext context, Message? message, Widget? child) {
-            if (message != null) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  generateSnackBarWidget(context: context, message: message),
-                );
-              });
-            }
-            return child!;
-          },
-          child: Scaffold(
-            backgroundColor: context.theme.scaffoldBackgroundColor,
-            body: TemplatesPageBodyContent(),
-          ),
+      value: manager,
+      child: StateBuilder(
+        stateReadable: manager,
+        buildWhen: (previous, current) =>
+            previous is DownloadProgressState ||
+            current is DownloadProgressState,
+        builder: (BuildContext context, state, Widget? child) {
+          return Stack(
+            children: [
+              child ?? SizedBox.shrink(),
+              state is DownloadProgressState
+                  ? ProgressWidget()
+                  : SizedBox.shrink(),
+            ],
+          );
+        },
+        child: Scaffold(
+          backgroundColor: context.theme.scaffoldBackgroundColor,
+          body: TemplatesPageBodyContent(),
         ),
       ),
     );
@@ -73,7 +76,7 @@ class _TemplateDownloadPageState extends State<TemplateDownloadPage> {
 
   @override
   void dispose() {
-    bloc.dispose();
+    manager.close();
     super.dispose();
   }
 }
@@ -83,82 +86,135 @@ class TemplatesPageBodyContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TemplateDownloadBloc bloc = Provider.of<TemplateDownloadBloc>(
-      context,
-      listen: false,
-    );
-    return FutureBuilder<Either<ApiError, List<MemeApiData>>>(
-      future: bloc.getMemeTemplates(),
-      builder: (context, snapshot) {
-        final isTemplatesDataReceived = snapshot.hasData;
-        final data = snapshot.data;
-        return CustomScrollView(
-          slivers: [
-            SliverAppBar(
+    final TemplateDownloadStateManager manager =
+        Provider.of<TemplateDownloadStateManager>(context, listen: false);
+    return CustomScrollView(
+      slivers: [
+        StateBuilder<TemplateDownloadState>(
+          stateReadable: manager,
+          buildWhen: (previous, current) => current is DownloadDataState,
+          builder: (context, state, child) {
+            final isTemplatesReceived = state is DownloadDataState
+                ? true
+                : false;
+            return SliverAppBar(
               titleSpacing: 0,
               title: Text(S.of(context).template_download),
-              floating: isTemplatesDataReceived ? true : false,
-              pinned: !isTemplatesDataReceived || (data != null && data.isLeft)
-                  ? true
-                  : false,
-            ),
-            if (!isTemplatesDataReceived || data == null)
-              SliverFillRemaining(
-                child: Center(child: const CircularProgressIndicator()),
-              ),
-            if (data != null && data.isLeft)
-              SliverFillRemaining(
-                child: Center(child: Text(data.left.description)),
-              ),
-            if (data != null && data.isRight)
-              data.right.isEmpty
-                  ? Center(child: Text(S.of(context).templates_empty))
-                  : SliverPadding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 12,
-                      ),
-                      sliver: SliverGrid.builder(
-                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 180,
-                          mainAxisSpacing: 8,
-                          crossAxisSpacing: 8,
-                          childAspectRatio: 1,
-                        ),
-                        itemCount: data.right.length,
-                        itemBuilder: (context, index) => GridItem(
-                          memeData: data.right.elementAt(index),
-                          onDownload: () {
-                            final TemplateDownloadBloc bloc =
-                                Provider.of<TemplateDownloadBloc>(
-                                  context,
-                                  listen: false,
-                                );
-                            bloc.saveTemplate(
-                              memeData: data.right.elementAt(index),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-          ],
-        );
-      },
+              floating: isTemplatesReceived,
+              pinned: !isTemplatesReceived,
+            );
+          },
+        ),
+        StateConsumer<TemplateDownloadState>(
+          stateReadable: manager,
+          listenWhen: (previous, current) => current is SaveTemplateState,
+          listener: (intContext, state) {
+            if (state is SaveTemplateState) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  generateSnackBarWidget(
+                    context: context,
+                    message: state.message,
+                  ),
+                );
+              });
+            }
+          },
+          buildWhen: (previous, current) =>
+              current is! SaveTemplateState &&
+              current is! DownloadProgressState,
+          builder: (context, state, child) {
+            if (state is DownloadErrorState) {
+              return SliverFillRemaining(
+                hasScrollBody: false,
+                child: _WarningInfoWidget(warningString: state.errorMessage),
+              );
+            } else if (state is EmptyDataState) {
+              return SliverFillRemaining(
+                hasScrollBody: false,
+                child: _WarningInfoWidget(
+                  warningString: S.of(context).templates_empty,
+                ),
+              );
+            } else if (state is DownloadDataState) {
+              return SliverPadding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                sliver: SliverGrid.builder(
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 180,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    childAspectRatio: 1,
+                  ),
+                  itemCount: state.templatesList.length,
+                  itemBuilder: (context, index) => _GridItem(
+                    memeData: state.templatesList.elementAt(index),
+                    onDownload: () {
+                      manager.saveTemplate(
+                        memeData: state.templatesList.elementAt(index),
+                      );
+                    },
+                  ),
+                ),
+              );
+            }
+            return SliverToBoxAdapter(child: SizedBox.shrink());
+          },
+        ),
+      ],
     );
   }
 }
 
-class GridItem extends StatefulWidget {
-  const GridItem({super.key, required this.onDownload, required this.memeData});
+class _WarningInfoWidget extends StatelessWidget {
+  const _WarningInfoWidget({required this.warningString});
+
+  final String warningString;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SvgPicture.asset(
+              AppIcons.iconError,
+              width: 150,
+              height: 150,
+              colorFilter: ColorFilter.mode(
+                context.color.textSecondaryColor,
+                BlendMode.srcIn,
+              ),
+            ),
+            SizedBox(height: 32),
+            Text(
+              warningString,
+              textAlign: TextAlign.center,
+              style: context.theme.memeSemiBold16.copyWith(height: 1.5),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _GridItem extends StatefulWidget {
+  const _GridItem({required this.onDownload, required this.memeData});
 
   final VoidCallback onDownload;
   final MemeApiData memeData;
 
   @override
-  State<GridItem> createState() => _GridItemState();
+  State<_GridItem> createState() => _GridItemState();
 }
 
-class _GridItemState extends State<GridItem> {
+class _GridItemState extends State<_GridItem> {
   @override
   Widget build(BuildContext context) {
     return Stack(

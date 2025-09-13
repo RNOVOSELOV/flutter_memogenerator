@@ -33,6 +33,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "editor_size": MessageLookupByLibrary.simpleMessage("Размер: "),
     "editor_text_hint": MessageLookupByLibrary.simpleMessage("Введите текст"),
     "editor_weight": MessageLookupByLibrary.simpleMessage("Толщина: "),
+    "empty_data": MessageLookupByLibrary.simpleMessage(
+      "Получен пустой список шаблонов",
+    ),
     "error_image_loading": MessageLookupByLibrary.simpleMessage(
       "Ошибка загрузки изображения",
     ),
@@ -43,6 +46,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "meme": MessageLookupByLibrary.simpleMessage("Мем"),
     "meme_generator": MessageLookupByLibrary.simpleMessage("Мемогенератор"),
+    "meme_remove_error": MessageLookupByLibrary.simpleMessage(
+      "Ошибка удаления мема",
+    ),
+    "meme_remove_success": MessageLookupByLibrary.simpleMessage(
+      "Мем успешно удален",
+    ),
     "memes": MessageLookupByLibrary.simpleMessage("Мемы"),
     "remove": MessageLookupByLibrary.simpleMessage("Удалить"),
     "remove_meme": MessageLookupByLibrary.simpleMessage("Удалить мем?"),
@@ -54,10 +63,22 @@ class MessageLookup extends MessageLookupByLibrary {
       "Выбранный шаблон будет удален навсегда",
     ),
     "save": MessageLookupByLibrary.simpleMessage("Сохранить"),
+    "save_meme_error": MessageLookupByLibrary.simpleMessage(
+      "Произошла ошибка при сохранении мема",
+    ),
+    "save_meme_success": MessageLookupByLibrary.simpleMessage(
+      "Мем успешно сохранен",
+    ),
     "settings": MessageLookupByLibrary.simpleMessage("Настройки"),
     "template": MessageLookupByLibrary.simpleMessage("Шаблон"),
     "template_download": MessageLookupByLibrary.simpleMessage(
       "Загрузить шаблон",
+    ),
+    "template_remove_error": MessageLookupByLibrary.simpleMessage(
+      "Ошибка удаления шаблона",
+    ),
+    "template_remove_success": MessageLookupByLibrary.simpleMessage(
+      "Шаблон успешно удален",
     ),
     "templates": MessageLookupByLibrary.simpleMessage("Шаблоны"),
     "templates_empty": MessageLookupByLibrary.simpleMessage(

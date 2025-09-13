@@ -31,7 +31,7 @@ class MemesBloc {
   Stream<List<MemeThumbnail>> observeMemesThumbnails() =>
       _getMemesThumbnailStream();
 
-  Future<String?> selectMeme() async {
+  Future<String?> selectImageInGallery() async {
     final xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (xFile != null) {
       final data = await xFile.readAsBytes();
@@ -48,10 +48,8 @@ class MemesBloc {
     return await _getMeme(id: id);
   }
 
-  void deleteMeme(final String memeId) {
-    _deleteMeme(memeId: memeId).then((value) {
-      // TODO show message about result
-    });
+  Future<bool> deleteMeme(final String memeId) async {
+    return _deleteMeme(memeId: memeId);
   }
 
   void dispose() {}

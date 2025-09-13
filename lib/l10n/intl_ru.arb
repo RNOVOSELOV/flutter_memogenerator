@@ -1,4 +1,5 @@
 {
+  "@@locale": "ru",
   "meme_generator": "Мемогенератор",
   "memes": "Мемы",
   "meme": "Мем",
@@ -26,5 +27,11 @@
   "editor_select_color": "Выберите цвет",
   "editor_size": "Размер: ",
   "editor_weight": "Толщина: ",
-  "": ""
+  "meme_remove_success": "Мем успешно удален",
+  "meme_remove_error": "Ошибка удаления мема",
+  "template_remove_success": "Шаблон успешно удален",
+  "template_remove_error": "Ошибка удаления шаблона",
+  "empty_data": "Получен пустой список шаблонов",
+  "save_meme_success": "Мем успешно сохранен",
+  "save_meme_error": "Произошла ошибка при сохранении мема"
 }

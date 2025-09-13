@@ -255,7 +255,75 @@ class S {
     return Intl.message('Weight: ', name: 'editor_weight', desc: '', args: []);
   }
 
-  // skipped getter for the '' key
+  /// `Meme successfully deleted`
+  String get meme_remove_success {
+    return Intl.message(
+      'Meme successfully deleted',
+      name: 'meme_remove_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error deleting meme`
+  String get meme_remove_error {
+    return Intl.message(
+      'Error deleting meme',
+      name: 'meme_remove_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Template successfully deleted`
+  String get template_remove_success {
+    return Intl.message(
+      'Template successfully deleted',
+      name: 'template_remove_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error deleting template`
+  String get template_remove_error {
+    return Intl.message(
+      'Error deleting template',
+      name: 'template_remove_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Empty templates list received`
+  String get empty_data {
+    return Intl.message(
+      'Empty templates list received',
+      name: 'empty_data',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The meme was saved successfully`
+  String get save_meme_success {
+    return Intl.message(
+      'The meme was saved successfully',
+      name: 'save_meme_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `An error occurred while saving the meme`
+  String get save_meme_error {
+    return Intl.message(
+      'An error occurred while saving the meme',
+      name: 'save_meme_error',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
