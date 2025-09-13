@@ -29,7 +29,7 @@ class TemplateDownloadStateManager extends StateManager<TemplateDownloadState> {
 
   Future<void> saveTemplate({required final MemeApiData memeData}) =>
       handle((emit) async {
-        emit (DownloadProgressState());
+        emit(DownloadProgressState());
         final result = await _downloadTemplate(memeData: memeData);
         emit(SaveTemplateState(message: result));
       });

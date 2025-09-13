@@ -63,6 +63,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Выбранный шаблон будет удален навсегда",
     ),
     "save": MessageLookupByLibrary.simpleMessage("Сохранить"),
+    "save_meme_error": MessageLookupByLibrary.simpleMessage(
+      "Произошла ошибка при сохранении мема",
+    ),
+    "save_meme_success": MessageLookupByLibrary.simpleMessage(
+      "Мем успешно сохранен",
+    ),
     "settings": MessageLookupByLibrary.simpleMessage("Настройки"),
     "template": MessageLookupByLibrary.simpleMessage("Шаблон"),
     "template_download": MessageLookupByLibrary.simpleMessage(

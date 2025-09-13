@@ -61,6 +61,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "The selected template will be deleted permanently",
     ),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
+    "save_meme_error": MessageLookupByLibrary.simpleMessage(
+      "An error occurred while saving the meme",
+    ),
+    "save_meme_success": MessageLookupByLibrary.simpleMessage(
+      "The meme was saved successfully",
+    ),
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
     "template": MessageLookupByLibrary.simpleMessage("Template"),
     "template_download": MessageLookupByLibrary.simpleMessage(

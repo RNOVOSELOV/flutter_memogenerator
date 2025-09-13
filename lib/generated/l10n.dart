@@ -304,6 +304,26 @@ class S {
       args: [],
     );
   }
+
+  /// `The meme was saved successfully`
+  String get save_meme_success {
+    return Intl.message(
+      'The meme was saved successfully',
+      name: 'save_meme_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `An error occurred while saving the meme`
+  String get save_meme_error {
+    return Intl.message(
+      'An error occurred while saving the meme',
+      name: 'save_meme_error',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

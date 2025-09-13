@@ -31,5 +31,7 @@
   "meme_remove_error": "Ошибка удаления мема",
   "template_remove_success": "Шаблон успешно удален",
   "template_remove_error": "Ошибка удаления шаблона",
-  "empty_data": "Получен пустой список шаблонов"
+  "empty_data": "Получен пустой список шаблонов",
+  "save_meme_success": "Мем успешно сохранен",
+  "save_meme_error": "Произошла ошибка при сохранении мема"
 }
