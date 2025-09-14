@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
 import 'package:memogenerator/features/create_meme/entities/meme_text.dart';
+import 'package:memogenerator/features/create_meme/use_cases/meme_save_gallery.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:yx_state/yx_state.dart';
@@ -17,6 +18,7 @@ import '../use_cases/meme_get_binary.dart';
 import '../use_cases/meme_save.dart';
 import '../use_cases/meme_save_thumbnail.dart';
 import 'create_meme_state.dart';
+import '../../../data/repositories/image_saver.dart';
 
 class CreateMemeStateManager extends StateManager<CreateMemeState> {
   final Meme _meme;
@@ -24,6 +26,7 @@ class CreateMemeStateManager extends StateManager<CreateMemeState> {
   final MemeGet _getMeme;
   final MemeSave _saveMeme;
   final MemeSaveThumbnail _saveMemeThumbnail;
+  final MemeSaveGallery _saveMemeToGallery;
 
   final ScreenshotController _screenshotController;
   final List<MemeText> _memeTextSubject = [];
@@ -37,11 +40,13 @@ class CreateMemeStateManager extends StateManager<CreateMemeState> {
     required final MemeGet getMeme,
     required final MemeSave saveMeme,
     required final MemeSaveThumbnail saveMemeThumbnail,
+    required final MemeSaveGallery saveMemeToGallery,
   }) : _meme = meme,
        _getBinary = getBinary,
        _getMeme = getMeme,
        _saveMeme = saveMeme,
        _saveMemeThumbnail = saveMemeThumbnail,
+       _saveMemeToGallery = saveMemeToGallery,
        _screenshotController = ScreenshotController();
 
   ScreenshotController get screenshotController => _screenshotController;
@@ -179,6 +184,12 @@ class CreateMemeStateManager extends StateManager<CreateMemeState> {
         _memeTextOffsetSubject = [...currentMemeOffsets];
         await deselectMemeText();
       });
+
+  Future<void> saveImageFile() => handle((emit) async {
+    final imageBinaryData = await _screenshotController.capture();
+    if (imageBinaryData == null) return;
+    bool result = await _saveMemeToGallery(imageBinary: imageBinaryData);
+  });
 
   Future<void> shareMeme() => handle((emit) async {
     final imageBinaryData = await _screenshotController.capture();

@@ -31,6 +31,9 @@ dependencies:
   cached_network_image: ^3.4.1
   screenshot: ^3.0.0
   share_plus: ^11.1.0
+  image_gallery_saver_plus: ^4.0.1
+  file_saver: ^0.3.1
+  universal_io: ^2.2.2
   flutter_svg: ^2.2.1
   flutter_colorpicker: ^1.1.0
   yx_scope: ^1.1.2

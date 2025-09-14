@@ -23,6 +23,8 @@ abstract interface class MemeRepository {
 
   Future<bool> saveMeme({required final Meme meme});
 
+  Future<bool> saveImageToGallery({required final Uint8List binaryData});
+
   Future<({Uint8List imageBinary, double aspectRatio})?> getImageBinaryData({
     required String fileName,
   });

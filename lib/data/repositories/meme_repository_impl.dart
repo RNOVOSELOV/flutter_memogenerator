@@ -1,8 +1,11 @@
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 import 'package:memogenerator/data/datasources/meme_datasource.dart';
 import 'package:memogenerator/data/image_type_enum.dart';
+import 'package:memogenerator/data/repositories/image_saver.dart';
 import 'package:memogenerator/domain/entities/meme_thumbnail.dart';
 import 'package:memogenerator/domain/repositories/meme_repository.dart';
 import '../../domain/entities/meme.dart';
@@ -102,5 +105,15 @@ class MemeRepositoryImp implements MemeRepository {
       savedData[itemIndex] = MemeModel.fromMeme(meme: meme);
     }
     return await _memeDataSource.setMemeModels(models: savedData);
+  }
+
+  @override
+  Future<bool> saveImageToGallery({required Uint8List binaryData}) async {
+    final result = await UniversalImageSaver.saveImage(
+      binaryData,
+      fileName: 'meme_${DateTime.now().millisecondsSinceEpoch}',
+      format: 'png',
+    );
+    return result != null;
   }
 }

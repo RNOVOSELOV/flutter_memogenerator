@@ -8,6 +8,8 @@ import 'package:memogenerator/domain/entities/message_status.dart';
 import 'package:memogenerator/domain/usecases/meme_get.dart';
 import 'package:memogenerator/features/create_meme/sm/create_meme_state.dart';
 import 'package:memogenerator/features/create_meme/sm/create_meme_state_manager.dart';
+import 'package:memogenerator/data/repositories/image_saver.dart';
+import 'package:memogenerator/features/create_meme/use_cases/meme_save_gallery.dart';
 import 'package:memogenerator/features/create_meme/widgets/meme_text_on_canvas.dart';
 import 'package:memogenerator/features/create_meme/use_cases/meme_get_binary.dart';
 import 'package:memogenerator/features/create_meme/use_cases/meme_save.dart';
@@ -62,6 +64,9 @@ class _CreateMemePageState extends State<CreateMemePage> {
         memeRepository: appScopeHolder.scope!.memeRepositoryImpl.get,
       ),
       saveMemeThumbnail: MemeSaveThumbnail(
+        memeRepository: appScopeHolder.scope!.memeRepositoryImpl.get,
+      ),
+      saveMemeToGallery: MemeSaveGallery(
         memeRepository: appScopeHolder.scope!.memeRepositoryImpl.get,
       ),
     )..getMemeData();
@@ -142,10 +147,15 @@ class _CreateMemePageWidget extends StatelessWidget {
             },
             icon: Icons.save,
           ),
-          // TODO save to gallery
           AnimatedIconButton(
-            onTap: () {
-
+            onTap: () async {
+              await sm.deselectMemeText();
+              await sm.saveImageFile();
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                generateSnackBarWidget(context: context, message: Message(status: MessageStatus.success, message: 'Успешно сохранено.')),
+              );
+              }
             },
             icon: Icons.save_alt_outlined,
           ),
