@@ -42,6 +42,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "exit_action_desc": MessageLookupByLibrary.simpleMessage(
       "You will lose unsaved changes",
     ),
+    "lang": MessageLookupByLibrary.simpleMessage("Language"),
+    "lang_eng": MessageLookupByLibrary.simpleMessage("English"),
+    "lang_rus": MessageLookupByLibrary.simpleMessage("Русский"),
+    "lang_system": MessageLookupByLibrary.simpleMessage("System"),
     "meme": MessageLookupByLibrary.simpleMessage("Meme"),
     "meme_generator": MessageLookupByLibrary.simpleMessage("Meme generator"),
     "meme_remove_error": MessageLookupByLibrary.simpleMessage(
@@ -68,6 +72,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "The meme was saved successfully",
     ),
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+    "settings_cache": MessageLookupByLibrary.simpleMessage("Clear cache"),
     "template": MessageLookupByLibrary.simpleMessage("Template"),
     "template_download": MessageLookupByLibrary.simpleMessage(
       "Download template",
@@ -82,5 +87,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "templates_empty": MessageLookupByLibrary.simpleMessage(
       "Empty list of templates received",
     ),
+    "theme": MessageLookupByLibrary.simpleMessage("Theme"),
+    "theme_dark": MessageLookupByLibrary.simpleMessage("Dark"),
+    "theme_light": MessageLookupByLibrary.simpleMessage("Light"),
+    "theme_system": MessageLookupByLibrary.simpleMessage("System"),
   };
 }

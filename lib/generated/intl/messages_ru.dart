@@ -44,6 +44,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "exit_action_desc": MessageLookupByLibrary.simpleMessage(
       "Вы потеряете несохраненные изменения",
     ),
+    "lang": MessageLookupByLibrary.simpleMessage("Язык"),
+    "lang_eng": MessageLookupByLibrary.simpleMessage("English"),
+    "lang_rus": MessageLookupByLibrary.simpleMessage("Русский"),
+    "lang_system": MessageLookupByLibrary.simpleMessage("Системный"),
     "meme": MessageLookupByLibrary.simpleMessage("Мем"),
     "meme_generator": MessageLookupByLibrary.simpleMessage("Мемогенератор"),
     "meme_remove_error": MessageLookupByLibrary.simpleMessage(
@@ -70,6 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Мем успешно сохранен",
     ),
     "settings": MessageLookupByLibrary.simpleMessage("Настройки"),
+    "settings_cache": MessageLookupByLibrary.simpleMessage("Очистить кеш"),
     "template": MessageLookupByLibrary.simpleMessage("Шаблон"),
     "template_download": MessageLookupByLibrary.simpleMessage(
       "Загрузить шаблон",
@@ -84,5 +89,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "templates_empty": MessageLookupByLibrary.simpleMessage(
       "Получен пустой список шаблонов",
     ),
+    "theme": MessageLookupByLibrary.simpleMessage("Тема"),
+    "theme_dark": MessageLookupByLibrary.simpleMessage("Темная"),
+    "theme_light": MessageLookupByLibrary.simpleMessage("Светлая"),
+    "theme_system": MessageLookupByLibrary.simpleMessage("Системная"),
   };
 }

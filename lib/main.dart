@@ -59,8 +59,22 @@ class _MyAppState extends State<MyApp> {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
+            locale: WidgetsBinding.instance.platformDispatcher.locale,
             supportedLocales: S.delegate.supportedLocales,
-
+            localeResolutionCallback: (locale, supportedLocales) {
+              for (var supportedLocale in supportedLocales) {
+                if (supportedLocale.languageCode == locale?.languageCode &&
+                    supportedLocale.countryCode == locale?.countryCode) {
+                  return supportedLocale;
+                }
+              }
+              for (var supportedLocale in supportedLocales) {
+                if (supportedLocale.languageCode == locale?.languageCode) {
+                  return supportedLocale;
+                }
+              }
+              return const Locale('en', 'US');
+            },
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode: ThemeMode.light,

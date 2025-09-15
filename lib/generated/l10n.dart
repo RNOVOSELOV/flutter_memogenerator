@@ -70,6 +70,56 @@ class S {
     return Intl.message('Memes', name: 'memes', desc: '', args: []);
   }
 
+  /// `Theme`
+  String get theme {
+    return Intl.message('Theme', name: 'theme', desc: '', args: []);
+  }
+
+  /// `System`
+  String get theme_system {
+    return Intl.message('System', name: 'theme_system', desc: '', args: []);
+  }
+
+  /// `Light`
+  String get theme_light {
+    return Intl.message('Light', name: 'theme_light', desc: '', args: []);
+  }
+
+  /// `Dark`
+  String get theme_dark {
+    return Intl.message('Dark', name: 'theme_dark', desc: '', args: []);
+  }
+
+  /// `Language`
+  String get lang {
+    return Intl.message('Language', name: 'lang', desc: '', args: []);
+  }
+
+  /// `System`
+  String get lang_system {
+    return Intl.message('System', name: 'lang_system', desc: '', args: []);
+  }
+
+  /// `Русский`
+  String get lang_rus {
+    return Intl.message('Русский', name: 'lang_rus', desc: '', args: []);
+  }
+
+  /// `English`
+  String get lang_eng {
+    return Intl.message('English', name: 'lang_eng', desc: '', args: []);
+  }
+
+  /// `Clear cache`
+  String get settings_cache {
+    return Intl.message(
+      'Clear cache',
+      name: 'settings_cache',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Meme`
   String get meme {
     return Intl.message('Meme', name: 'meme', desc: '', args: []);
