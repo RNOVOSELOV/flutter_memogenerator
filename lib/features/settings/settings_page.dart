@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:memogenerator/di_sm/application_sm/application_sm.dart';
 import 'package:memogenerator/features/settings/entities/lang_types.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:memogenerator/widgets/switch_widget.dart';
+import 'package:provider/provider.dart';
 
 import '../../generated/l10n.dart';
 import '../../resources/app_images.dart';
@@ -42,61 +44,11 @@ class SettingsPage extends StatelessWidget {
               child: ListView(
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 children: [
-                  SelectorWidget(
-                    title: S.of(context).lang,
-                    selectedValue: 'Значение',
-                    onPress: () {
-                      Future.delayed(Duration(milliseconds: 150), () async {
-                        if (context.mounted) {
-                          // final bloc = context.read<SettingsBloc>();
-                          // final themeCubit = context.read<ThemeCubit>();
-                          // final int? returnedCode;
-                          final returnedCode = await showItemsBottomSheet(
-                            context,
-                            items: LangType.getLangMap(context: context),
-                            selectedItemCode: -1,
-                            title: 'Выбери язык',
-                          );
-                          // if (returnedCode != null) {
-                          //   final ThemeType type = ThemeType.getTypeByCode(returnedCode);
-                          //   bloc.add(SettingsSetThemeModeEvent(themeType: type));
-                          //   themeCubit.setThemeBrightness(type);
-                          // }
-                        }
-                      });
-                    },
-                  ),
+                  LanguageSelectorWidget(),
                   SizedBox(height: 8),
-                  SelectorWidget(
-                    title: S.of(context).theme,
-                    selectedValue: 'Значение',
-                    onPress: () {
-                      Future.delayed(Duration(milliseconds: 150), () async {
-                        if (context.mounted) {
-                          // final bloc = context.read<SettingsBloc>();
-                          // final themeCubit = context.read<ThemeCubit>();
-                          // final int? returnedCode;
-                          final returnedCode = await showItemsBottomSheet(
-                            context,
-                            items: ThemeType.getThemeTypesMap(context: context),
-                            selectedItemCode: -1,
-                            title: 'Выбери тему',
-                          );
-                          // if (returnedCode != null) {
-                          //   final ThemeType type = ThemeType.getTypeByCode(returnedCode);
-                          //   bloc.add(SettingsSetThemeModeEvent(themeType: type));
-                          //   themeCubit.setThemeBrightness(type);
-                          // }
-                        }
-                      });
-                    },
-                  ),
+                  ThemeSelectorWidget(),
                   SizedBox(height: 8),
-                  SwitchWidget(
-                    text: 'Использовать вход по биометрии',
-                    onStateChanged: ({required value}) {},
-                    initialState: false,
-                  ),
+                  BioSelectorWidget(),
                 ],
               ),
             ),
@@ -123,6 +75,86 @@ class SettingsPage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class BioSelectorWidget extends StatelessWidget {
+  const BioSelectorWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final sm = Provider.of<ApplicationStateManager>(context, listen: false);
+    return SwitchWidget(
+      text: S.of(context).settings_bio,
+      onStateChanged: ({required value}) {
+        sm.setBiometry(useBio: value);
+      },
+      initialState: sm.state.settingsData.useBiometry,
+    );
+  }
+}
+
+class ThemeSelectorWidget extends StatelessWidget {
+  const ThemeSelectorWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final sm = Provider.of<ApplicationStateManager>(context, listen: false);
+    return SelectorWidget(
+      title: S.of(context).theme,
+      selectedValue: ThemeType.getThemeNameByCode(
+        context,
+        sm.state.settingsData.themeType.code,
+      ),
+      onPress: () {
+        Future.delayed(Duration(milliseconds: 150), () async {
+          if (context.mounted) {
+            final returnedCode = await showItemsBottomSheet(
+              context,
+              items: ThemeType.getThemeTypesMap(context: context),
+              selectedItemCode: sm.state.settingsData.themeType.code,
+              title: S.of(context).settings_select_theme,
+            );
+            if (returnedCode != null) {
+              final type = ThemeType.getThemeByCode(returnedCode);
+              sm.setTheme(theme: type);
+            }
+          }
+        });
+      },
+    );
+  }
+}
+
+class LanguageSelectorWidget extends StatelessWidget {
+  const LanguageSelectorWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final sm = Provider.of<ApplicationStateManager>(context, listen: false);
+    return SelectorWidget(
+      title: S.of(context).lang,
+      selectedValue: LangType.getLangValueByCode(
+        context,
+        sm.state.settingsData.langType.code,
+      ),
+      onPress: () {
+        Future.delayed(Duration(milliseconds: 150), () async {
+          if (context.mounted) {
+            final returnedCode = await showItemsBottomSheet(
+              context,
+              items: LangType.getLangMap(context: context),
+              selectedItemCode: sm.state.settingsData.langType.code,
+              title: S.of(context).settings_select_lang,
+            );
+            if (returnedCode != null) {
+              final lang = LangType.getLangByCode(returnedCode);
+              sm.setLanguage(lang: lang);
+            }
+          }
+        });
+      },
     );
   }
 }

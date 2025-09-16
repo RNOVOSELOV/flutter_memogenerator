@@ -1,12 +1,13 @@
 import 'dart:convert';
 
+import 'package:memogenerator/data/datasources/settings_datasource.dart';
 import 'package:memogenerator/data/shared_pref/datasources/settings/settings_data_provider.dart';
 import 'package:memogenerator/data/shared_pref/dto/settings_model.dart';
 
 import '../reactive_sp_datasource.dart';
 
 class SettingsDataSourceImpl
-    extends ReactiveSharedPreferencesDatasource<SettingsModel> {
+    extends ReactiveSharedPreferencesDatasource<SettingsModel>  implements SettingsDatasource{
   final SettingsDataProvider _dataProvider;
 
   SettingsDataSourceImpl({required SettingsDataProvider settingsDataProvider})
@@ -24,4 +25,14 @@ class SettingsDataSourceImpl
 
   @override
   Future<bool> saveRawData(String? item) => _dataProvider.setSettingsData(item);
+
+  @override
+  Future<SettingsModel> getSettings() async {
+    return (await getItem()) ?? SettingsModel.defaultData();
+  }
+
+  @override
+  Future<bool> setSettings({required SettingsModel settings}) async {
+    return await setItem(settings);
+  }
 }

@@ -72,7 +72,14 @@ class MessageLookup extends MessageLookupByLibrary {
       "The meme was saved successfully",
     ),
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+    "settings_bio": MessageLookupByLibrary.simpleMessage("Use biometric login"),
     "settings_cache": MessageLookupByLibrary.simpleMessage("Clear cache"),
+    "settings_select_lang": MessageLookupByLibrary.simpleMessage(
+      "Select language",
+    ),
+    "settings_select_theme": MessageLookupByLibrary.simpleMessage(
+      "Select theme",
+    ),
     "template": MessageLookupByLibrary.simpleMessage("Template"),
     "template_download": MessageLookupByLibrary.simpleMessage(
       "Download template",

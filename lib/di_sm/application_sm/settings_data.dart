@@ -1,8 +1,12 @@
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
+
 import '../../features/settings/entities/lang_types.dart';
 import '../../features/settings/entities/theme_types.dart';
 
 class SettingsData {
-  SettingsData({
+  const SettingsData({
     required this.themeType,
     required this.langType,
     required this.useBiometry,
@@ -11,6 +15,13 @@ class SettingsData {
   final ThemeType themeType;
   final LangType langType;
   final bool useBiometry;
+
+  const SettingsData.defaultData()
+    : this(
+        themeType: ThemeType.systemTheme,
+        langType: LangType.systemLang,
+        useBiometry: false,
+      );
 
   SettingsData copyWith({
     ThemeType? themeType,
@@ -23,4 +34,8 @@ class SettingsData {
       useBiometry: useBiometry ?? this.useBiometry,
     );
   }
+
+  Locale get locale => langType == LangType.systemLang
+      ? WidgetsBinding.instance.platformDispatcher.locale
+      : Locale(langType.languageCode);
 }

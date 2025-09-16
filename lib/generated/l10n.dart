@@ -110,6 +110,36 @@ class S {
     return Intl.message('English', name: 'lang_eng', desc: '', args: []);
   }
 
+  /// `Select theme`
+  String get settings_select_theme {
+    return Intl.message(
+      'Select theme',
+      name: 'settings_select_theme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select language`
+  String get settings_select_lang {
+    return Intl.message(
+      'Select language',
+      name: 'settings_select_lang',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Use biometric login`
+  String get settings_bio {
+    return Intl.message(
+      'Use biometric login',
+      name: 'settings_bio',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Clear cache`
   String get settings_cache {
     return Intl.message(

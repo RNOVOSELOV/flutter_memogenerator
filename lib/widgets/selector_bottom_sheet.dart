@@ -163,7 +163,7 @@ class _BottomSheetTitleWidget extends StatelessWidget {
         SizedBox(height: 16),
         DragElementWidget(),
         SizedBox(height: 24),
-        Text(title, style: context.theme.memeSemiBold16),
+        Text(title, style: context.theme.memeSemiBold20),
         SizedBox(height: 16),
       ],
     );

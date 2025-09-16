@@ -3,13 +3,14 @@ import 'package:flutter/cupertino.dart';
 import '../../../generated/l10n.dart';
 
 enum LangType {
-  systemLang(code: 0, hide: false),
-  rusLang(code: 1),
-  engLang(code: 2);
+  systemLang(code: 0, languageCode: '', hide: false),
+  rusLang(code: 1, languageCode: 'ru'),
+  engLang(code: 2, languageCode: 'en');
 
-  const LangType({required this.code, this.hide = false});
+  const LangType({required this.code, required this.languageCode, this.hide = false});
 
   final int code;
+  final String  languageCode;
   final bool hide;
 
   static String getLangValueByCode(final BuildContext context, final int code) {

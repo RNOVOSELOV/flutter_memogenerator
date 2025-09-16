@@ -48,7 +48,7 @@ class SelectorWidget extends StatelessWidget {
           Text(title, style: context.theme.memeSemiBold20),
           Text(
             selectedValue,
-            style: context.theme.memeBold16.copyWith(
+            style: context.theme.memeBold20.copyWith(
               color: context.theme.primaryColor,
             ),
           ),

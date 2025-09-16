@@ -74,7 +74,14 @@ class MessageLookup extends MessageLookupByLibrary {
       "Мем успешно сохранен",
     ),
     "settings": MessageLookupByLibrary.simpleMessage("Настройки"),
+    "settings_bio": MessageLookupByLibrary.simpleMessage(
+      "Использовать вход по биометрии",
+    ),
     "settings_cache": MessageLookupByLibrary.simpleMessage("Очистить кеш"),
+    "settings_select_lang": MessageLookupByLibrary.simpleMessage("Выбери язык"),
+    "settings_select_theme": MessageLookupByLibrary.simpleMessage(
+      "Выбери тему",
+    ),
     "template": MessageLookupByLibrary.simpleMessage("Шаблон"),
     "template_download": MessageLookupByLibrary.simpleMessage(
       "Загрузить шаблон",
