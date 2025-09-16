@@ -3,21 +3,25 @@ import 'package:flutter/cupertino.dart';
 import '../../../generated/l10n.dart';
 
 enum LangType {
-  systemTheme(code: 0, hide: false),
+  systemLang(code: 0, hide: false),
   rusLang(code: 1),
-  engTheme(code: 2);
+  engLang(code: 2);
 
   const LangType({required this.code, this.hide = false});
 
   final int code;
   final bool hide;
 
-  static String getLangByCode(final BuildContext context, final int code) {
-    final themeType = LangType.values.firstWhere(
-      (element) => element.code == code,
-      orElse: () => LangType.systemTheme,
-    );
+  static String getLangValueByCode(final BuildContext context, final int code) {
+    final themeType = getLangByCode(code);
     return getLangMap(context: context)[themeType.code] ?? '';
+  }
+
+  static LangType getLangByCode(final int code) {
+    return LangType.values.firstWhere(
+      (element) => element.code == code,
+      orElse: () => LangType.systemLang,
+    );
   }
 
   static Map<int, String> getLangMap({required BuildContext context}) {

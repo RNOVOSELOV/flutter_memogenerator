@@ -1,11 +1,14 @@
+import 'package:memogenerator/data/shared_pref/datasources/settings/settings_data_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'datasources/memes/meme_data_provider.dart';
 import 'datasources/templates/template_data_provider.dart';
 
-class SharedPreferenceData implements MemeDataProvider, TemplateDataProvider {
+class SharedPreferenceData
+    implements MemeDataProvider, TemplateDataProvider, SettingsDataProvider {
   static const _memeKey = "meme_key";
   static const _templateKey = "template_key";
+  static const _settingsKey = "settings_key";
 
   const SharedPreferenceData();
 
@@ -21,6 +24,13 @@ class SharedPreferenceData implements MemeDataProvider, TemplateDataProvider {
   @override
   Future<bool> setTemplatesData(String? data) =>
       _setItem(key: _templateKey, item: data);
+
+  @override
+  Future<String?> getSettingsData() => _getItem(_settingsKey);
+
+  @override
+  Future<bool> setSettingsData(String? data) =>
+      _setItem(key: _settingsKey, item: data);
 
   Future<bool> _setItem({
     required final String key,

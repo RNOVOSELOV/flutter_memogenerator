@@ -17,6 +17,9 @@ import 'scope_observer.dart' show diObserver;
 
 class AppScopeContainer extends ScopeContainer {
   late final talkerDep = dep(() => TalkerFlutter.init());
+
+
+
   late final _sharedPreferencesDep = dep(() => SharedPreferenceData());
   late final memeDatasourceDep = dep(
     () => MemesDataSourceImpl(memeDataProvider: _sharedPreferencesDep.get),

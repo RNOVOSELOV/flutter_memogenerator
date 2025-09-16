@@ -12,12 +12,16 @@ enum ThemeType {
   final int code;
   final bool hide;
 
-  static String getThemeByCode(final BuildContext context, final int code) {
-    final themeType = ThemeType.values.firstWhere(
+  static String getThemeNameByCode(final BuildContext context, final int code) {
+    final themeType = getThemeByCode(code);
+    return getThemeTypesMap(context: context)[themeType.code] ?? '';
+  }
+
+  static ThemeType getThemeByCode(final int code) {
+    return ThemeType.values.firstWhere(
       (element) => element.code == code,
       orElse: () => ThemeType.systemTheme,
     );
-    return getThemeTypesMap(context: context)[themeType.code] ?? '';
   }
 
   static Map<int, String> getThemeTypesMap({required BuildContext context}) {

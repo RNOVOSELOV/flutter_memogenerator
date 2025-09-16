@@ -108,11 +108,15 @@ class SettingsPage extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 16),
                   backgroundColor: context.color.accentColor,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
                 child: Text(
                   S.of(context).settings_cache,
-                  style: context.theme.memeSemiBold24.copyWith(color: Colors.white)
+                  style: context.theme.memeSemiBold24.copyWith(
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
