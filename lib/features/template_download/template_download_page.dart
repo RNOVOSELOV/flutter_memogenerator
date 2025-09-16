@@ -38,13 +38,8 @@ class _TemplateDownloadPageState extends State<TemplateDownloadPage> {
     );
     manager = TemplateDownloadStateManager(
       DownloadProgressState(),
-      ucGetTemplatesFromApi: TemplatesGetFromApi(
-        templateRepository: appScopeHolder.scope!.templateRepositoryImpl.get,
-      ),
-      ucDownloadTemplate: TemplateDownload(
-        templateRepository: appScopeHolder.scope!.templateRepositoryImpl.get,
-      ),
-    )..getTemplates();
+      appScopeContainer: appScopeHolder.scope!,
+    );
   }
 
   @override

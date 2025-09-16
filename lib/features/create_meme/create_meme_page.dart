@@ -55,19 +55,19 @@ class _CreateMemePageState extends State<CreateMemePage> {
       CreateMemeInitialState(),
       meme: widget.meme,
       getBinary: MemeGetBinary(
-        memeRepository: appScopeHolder.scope!.memeRepositoryImpl.get,
+        memeRepository: appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
       ),
       getMeme: MemeGet(
-        memeRepository: appScopeHolder.scope!.memeRepositoryImpl.get,
+        memeRepository: appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
       ),
       saveMeme: MemeSave(
-        memeRepository: appScopeHolder.scope!.memeRepositoryImpl.get,
+        memeRepository: appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
       ),
       saveMemeThumbnail: MemeSaveThumbnail(
-        memeRepository: appScopeHolder.scope!.memeRepositoryImpl.get,
+        memeRepository: appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
       ),
       saveMemeToGallery: MemeSaveGallery(
-        memeRepository: appScopeHolder.scope!.memeRepositoryImpl.get,
+        memeRepository: appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
       ),
     )..getMemeData();
   }

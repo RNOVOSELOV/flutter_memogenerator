@@ -10,7 +10,13 @@ class SharedPreferenceData
   static const _templateKey = "template_key";
   static const _settingsKey = "settings_key";
 
-  const SharedPreferenceData();
+  late final SharedPreferences sp;
+
+  SharedPreferenceData();
+
+  Future<void> init() async {
+    sp = await SharedPreferences.getInstance();
+  }
 
   @override
   Future<String?> getMemeData() => _getItem(_memeKey);
@@ -37,14 +43,14 @@ class SharedPreferenceData
     required final String? item,
   }) async {
     // TODO move sp instance to constructor
-    final sp = await SharedPreferences.getInstance();
+    // final sp = await SharedPreferences.getInstance();
     final result = sp.setString(key, item ?? '');
     return result;
   }
 
   Future<String?> _getItem(final String key) async {
     // TODO move sp instance to constructor
-    final sp = await SharedPreferences.getInstance();
+    // final sp = await SharedPreferences.getInstance();
     return sp.getString(key);
   }
 }

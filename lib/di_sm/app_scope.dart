@@ -5,6 +5,7 @@ import 'package:memogenerator/data/filesystem/fs_images_datasource_impl.dart';
 import 'package:memogenerator/data/http/dio_builder.dart';
 import 'package:memogenerator/data/repositories/meme_repository_impl.dart';
 import 'package:memogenerator/data/repositories/template_repository_impl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:yx_scope/yx_scope.dart';
 
@@ -16,53 +17,70 @@ import '../data/shared_pref/shared_preference_data.dart';
 import 'scope_observer.dart' show diObserver;
 
 class AppScopeContainer extends ScopeContainer {
+  @override
+  List<Set<AsyncDep>> get initializeQueue => [
+    {_sharedPreferencesDataDep},
+  ];
+
   late final talkerDep = dep(() => TalkerFlutter.init());
+  late final _sharedPreferencesDataDep = rawAsyncDep(
+    () => SharedPreferenceData(),
+    init: (dep) async => await dep.init(),
+    dispose: (dep) async {},
+  );
+
+  late final datasourceScopeModule = DatasourceScopeModule(this);
+  late final memeScopeModule = MemeScopeModule(this);
+  late final templateScopeModule = TemplateScopeModule(this);
 
 
+}
 
-  late final _sharedPreferencesDep = dep(() => SharedPreferenceData());
+class MemeScopeModule extends ScopeModule<AppScopeContainer> {
+  MemeScopeModule(super.container);
+
   late final memeDatasourceDep = dep(
-    () => MemesDataSourceImpl(memeDataProvider: _sharedPreferencesDep.get),
-  );
-  late final templateDatasourceDep = dep(
-    () => TemplatesDataSourceImpl(
-      templateDataProvider: _sharedPreferencesDep.get,
+    () => MemesDataSourceImpl(
+      memeDataProvider: container._sharedPreferencesDataDep.get,
     ),
-  );
-  late final fileSystemDatasourceDep = dep(() => FileSystemDatasourceImpl());
-  late final _apiServiceDep = dep(
-    () => ApiService(
-      dio: DioBuilder(
-        talker: talkerDep.get,
-      ).addHeaderParameters().addAuthorizationInterceptor().build(),
-      talker: talkerDep.get,
-    ),
-  );
-  late final spImagesDatasourceDep = dep(
-    () => SpImagesDatasourceImpl(
-      sharedPreferenceImageData: SharedPreferenceImageData(),
-    ),
-  );
-
-  late final memeApiDatasourceDep = dep(
-    () => ApiDatasourceImpl(dataProvider: _apiServiceDep.get),
   );
 
   late final memeRepositoryImpl = dep(
     () => MemeRepositoryImp(
       memeDatasource: memeDatasourceDep.get,
       imageDatasource: kIsWeb
-          ? spImagesDatasourceDep.get
-          : fileSystemDatasourceDep.get,
+          ? container.datasourceScopeModule.spImagesDatasourceDep.get
+          : container.datasourceScopeModule.fileSystemDatasourceDep.get,
     ),
   );
+}
+
+class TemplateScopeModule extends ScopeModule<AppScopeContainer> {
+  TemplateScopeModule(super.container);
+
+  late final templateDatasourceDep = dep(
+    () => TemplatesDataSourceImpl(
+      templateDataProvider: container._sharedPreferencesDataDep.get,
+    ),
+  );
+
   late final templateRepositoryImpl = dep(
     () => TemplateRepositoryImp(
-      apiDatasource: memeApiDatasourceDep.get,
       templateDatasource: templateDatasourceDep.get,
       imageDatasource: kIsWeb
-          ? spImagesDatasourceDep.get
-          : fileSystemDatasourceDep.get,
+          ? container.datasourceScopeModule.spImagesDatasourceDep.get
+          : container.datasourceScopeModule.fileSystemDatasourceDep.get,
+    ),
+  );
+}
+
+class DatasourceScopeModule extends ScopeModule<AppScopeContainer> {
+  DatasourceScopeModule(super.container);
+
+  late final fileSystemDatasourceDep = dep(() => FileSystemDatasourceImpl());
+  late final spImagesDatasourceDep = dep(
+    () => SpImagesDatasourceImpl(
+      sharedPreferenceImageData: SharedPreferenceImageData(),
     ),
   );
 }

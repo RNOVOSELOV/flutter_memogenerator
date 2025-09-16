@@ -10,6 +10,7 @@ import 'package:yx_state/yx_state.dart';
 import 'di_sm/app_scope.dart';
 import 'di_sm/state_observer.dart';
 import 'generated/l10n.dart';
+import 'resources/app_colors.dart';
 
 void main() async {
   EquatableConfig.stringify = true;
@@ -81,7 +82,12 @@ class _MyAppState extends State<MyApp> {
             routerConfig: CustomNavigationHelper.instance.router,
           );
         },
-        placeholder: Center(child: CircularProgressIndicator()),
+        placeholder: Container(
+          height: double.infinity,
+          width: double.infinity,
+          color: AppColors.dayPrimaryColor,
+          child: Center(child: CircularProgressIndicator()),
+        ),
       ),
     );
   }

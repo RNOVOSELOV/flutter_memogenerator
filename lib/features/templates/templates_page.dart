@@ -41,13 +41,25 @@ class _TemplatesPageState extends State<TemplatesPage> {
     );
     bloc = TemplatesBloc(
       getTemplatesStream: TemplatesGetStream(
-        templatesRepository: appScopeHolder.scope!.templateRepositoryImpl.get,
+        templatesRepository: appScopeHolder
+            .scope!
+            .templateScopeModule
+            .templateRepositoryImpl
+            .get,
       ),
       deleteTemplate: TemplateDelete(
-        templatesRepository: appScopeHolder.scope!.templateRepositoryImpl.get,
+        templatesRepository: appScopeHolder
+            .scope!
+            .templateScopeModule
+            .templateRepositoryImpl
+            .get,
       ),
       uploadTemplateToMeme: TemplateToMemeUpload(
-        templateRepository: appScopeHolder.scope!.templateRepositoryImpl.get,
+        templateRepository: appScopeHolder
+            .scope!
+            .templateScopeModule
+            .templateRepositoryImpl
+            .get,
       ),
     );
   }
@@ -144,14 +156,21 @@ class TemplatesPageBodyContent extends StatelessWidget {
                       actionButtonText: S.of(context).remove,
                     );
                     if ((removeTemplateDialog ?? false) == true) {
-                      final result = await bloc.deleteTemplate(items.elementAt(index).id);
+                      final result = await bloc.deleteTemplate(
+                        items.elementAt(index).id,
+                      );
                       final message = Message(
-                        status: result ? MessageStatus.success : MessageStatus.error,
+                        status: result
+                            ? MessageStatus.success
+                            : MessageStatus.error,
                         message: result ? successString : errorString,
                       );
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          generateSnackBarWidget(context: context, message: message),
+                          generateSnackBarWidget(
+                            context: context,
+                            message: message,
+                          ),
                         );
                       });
                     }
