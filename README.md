@@ -14,7 +14,8 @@
 Помни! Мемы сами себя не сделают!
 
 Web версия опубликована на  [gh_pages](https://rnovoselov.github.io/flutter_memogenerator/). 
-[APK](https://github.com/RNOVOSELOV/flutter_memogenerator/blob/main/resources/app-release.apk). 
+
+[APK](https://github.com/RNOVOSELOV/flutter_memogenerator/blob/main/resources/app-release.apk "download"). 
 
 ## Развитие проекта
 
