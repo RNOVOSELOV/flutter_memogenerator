@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../datasources/images_datasource.dart';
@@ -204,5 +206,38 @@ class FileSystemDatasourceImpl implements ImagesDatasource {
         '$docDirectory$filePath${Platform.pathSeparator}$fileName';
     final file = File(fillFileName);
     return await file.exists();
+  }
+
+  @override
+  Future<int> getCacheSize() async {
+    final Directory tempDir = await getApplicationCacheDirectory();
+    return await compute(_getDirectorySize, tempDir.absolute.path);
+  }
+
+  static Future<int> _getDirectorySize(String path) async {
+    Directory directory = Directory(path);
+    int totalSize = 0;
+    try {
+      final List<FileSystemEntity> entities = await directory.list().toList();
+      for (final entity in entities) {
+        if (entity is File) {
+          totalSize += await entity.length();
+        } else if (entity is Directory) {
+          totalSize += await _getDirectorySize(entity.absolute.path);
+        }
+      }
+    } catch (e) {
+      log('Ошибка при чтении: $e');
+    }
+    return totalSize;
+  }
+
+  @override
+  Future<void> clearCache() async {
+    final Directory tempDir = await getApplicationCacheDirectory();
+    if (await tempDir.exists()) {
+      await tempDir.delete(recursive: true);
+    }
+    await tempDir.create(recursive: true);
   }
 }

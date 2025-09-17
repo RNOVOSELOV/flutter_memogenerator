@@ -6,11 +6,47 @@
   "theme_system": "Системная",
   "theme_light": "Светлая",
   "theme_dark": "Темная",
+  "auth": "Повторить",
   "lang": "Язык",
   "lang_system": "Системный",
   "lang_rus": "Русский",
   "lang_eng": "English",
+  "settings_select_theme": "Выбери тему",
+  "settings_select_lang": "Выбери язык",
+  "settings_bio": "Использовать вход по биометрии",
   "settings_cache": "Очистить кеш",
+  "settings_b": "{count} б",
+  "@settings_b": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "settings_Kb": "{count} Кб",
+  "@settings_Kb": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "settings_Mb": "{count} Мб",
+  "@settings_Mb": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "settings_Gb": "{count} Гб",
+  "@settings_Gb": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
   "meme": "Мем",
   "templates": "Шаблоны",
   "template": "Шаблон",

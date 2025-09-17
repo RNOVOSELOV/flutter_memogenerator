@@ -90,6 +90,11 @@ class S {
     return Intl.message('Dark', name: 'theme_dark', desc: '', args: []);
   }
 
+  /// `Repeat`
+  String get auth {
+    return Intl.message('Repeat', name: 'auth', desc: '', args: []);
+  }
+
   /// `Language`
   String get lang {
     return Intl.message('Language', name: 'lang', desc: '', args: []);
@@ -110,6 +115,36 @@ class S {
     return Intl.message('English', name: 'lang_eng', desc: '', args: []);
   }
 
+  /// `Select theme`
+  String get settings_select_theme {
+    return Intl.message(
+      'Select theme',
+      name: 'settings_select_theme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select language`
+  String get settings_select_lang {
+    return Intl.message(
+      'Select language',
+      name: 'settings_select_lang',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Use biometric login`
+  String get settings_bio {
+    return Intl.message(
+      'Use biometric login',
+      name: 'settings_bio',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Clear cache`
   String get settings_cache {
     return Intl.message(
@@ -117,6 +152,46 @@ class S {
       name: 'settings_cache',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `{count} b`
+  String settings_b(String count) {
+    return Intl.message(
+      '$count b',
+      name: 'settings_b',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count} Kb`
+  String settings_Kb(String count) {
+    return Intl.message(
+      '$count Kb',
+      name: 'settings_Kb',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count} Mb`
+  String settings_Mb(String count) {
+    return Intl.message(
+      '$count Mb',
+      name: 'settings_Mb',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count} Gb`
+  String settings_Gb(String count) {
+    return Intl.message(
+      '$count Gb',
+      name: 'settings_Gb',
+      desc: '',
+      args: [count],
     );
   }
 

@@ -20,9 +20,18 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
+  static String m0(count) => "${count} Gb";
+
+  static String m1(count) => "${count} Kb";
+
+  static String m2(count) => "${count} Mb";
+
+  static String m3(count) => "${count} b";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "apply": MessageLookupByLibrary.simpleMessage("Apply"),
+    "auth": MessageLookupByLibrary.simpleMessage("Repeat"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "editor": MessageLookupByLibrary.simpleMessage("Editor"),
     "editor_add_text": MessageLookupByLibrary.simpleMessage("Add text"),
@@ -72,7 +81,18 @@ class MessageLookup extends MessageLookupByLibrary {
       "The meme was saved successfully",
     ),
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+    "settings_Gb": m0,
+    "settings_Kb": m1,
+    "settings_Mb": m2,
+    "settings_b": m3,
+    "settings_bio": MessageLookupByLibrary.simpleMessage("Use biometric login"),
     "settings_cache": MessageLookupByLibrary.simpleMessage("Clear cache"),
+    "settings_select_lang": MessageLookupByLibrary.simpleMessage(
+      "Select language",
+    ),
+    "settings_select_theme": MessageLookupByLibrary.simpleMessage(
+      "Select theme",
+    ),
     "template": MessageLookupByLibrary.simpleMessage("Template"),
     "template_download": MessageLookupByLibrary.simpleMessage(
       "Download template",

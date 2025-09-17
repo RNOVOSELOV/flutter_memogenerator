@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:memogenerator/features/auth/auth_page.dart';
 import 'package:memogenerator/features/create_meme/create_meme_page.dart';
 import 'package:memogenerator/features/settings/settings_page.dart';
 import 'package:memogenerator/navigation/navigation_path.dart';
@@ -43,7 +44,7 @@ class CustomNavigationHelper {
     final talker = TalkerFlutter.init();
     _router = GoRouter(
       navigatorKey: _rootNavigatorKey,
-      initialLocation: NavigationPagePath.memesPage.path,
+      initialLocation: NavigationPagePath.authPage.path,
       observers: [TalkerRouteObserver(talker)],
       debugLogDiagnostics: kDebugMode ? true : false,
       routes: <RouteBase>[
@@ -55,6 +56,17 @@ class CustomNavigationHelper {
             final arguments = state.extra as Meme;
             return getPage(
               child: CreateMemePage(meme: arguments),
+              state: state,
+            );
+          },
+        ),
+        GoRoute(
+          parentNavigatorKey: _rootNavigatorKey,
+          name: NavigationPagePath.authPage.name,
+          path: NavigationPagePath.authPage.path,
+          pageBuilder: (context, state) {
+            return getPage(
+              child: AuthPage(),
               state: state,
             );
           },
@@ -74,6 +86,7 @@ class CustomNavigationHelper {
               routes: <RouteBase>[
                 GoRoute(
                   path: NavigationPagePath.memesPage.path,
+                  name: NavigationPagePath.memesPage.name,
                   pageBuilder: (context, state) {
                     return getPage(child: MemesPage(), state: state);
                   },
@@ -105,6 +118,7 @@ class CustomNavigationHelper {
               routes: <RouteBase>[
                 GoRoute(
                   path: NavigationPagePath.settingsPage.path,
+                  name: NavigationPagePath.settingsPage.name,
                   pageBuilder: (context, state) =>
                       getPage(child: SettingsPage(), state: state),
                   routes: <RouteBase>[],

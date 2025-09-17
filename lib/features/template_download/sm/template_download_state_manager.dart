@@ -1,3 +1,5 @@
+import 'package:memogenerator/di_sm/app_scope.dart';
+import 'package:memogenerator/domain/di/download_scope_holder.dart';
 import 'package:memogenerator/features/template_download/sm/template_download_state.dart';
 import 'package:yx_state/yx_state.dart';
 
@@ -6,15 +8,24 @@ import '../use_cases/template_download.dart';
 import '../use_cases/templates_get_from_api.dart';
 
 class TemplateDownloadStateManager extends StateManager<TemplateDownloadState> {
-  final TemplatesGetFromApi _getTemplatesFromApi;
-  final TemplateDownload _downloadTemplate;
+  late final TemplatesGetFromApi _getTemplatesFromApi;
+  late final TemplateDownload _downloadTemplate;
+  late final ApiStateHolder _apiStateHolder;
 
   TemplateDownloadStateManager(
     super.state, {
-    required final TemplatesGetFromApi ucGetTemplatesFromApi,
-    required final TemplateDownload ucDownloadTemplate,
-  }) : _getTemplatesFromApi = ucGetTemplatesFromApi,
-       _downloadTemplate = ucDownloadTemplate;
+    required final AppScopeContainer appScopeContainer,
+  }) : _apiStateHolder = ApiScopeHolder(appScopeContainer) {
+    _apiStateHolder.toggle().then((value) {
+      _getTemplatesFromApi = TemplatesGetFromApi(
+        downloadRepository: _apiStateHolder.downloadRepository,
+      );
+      _downloadTemplate = TemplateDownload(
+        downloadRepository: _apiStateHolder.downloadRepository,
+      );
+      getTemplates();
+    });
+  }
 
   Future<void> getTemplates() => handle((emit) async {
     final result = await _getTemplatesFromApi();
@@ -33,4 +44,10 @@ class TemplateDownloadStateManager extends StateManager<TemplateDownloadState> {
         final result = await _downloadTemplate(memeData: memeData);
         emit(SaveTemplateState(message: result));
       });
+
+  @override
+  Future<void> close() async {
+    await _apiStateHolder.toggle();
+    return super.close();
+  }
 }
