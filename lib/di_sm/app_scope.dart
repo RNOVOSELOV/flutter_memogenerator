@@ -9,6 +9,8 @@ import 'package:memogenerator/data/shared_pref/datasources/settings/settings_dat
 import 'package:memogenerator/data/shared_pref/datasources/settings/settings_datasource_impl.dart';
 import 'package:memogenerator/di_sm/application_sm/application_sm.dart';
 import 'package:memogenerator/di_sm/application_sm/settings_data.dart';
+import 'package:memogenerator/features/auth/sm/auth_state.dart';
+import 'package:memogenerator/features/auth/sm/auth_state_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:yx_scope/yx_scope.dart';
@@ -24,7 +26,7 @@ class AppScopeContainer extends ScopeContainer {
   @override
   List<Set<AsyncDep>> get initializeQueue => [
     {_sharedPreferencesDataDep},
-    {appStateManager},
+    {appStateManager, authScopeModule.authStateManager},
   ];
 
   late final talkerDep = dep(() => TalkerFlutter.init());
@@ -53,6 +55,21 @@ class AppScopeContainer extends ScopeContainer {
   late final datasourceScopeModule = DatasourceScopeModule(this);
   late final memeScopeModule = MemeScopeModule(this);
   late final templateScopeModule = TemplateScopeModule(this);
+  late final authScopeModule = AuthScopeModule(this);
+}
+
+class AuthScopeModule extends ScopeModule<AppScopeContainer> {
+  AuthScopeModule(super.container);
+
+  late final authStateManager = rawAsyncDep(
+    () => AuthStateManager(
+      AuthInitialState(),
+      settingsDatasource: container._settingsDatasourceDep.get,
+      talker: container.talkerDep.get,
+    ),
+    init: (dep) async => await dep.init(),
+    dispose: (dep) async {},
+  );
 }
 
 class MemeScopeModule extends ScopeModule<AppScopeContainer> {

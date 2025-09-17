@@ -44,6 +44,9 @@ dependencies:
   talker: ^5.0.0
   talker_flutter: ^5.0.0
   talker_dio_logger: ^5.0.0
+  local_auth: ^2.3.0
+  pinput: ^5.0.2
+  crypto: ^3.0.6
 
 dev_dependencies:
   flutter_test:

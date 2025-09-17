@@ -42,7 +42,7 @@ class CreateMemePage extends StatefulWidget {
 }
 
 class _CreateMemePageState extends State<CreateMemePage> {
-  late CreateMemeStateManager manager;
+  late final CreateMemeStateManager manager;
 
   @override
   void initState() {

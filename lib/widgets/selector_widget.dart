@@ -49,7 +49,7 @@ class SelectorWidget extends StatelessWidget {
           Text(
             selectedValue,
             style: context.theme.memeBold20.copyWith(
-              color: context.theme.primaryColor,
+              color: context.color.accentColor,
             ),
           ),
         ],

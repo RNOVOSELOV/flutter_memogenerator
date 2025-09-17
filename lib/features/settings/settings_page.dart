@@ -1,21 +1,64 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:memogenerator/di_sm/application_sm/application_sm.dart';
 import 'package:memogenerator/features/settings/entities/lang_types.dart';
+import 'package:memogenerator/features/settings/sm/settings_state.dart';
+import 'package:memogenerator/features/settings/sm/settings_state_manager.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:memogenerator/widgets/switch_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:yx_scope_flutter/yx_scope_flutter.dart';
+import 'package:yx_state_flutter/yx_state_flutter.dart';
 
+import '../../di_sm/app_scope.dart';
 import '../../generated/l10n.dart';
 import '../../resources/app_images.dart';
 import '../../widgets/selector_bottom_sheet.dart';
 import '../../widgets/selector_widget.dart';
 import 'entities/theme_types.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
   @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  late final SettingsStateManager _manager;
+
+  @override
+  void initState() {
+    super.initState();
+    final appScopeHolder = ScopeProvider.scopeHolderOf<AppScopeContainer>(
+      context,
+      listen: false,
+    );
+    _manager = SettingsStateManager(
+      SettingsInitialState(),
+      templateRepository:
+          appScopeHolder.scope!.templateScopeModule.templateRepositoryImpl.get,
+    );
+  }
+
+  @override
+  void dispose() {
+    _manager.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    return Provider.value(value: _manager, child: SettingsPageWidget());
+  }
+}
+
+class SettingsPageWidget extends StatelessWidget {
+  const SettingsPageWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final sm = Provider.of<SettingsStateManager>(context, listen: false);
     return Scaffold(
       backgroundColor: context.theme.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -52,26 +95,39 @@ class SettingsPage extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: context.color.accentColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: Text(
-                  S.of(context).settings_cache,
-                  style: context.theme.memeSemiBold24.copyWith(
-                    color: Colors.white,
-                  ),
+            if (!kIsWeb)
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                width: double.infinity,
+                child: StateBuilder(
+                  stateReadable: sm,
+                  buildWhen: (previous, current) =>
+                      current is SettingsDataState,
+                  builder: (context, state, child) {
+                    String cacheSize = '';
+                    if (state is SettingsDataState) {
+                      cacheSize =
+                          '(${sm.formatBytes(context, bytes: state.cacheSize)})';
+                    }
+                    return ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        backgroundColor: context.color.accentColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Text(
+                        '${S.of(context).settings_cache} $cacheSize',
+                        style: context.theme.memeSemiBold24.copyWith(
+                          color: Colors.white,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
-            ),
           ],
         ),
       ),

@@ -108,4 +108,9 @@ class TemplateRepositoryImp implements TemplatesRepository {
     }
     return null;
   }
+
+  @override
+  Future<int> getCacheSize() async {
+    return await _imagesDatasource.getCacheSize();
+  }
 }

@@ -1,4 +1,5 @@
 enum NavigationPagePath {
+  authPage(path: '/auth', name: 'auth'),
   mainPage(path: '/main', name: 'main'),
   memesPage(path: '/memes', name: 'memes'),
   editMemePage(path: '/edit', name: 'edit_meme'),

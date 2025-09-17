@@ -19,4 +19,6 @@ abstract interface class TemplatesRepository {
   Future<bool> insertTemplateOrReplaceById({required final Template template});
 
   String get templatePathName;
+
+  Future<int> getCacheSize ();
 }

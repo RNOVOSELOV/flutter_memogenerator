@@ -20,9 +20,18 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ru';
 
+  static String m0(count) => "${count} Гб";
+
+  static String m1(count) => "${count} Кб";
+
+  static String m2(count) => "${count} Мб";
+
+  static String m3(count) => "${count} б";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "apply": MessageLookupByLibrary.simpleMessage("Выбрать"),
+    "auth": MessageLookupByLibrary.simpleMessage("Повторить"),
     "cancel": MessageLookupByLibrary.simpleMessage("Отмена"),
     "editor": MessageLookupByLibrary.simpleMessage("Редактор"),
     "editor_add_text": MessageLookupByLibrary.simpleMessage("Добавить текст"),
@@ -74,6 +83,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Мем успешно сохранен",
     ),
     "settings": MessageLookupByLibrary.simpleMessage("Настройки"),
+    "settings_Gb": m0,
+    "settings_Kb": m1,
+    "settings_Mb": m2,
+    "settings_b": m3,
     "settings_bio": MessageLookupByLibrary.simpleMessage(
       "Использовать вход по биометрии",
     ),

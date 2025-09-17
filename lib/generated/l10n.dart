@@ -90,6 +90,11 @@ class S {
     return Intl.message('Dark', name: 'theme_dark', desc: '', args: []);
   }
 
+  /// `Repeat`
+  String get auth {
+    return Intl.message('Repeat', name: 'auth', desc: '', args: []);
+  }
+
   /// `Language`
   String get lang {
     return Intl.message('Language', name: 'lang', desc: '', args: []);
@@ -147,6 +152,46 @@ class S {
       name: 'settings_cache',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `{count} b`
+  String settings_b(String count) {
+    return Intl.message(
+      '$count b',
+      name: 'settings_b',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count} Kb`
+  String settings_Kb(String count) {
+    return Intl.message(
+      '$count Kb',
+      name: 'settings_Kb',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count} Mb`
+  String settings_Mb(String count) {
+    return Intl.message(
+      '$count Mb',
+      name: 'settings_Mb',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count} Gb`
+  String settings_Gb(String count) {
+    return Intl.message(
+      '$count Gb',
+      name: 'settings_Gb',
+      desc: '',
+      args: [count],
     );
   }
 
