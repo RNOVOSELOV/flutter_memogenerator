@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:memogenerator/domain/repositories/download_repository.dart';
 import 'package:memogenerator/domain/repositories/templates_repository.dart';
 import 'package:yx_state/yx_state.dart';
 
@@ -12,11 +11,15 @@ class SettingsStateManager extends StateManager<SettingsState> {
   SettingsStateManager(
     super.state, {
     required final TemplatesRepository templateRepository,
-  }) : _templatesRepository = templateRepository {
-    getCacheSize();
-  }
+  }) : _templatesRepository = templateRepository;
 
   Future<void> getCacheSize() => handle((emit) async {
+    final result = await _templatesRepository.getCacheSize();
+    emit(SettingsDataState(cacheSize: result));
+  });
+
+  Future<void> clearCache() => handle((emit) async {
+    await _templatesRepository.clearCache();
     final result = await _templatesRepository.getCacheSize();
     emit(SettingsDataState(cacheSize: result));
   });

@@ -55,5 +55,7 @@ abstract interface class ImagesDatasource {
     required String fileName,
   });
 
-  Future<int> getCacheSize ();
+  Future<int> getCacheSize();
+
+  Future<void> clearCache();
 }

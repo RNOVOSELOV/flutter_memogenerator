@@ -231,4 +231,13 @@ class FileSystemDatasourceImpl implements ImagesDatasource {
     }
     return totalSize;
   }
+
+  @override
+  Future<void> clearCache() async {
+    final Directory tempDir = await getApplicationCacheDirectory();
+    if (await tempDir.exists()) {
+      await tempDir.delete(recursive: true);
+    }
+    await tempDir.create(recursive: true);
+  }
 }

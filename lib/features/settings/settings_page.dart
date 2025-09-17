@@ -1,9 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:memogenerator/di_sm/application_sm/application_sm.dart';
 import 'package:memogenerator/features/settings/entities/lang_types.dart';
 import 'package:memogenerator/features/settings/sm/settings_state.dart';
 import 'package:memogenerator/features/settings/sm/settings_state_manager.dart';
+import 'package:memogenerator/navigation/navigation_helper.dart';
+import 'package:memogenerator/navigation/navigation_path.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:memogenerator/widgets/switch_widget.dart';
 import 'package:provider/provider.dart';
@@ -26,6 +29,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   late final SettingsStateManager _manager;
+  String? _lastLocation;
 
   @override
   void initState() {
@@ -39,6 +43,30 @@ class _SettingsPageState extends State<SettingsPage> {
       templateRepository:
           appScopeHolder.scope!.templateScopeModule.templateRepositoryImpl.get,
     );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+
+      final router = CustomNavigationHelper.instance.router;
+      router.routerDelegate.addListener(_onRouteChanged);
+      _onRouteChanged();
+    });
+  }
+
+  void _onRouteChanged() {
+    if (!mounted) return;
+
+    final location = CustomNavigationHelper
+        .instance
+        .router
+        .routerDelegate
+        .currentConfiguration
+        .fullPath;
+    if (_lastLocation != location &&
+        location == NavigationPagePath.settingsPage.path) {
+      _manager.getCacheSize();
+    }
+    _lastLocation = location;
   }
 
   @override
@@ -105,12 +133,15 @@ class SettingsPageWidget extends StatelessWidget {
                       current is SettingsDataState,
                   builder: (context, state, child) {
                     String cacheSize = '';
+                    bool isActive = false;
                     if (state is SettingsDataState) {
-                      cacheSize =
-                          '(${sm.formatBytes(context, bytes: state.cacheSize)})';
+                      cacheSize = state.cacheSize == 0
+                          ? ''
+                          : '(${sm.formatBytes(context, bytes: state.cacheSize)})';
+                      isActive = state.cacheSize > 0 ? true : false;
                     }
                     return ElevatedButton(
-                      onPressed: () {},
+                      onPressed: isActive ?  () => sm.clearCache() : null,
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 16),
                         backgroundColor: context.color.accentColor,

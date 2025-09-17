@@ -86,6 +86,7 @@ class CustomNavigationHelper {
               routes: <RouteBase>[
                 GoRoute(
                   path: NavigationPagePath.memesPage.path,
+                  name: NavigationPagePath.memesPage.name,
                   pageBuilder: (context, state) {
                     return getPage(child: MemesPage(), state: state);
                   },
@@ -117,6 +118,7 @@ class CustomNavigationHelper {
               routes: <RouteBase>[
                 GoRoute(
                   path: NavigationPagePath.settingsPage.path,
+                  name: NavigationPagePath.settingsPage.name,
                   pageBuilder: (context, state) =>
                       getPage(child: SettingsPage(), state: state),
                   routes: <RouteBase>[],

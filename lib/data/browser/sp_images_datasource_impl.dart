@@ -125,4 +125,8 @@ class SpImagesDatasourceImpl implements ImagesDatasource {
   Future<int> getCacheSize() async {
     return 0;
   }
+
+  @override
+  Future<void> clearCache() async {
+  }
 }

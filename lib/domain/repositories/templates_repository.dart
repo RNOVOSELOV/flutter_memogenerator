@@ -20,5 +20,7 @@ abstract interface class TemplatesRepository {
 
   String get templatePathName;
 
-  Future<int> getCacheSize ();
+  Future<int> getCacheSize();
+
+  Future<void> clearCache();
 }
