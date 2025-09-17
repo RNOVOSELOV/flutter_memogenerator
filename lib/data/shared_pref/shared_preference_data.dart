@@ -42,15 +42,11 @@ class SharedPreferenceData
     required final String key,
     required final String? item,
   }) async {
-    // TODO move sp instance to constructor
-    // final sp = await SharedPreferences.getInstance();
     final result = sp.setString(key, item ?? '');
     return result;
   }
 
   Future<String?> _getItem(final String key) async {
-    // TODO move sp instance to constructor
-    // final sp = await SharedPreferences.getInstance();
     return sp.getString(key);
   }
 }

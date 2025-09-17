@@ -36,7 +36,7 @@ class AppScopeContainer extends ScopeContainer {
     dispose: (dep) async {},
   );
 
-  late final _settingsDatasourceDep = dep(
+  late final settingsDatasourceDep = dep(
     () => SettingsDataSourceImpl(
       settingsDataProvider: _sharedPreferencesDataDep.get,
     ),
@@ -45,9 +45,8 @@ class AppScopeContainer extends ScopeContainer {
   late final appStateManager = rawAsyncDep(
     () => ApplicationStateManager(
       ApplicationState(settingsData: SettingsData.defaultData()),
-      settingsData: _settingsDatasourceDep.get,
+      settingsData: settingsDatasourceDep.get,
     ),
-
     init: (dep) async => await dep.init(),
     dispose: (dep) async {},
   );
@@ -64,7 +63,7 @@ class AuthScopeModule extends ScopeModule<AppScopeContainer> {
   late final authStateManager = rawAsyncDep(
     () => AuthStateManager(
       AuthInitialState(),
-      settingsDatasource: container._settingsDatasourceDep.get,
+      settingsDatasource: container.settingsDatasourceDep.get,
       talker: container.talkerDep.get,
     ),
     init: (dep) async => await dep.init(),

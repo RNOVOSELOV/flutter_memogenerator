@@ -1,11 +1,12 @@
 import 'dart:ui';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../../features/settings/entities/lang_types.dart';
 import '../../features/settings/entities/theme_types.dart';
 
-class SettingsData {
+class SettingsData extends Equatable {
   const SettingsData({
     required this.themeType,
     required this.langType,
@@ -38,4 +39,10 @@ class SettingsData {
   Locale get locale => langType == LangType.systemLang
       ? WidgetsBinding.instance.platformDispatcher.locale
       : Locale(langType.languageCode);
+
+  @override
+  bool? get stringify => true;
+
+  @override
+  List<Object?> get props => [themeType, langType, useBiometry];
 }

@@ -1,6 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:memogenerator/di_sm/application_sm/application_sm.dart';
 import 'package:memogenerator/features/settings/entities/lang_types.dart';
 import 'package:memogenerator/features/settings/sm/settings_state.dart';
@@ -119,7 +120,7 @@ class SettingsPageWidget extends StatelessWidget {
                   SizedBox(height: 8),
                   ThemeSelectorWidget(),
                   SizedBox(height: 8),
-                  BioSelectorWidget(),
+                  if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) BioSelectorWidget(),
                 ],
               ),
             ),
@@ -141,7 +142,7 @@ class SettingsPageWidget extends StatelessWidget {
                       isActive = state.cacheSize > 0 ? true : false;
                     }
                     return ElevatedButton(
-                      onPressed: isActive ?  () => sm.clearCache() : null,
+                      onPressed: isActive ? () => sm.clearCache() : null,
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 16),
                         backgroundColor: context.color.accentColor,
@@ -188,28 +189,31 @@ class ThemeSelectorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sm = Provider.of<ApplicationStateManager>(context, listen: false);
-    return SelectorWidget(
-      title: S.of(context).theme,
-      selectedValue: ThemeType.getThemeNameByCode(
-        context,
-        sm.state.settingsData.themeType.code,
-      ),
-      onPress: () {
-        Future.delayed(Duration(milliseconds: 150), () async {
-          if (context.mounted) {
-            final returnedCode = await showItemsBottomSheet(
-              context,
-              items: ThemeType.getThemeTypesMap(context: context),
-              selectedItemCode: sm.state.settingsData.themeType.code,
-              title: S.of(context).settings_select_theme,
-            );
-            if (returnedCode != null) {
-              final type = ThemeType.getThemeByCode(returnedCode);
-              sm.setTheme(theme: type);
+    return StateBuilder(
+      stateReadable: sm,
+      builder: (context, state, child) => SelectorWidget(
+        title: S.of(context).theme,
+        selectedValue: ThemeType.getThemeNameByCode(
+          context,
+          state.settingsData.themeType.code,
+        ),
+        onPress: () {
+          Future.delayed(Duration(milliseconds: 150), () async {
+            if (context.mounted) {
+              final returnedCode = await showItemsBottomSheet(
+                context,
+                items: ThemeType.getThemeTypesMap(context: context),
+                selectedItemCode: state.settingsData.themeType.code,
+                title: S.of(context).settings_select_theme,
+              );
+              if (returnedCode != null) {
+                final type = ThemeType.getThemeByCode(returnedCode);
+                sm.setTheme(theme: type);
+              }
             }
-          }
-        });
-      },
+          });
+        },
+      ),
     );
   }
 }
@@ -219,28 +223,33 @@ class LanguageSelectorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sm = Provider.of<ApplicationStateManager>(context, listen: false);
-    return SelectorWidget(
-      title: S.of(context).lang,
-      selectedValue: LangType.getLangValueByCode(
-        context,
-        sm.state.settingsData.langType.code,
-      ),
-      onPress: () {
-        Future.delayed(Duration(milliseconds: 150), () async {
-          if (context.mounted) {
-            final returnedCode = await showItemsBottomSheet(
-              context,
-              items: LangType.getLangMap(context: context),
-              selectedItemCode: sm.state.settingsData.langType.code,
-              title: S.of(context).settings_select_lang,
-            );
-            if (returnedCode != null) {
-              final lang = LangType.getLangByCode(returnedCode);
-              sm.setLanguage(lang: lang);
-            }
-          }
-        });
+    final sm = Provider.of<ApplicationStateManager>(context, listen: true);
+    return StateBuilder<ApplicationState>(
+      stateReadable: sm,
+      builder: (context, state, child) {
+        return SelectorWidget(
+          title: S.of(context).lang,
+          selectedValue: LangType.getLangValueByCode(
+            context,
+            state.settingsData.langType.code,
+          ),
+          onPress: () {
+            Future.delayed(Duration(milliseconds: 150), () async {
+              if (context.mounted) {
+                final returnedCode = await showItemsBottomSheet(
+                  context,
+                  items: LangType.getLangMap(context: context),
+                  selectedItemCode: state.settingsData.langType.code,
+                  title: S.of(context).settings_select_lang,
+                );
+                if (returnedCode != null) {
+                  final lang = LangType.getLangByCode(returnedCode);
+                  sm.setLanguage(lang: lang);
+                }
+              }
+            });
+          },
+        );
       },
     );
   }

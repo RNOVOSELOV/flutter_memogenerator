@@ -55,5 +55,4 @@ class ApplicationStateManager extends StateManager<ApplicationState> {
     );
     emit(ApplicationState(settingsData: newSettings));
   });
-
 }

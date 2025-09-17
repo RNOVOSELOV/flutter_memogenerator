@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,7 +25,13 @@ void main() async {
   EquatableConfig.stringify = true;
   WidgetsFlutterBinding.ensureInitialized();
   CustomNavigationHelper();
-  runApp(const MyApp());
+
+  final appScopeHolder = AppScopeHolder();
+  await appScopeHolder.create();
+  StateManagerOverrides.observer = LoggingObserver(
+    talker: appScopeHolder.scope!.talkerDep.get,
+  );
+  runApp(ScopeProvider(holder: appScopeHolder, child: const MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -34,100 +42,91 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _appScopeHolder = AppScopeHolder();
   late final ApplicationStateManager _appStateManager;
 
   @override
   void initState() {
     super.initState();
-    _appScopeHolder.create().then((_) {
-      _appStateManager = _appScopeHolder.scope!.appStateManager.get;
-
-      StateManagerOverrides.observer = LoggingObserver(
-        talker: _appScopeHolder.scope!.talkerDep.get,
-      );
-    });
+    final appScopeHolder = ScopeProvider.scopeHolderOf<AppScopeContainer>(
+      context,
+      listen: false,
+    );
+    _appStateManager = appScopeHolder.scope!.appStateManager.get;
   }
 
   @override
   void dispose() {
     _appStateManager.close();
-    _appScopeHolder.drop();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ScopeProvider(
-      holder: _appScopeHolder,
-      child: ScopeBuilder<AppScopeContainer>.withPlaceholder(
-        builder: (BuildContext context, AppScopeContainer appScope) {
-          return Provider.value(
-            value: _appStateManager,
-            child: StateBuilder<ApplicationState>(
-              stateReadable: _appStateManager,
-              builder: (context, state, child) {
-                late final Brightness brightness;
-                switch (state.settingsData.themeType) {
-                  case ThemeType.lightTheme:
-                    brightness = Brightness.light;
-                    break;
-                  case ThemeType.darkTheme:
-                    brightness = Brightness.dark;
-                    break;
-                  case ThemeType.systemTheme:
-                    brightness = MediaQuery.of(context).platformBrightness;
-                    break;
-                }
-                SystemChrome.setSystemUIOverlayStyle(
-                  brightness == Brightness.dark
-                      ? SystemUiOverlayStyle.light
-                      : SystemUiOverlayStyle.dark,
-                );
+    return ScopeBuilder<AppScopeContainer>.withPlaceholder(
+      builder: (BuildContext context, AppScopeContainer appScope) {
+        return Provider.value(
+          value: _appStateManager,
+          child: StateBuilder<ApplicationState>(
+            stateReadable: _appStateManager,
+            builder: (context, state, child) {
+              late final Brightness brightness;
+              switch (state.settingsData.themeType) {
+                case ThemeType.lightTheme:
+                  brightness = Brightness.light;
+                  break;
+                case ThemeType.darkTheme:
+                  brightness = Brightness.dark;
+                  break;
+                case ThemeType.systemTheme:
+                  brightness = MediaQuery.of(context).platformBrightness;
+                  break;
+              }
+              SystemChrome.setSystemUIOverlayStyle(
+                brightness == Brightness.dark
+                    ? SystemUiOverlayStyle.light
+                    : SystemUiOverlayStyle.dark,
+              );
 
-                return MaterialApp.router(
-                  title: 'Memegenerator',
-                  debugShowCheckedModeBanner: false,
-                  localizationsDelegates: const [
-                    S.delegate,
-                    GlobalMaterialLocalizations.delegate,
-                    GlobalWidgetsLocalizations.delegate,
-                    GlobalCupertinoLocalizations.delegate,
-                  ],
-                  locale: state.settingsData.locale,
-                  supportedLocales: S.delegate.supportedLocales,
-                  localeResolutionCallback: (locale, supportedLocales) {
-                    for (var supportedLocale in supportedLocales) {
-                      if (supportedLocale.languageCode ==
-                              locale?.languageCode &&
-                          supportedLocale.countryCode == locale?.countryCode) {
-                        return supportedLocale;
-                      }
+              return MaterialApp.router(
+                title: 'Memegenerator',
+                debugShowCheckedModeBanner: false,
+                localizationsDelegates: const [
+                  S.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                locale: state.settingsData.locale,
+                supportedLocales: S.delegate.supportedLocales,
+                localeResolutionCallback: (locale, supportedLocales) {
+                  for (var supportedLocale in supportedLocales) {
+                    if (supportedLocale.languageCode == locale?.languageCode &&
+                        supportedLocale.countryCode == locale?.countryCode) {
+                      return supportedLocale;
                     }
-                    for (var supportedLocale in supportedLocales) {
-                      if (supportedLocale.languageCode ==
-                          locale?.languageCode) {
-                        return supportedLocale;
-                      }
+                  }
+                  for (var supportedLocale in supportedLocales) {
+                    if (supportedLocale.languageCode == locale?.languageCode) {
+                      return supportedLocale;
                     }
-                    return const Locale('en', 'US');
-                  },
-                  theme: lightTheme,
-                  darkTheme: darkTheme,
-                  themeMode: brightness == Brightness.dark
-                      ? ThemeMode.dark
-                      : ThemeMode.light,
-                  routerConfig: CustomNavigationHelper.instance.router,
-                );
-              },
-            ),
-          );
-        },
-        placeholder: Container(
-          height: double.infinity,
-          width: double.infinity,
-          color: AppColors.dayPrimaryColor,
-        ),
+                  }
+                  return const Locale('en', 'US');
+                },
+                theme: lightTheme,
+                darkTheme: darkTheme,
+                themeMode: brightness == Brightness.dark
+                    ? ThemeMode.dark
+                    : ThemeMode.light,
+                routerConfig: CustomNavigationHelper.instance.router,
+              );
+            },
+          ),
+        );
+      },
+      placeholder: Container(
+        height: double.infinity,
+        width: double.infinity,
+        color: AppColors.dayPrimaryColor,
       ),
     );
   }
