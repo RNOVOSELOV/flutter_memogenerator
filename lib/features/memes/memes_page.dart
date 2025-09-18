@@ -43,19 +43,27 @@ class _MemesPageState extends State<MemesPage> {
     );
     bloc = MemesBloc(
       getMemeThumbnailsStream: MemeThumbnailsGetStream(
-        memeRepository: appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
+        memeRepository:
+            appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
       ),
       getMeme: MemeGet(
-        memeRepository: appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
+        memeRepository:
+            appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
       ),
       uploadMemeFile: MemeUploadFile(
-        memeRepository: appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
+        memeRepository:
+            appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
       ),
       deleteMeme: MemeDelete(
-        memeRepository: appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
+        memeRepository:
+            appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
       ),
       saveTemplate: TemplateSave(
-        templateRepository: appScopeHolder.scope!.templateScopeModule.templateRepositoryImpl.get,
+        templateRepository: appScopeHolder
+            .scope!
+            .templateScopeModule
+            .templateRepositoryImpl
+            .get,
       ),
     );
   }

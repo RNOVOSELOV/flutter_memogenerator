@@ -68,10 +68,7 @@ class MainPage extends StatelessWidget {
 }
 
 class _BottomNavBarIconWidget extends StatelessWidget {
-  const _BottomNavBarIconWidget({
-    required this.color,
-    required this.icon,
-  });
+  const _BottomNavBarIconWidget({required this.color, required this.icon});
 
   final Color color;
   final String icon;

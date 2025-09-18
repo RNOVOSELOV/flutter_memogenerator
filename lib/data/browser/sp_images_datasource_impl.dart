@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io' show Platform;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -127,6 +126,5 @@ class SpImagesDatasourceImpl implements ImagesDatasource {
   }
 
   @override
-  Future<void> clearCache() async {
-  }
+  Future<void> clearCache() async {}
 }

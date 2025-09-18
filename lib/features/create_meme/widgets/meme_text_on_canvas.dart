@@ -32,7 +32,9 @@ class MemeTextOnCanvas extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(
           width: 2,
-          color: selected ? context.color.cardBorderColor.withValues(alpha: 0.8) : Colors.transparent,
+          color: selected
+              ? context.color.cardBorderColor.withValues(alpha: 0.8)
+              : Colors.transparent,
         ),
         color: selected
             ? context.color.cardBackgroundColor
