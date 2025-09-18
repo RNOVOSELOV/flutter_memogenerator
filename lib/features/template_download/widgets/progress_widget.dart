@@ -17,7 +17,7 @@ class _BlurryEffect extends StatelessWidget {
   final Color shade = Colors.grey.shade200;
   final Widget? child;
 
-  _BlurryEffect({super.key, this.child});
+  _BlurryEffect({this.child});
 
   @override
   Widget build(BuildContext context) {

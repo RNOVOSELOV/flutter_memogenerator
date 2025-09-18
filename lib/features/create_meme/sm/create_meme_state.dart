@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:equatable/equatable.dart';
 import 'package:memogenerator/features/create_meme/entities/meme_text_with_offset.dart';
 
-
 sealed class CreateMemeState extends Equatable {
   const CreateMemeState();
 

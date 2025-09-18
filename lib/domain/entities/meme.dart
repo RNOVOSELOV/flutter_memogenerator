@@ -9,11 +9,7 @@ class Meme extends Equatable {
 
   const Meme({required this.id, required this.texts, required this.fileName});
 
-  Meme copyWith({
-    String? id,
-    List<TextWithPosition>? texts,
-    String? fileName,
-  }) {
+  Meme copyWith({String? id, List<TextWithPosition>? texts, String? fileName}) {
     return Meme(
       id: id ?? this.id,
       texts: texts ?? this.texts,

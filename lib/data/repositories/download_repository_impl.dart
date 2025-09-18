@@ -1,13 +1,9 @@
-import 'dart:typed_data';
-
-import 'package:collection/collection.dart';
 import 'package:either_dart/either.dart';
 import 'package:memogenerator/data/datasources/api_datasource.dart';
 import 'package:memogenerator/data/datasources/template_datasource.dart';
 import 'package:memogenerator/data/http/models/api_error.dart';
 import 'package:memogenerator/data/http/models/meme_data.dart';
 import 'package:memogenerator/domain/entities/message.dart';
-import 'package:memogenerator/domain/entities/template_full.dart';
 import 'package:memogenerator/domain/repositories/download_repository.dart';
 import 'package:memogenerator/domain/repositories/templates_repository.dart';
 import 'package:uuid/uuid.dart';
@@ -15,7 +11,6 @@ import '../../domain/entities/message_status.dart';
 import '../../domain/entities/template.dart';
 import '../datasources/images_datasource.dart';
 import '../image_type_enum.dart';
-import '../shared_pref/dto/template_model.dart';
 
 class DownloadRepositoryImp implements DownloadRepository {
   final TemplateDatasource _templateDatasource;

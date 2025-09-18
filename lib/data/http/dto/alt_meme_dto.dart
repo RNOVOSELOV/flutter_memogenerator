@@ -15,14 +15,10 @@ class AltMemeDto extends Equatable {
   factory AltMemeDto.fromJson(final Map<String, dynamic> json) =>
       _$AltMemeDtoFromJson(json);
 
-  const AltMemeDto({
-    required this.id,
-    required this.name,
-    required this.url,
-  });
+  const AltMemeDto({required this.id, required this.name, required this.url});
 
   Map<String, dynamic> toJson() => _$AltMemeDtoToJson(this);
 
   @override
-  List<Object?> get props => [id, name, url,];
+  List<Object?> get props => [id, name, url];
 }

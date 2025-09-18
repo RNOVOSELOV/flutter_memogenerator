@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,7 +5,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:memogenerator/di_sm/application_sm/application_sm.dart';
 import 'package:memogenerator/navigation/navigation_helper.dart';
 import 'package:memogenerator/theme/dark_theme.dart';
-import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:memogenerator/theme/light_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:yx_scope_flutter/yx_scope_flutter.dart';
@@ -15,7 +12,6 @@ import 'package:yx_state/yx_state.dart';
 import 'package:yx_state_flutter/yx_state_flutter.dart';
 
 import 'di_sm/app_scope.dart';
-import 'di_sm/application_sm/settings_data.dart';
 import 'di_sm/state_observer.dart';
 import 'features/settings/entities/theme_types.dart';
 import 'generated/l10n.dart';

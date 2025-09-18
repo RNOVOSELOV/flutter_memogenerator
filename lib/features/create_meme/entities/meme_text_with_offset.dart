@@ -7,10 +7,7 @@ class MemeTextWithOffset extends Equatable {
   final MemeText memeText;
   final Offset? offset;
 
-  const MemeTextWithOffset({
-    required this.memeText,
-    required this.offset,
-  });
+  const MemeTextWithOffset({required this.memeText, required this.offset});
 
   @override
   List<Object?> get props => [memeText, offset];

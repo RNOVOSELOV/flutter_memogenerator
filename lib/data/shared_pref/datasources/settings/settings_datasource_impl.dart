@@ -7,7 +7,8 @@ import 'package:memogenerator/data/shared_pref/dto/settings_model.dart';
 import '../reactive_sp_datasource.dart';
 
 class SettingsDataSourceImpl
-    extends ReactiveSharedPreferencesDatasource<SettingsModel>  implements SettingsDatasource{
+    extends ReactiveSharedPreferencesDatasource<SettingsModel>
+    implements SettingsDatasource {
   final SettingsDataProvider _dataProvider;
 
   SettingsDataSourceImpl({required SettingsDataProvider settingsDataProvider})

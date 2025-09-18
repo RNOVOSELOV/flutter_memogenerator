@@ -188,7 +188,9 @@ class _BottomSheetCancelButtonWidget extends StatelessWidget {
           }),
           style: TextButton.styleFrom(
             padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+            ),
           ),
           child: SizedBox(
             width: double.infinity,

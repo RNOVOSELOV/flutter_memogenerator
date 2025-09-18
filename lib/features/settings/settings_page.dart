@@ -120,7 +120,8 @@ class SettingsPageWidget extends StatelessWidget {
                   SizedBox(height: 8),
                   ThemeSelectorWidget(),
                   SizedBox(height: 8),
-                  if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) BioSelectorWidget(),
+                  if (!kIsWeb && (Platform.isAndroid || Platform.isIOS))
+                    BioSelectorWidget(),
                 ],
               ),
             ),

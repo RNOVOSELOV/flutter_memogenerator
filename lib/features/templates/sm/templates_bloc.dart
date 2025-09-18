@@ -24,7 +24,7 @@ class TemplatesBloc {
   }
 
   Future<String?> uploadTemplateToMeme({required String templateId}) async {
-    final result = _uploadTemplateToMeme (templateId: templateId);
+    final result = _uploadTemplateToMeme(templateId: templateId);
     return result;
 
     // final data = await xFile.readAsBytes();

@@ -8,9 +8,6 @@ class MemeSave {
   MemeSave({required MemeRepository memeRepository})
     : _memeRepository = memeRepository;
 
-  Future<bool> call({
-    required final Meme meme,
-  }) async => await _memeRepository.saveMeme(
-    meme: meme,
-  );
+  Future<bool> call({required final Meme meme}) async =>
+      await _memeRepository.saveMeme(meme: meme);
 }

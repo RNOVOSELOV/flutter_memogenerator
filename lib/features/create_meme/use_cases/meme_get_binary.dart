@@ -8,6 +8,7 @@ class MemeGetBinary {
   MemeGetBinary({required MemeRepository memeRepository})
     : _memeRepository = memeRepository;
 
-  Future<({Uint8List imageBinary, double aspectRatio})?> call({required final String fileName}) async =>
-      await _memeRepository.getImageBinaryData(fileName: fileName);
+  Future<({Uint8List imageBinary, double aspectRatio})?> call({
+    required final String fileName,
+  }) async => await _memeRepository.getImageBinaryData(fileName: fileName);
 }

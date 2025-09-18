@@ -28,7 +28,8 @@ class _AuthPageState extends State<AuthPage> {
       context,
       listen: false,
     );
-    _manager = appScopeHolder.scope!.authScopeModule.authStateManager.get..launchAuth();
+    _manager = appScopeHolder.scope!.authScopeModule.authStateManager.get
+      ..launchAuth();
   }
 
   @override

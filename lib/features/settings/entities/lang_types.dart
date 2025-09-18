@@ -7,10 +7,14 @@ enum LangType {
   rusLang(code: 1, languageCode: 'ru'),
   engLang(code: 2, languageCode: 'en');
 
-  const LangType({required this.code, required this.languageCode, this.hide = false});
+  const LangType({
+    required this.code,
+    required this.languageCode,
+    this.hide = false,
+  });
 
   final int code;
-  final String  languageCode;
+  final String languageCode;
   final bool hide;
 
   static String getLangValueByCode(final BuildContext context, final int code) {

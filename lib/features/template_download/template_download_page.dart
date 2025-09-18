@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:memogenerator/features/template_download/sm/template_download_state.dart';
 import 'package:memogenerator/features/template_download/sm/template_download_state_manager.dart';
-import 'package:memogenerator/features/template_download/use_cases/template_download.dart';
-import 'package:memogenerator/features/template_download/use_cases/templates_get_from_api.dart';
 import 'package:memogenerator/features/template_download/widgets/progress_widget.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:memogenerator/widgets/snackbar_widget.dart';

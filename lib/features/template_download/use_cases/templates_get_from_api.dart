@@ -1,6 +1,5 @@
 import 'package:either_dart/either.dart';
 import 'package:memogenerator/domain/repositories/download_repository.dart';
-import 'package:memogenerator/domain/repositories/templates_repository.dart';
 
 import '../../../data/http/models/api_error.dart';
 import '../../../data/http/models/meme_data.dart';
