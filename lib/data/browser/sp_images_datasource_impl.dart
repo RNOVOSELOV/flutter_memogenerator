@@ -120,4 +120,13 @@ class SpImagesDatasourceImpl implements ImagesDatasource {
       key: _getStorageKey(keyPrefix: filePath, fileName: fileName),
     );
   }
+
+  @override
+  Future<int> getCacheSize() async {
+    return 0;
+  }
+
+  @override
+  Future<void> clearCache() async {
+  }
 }

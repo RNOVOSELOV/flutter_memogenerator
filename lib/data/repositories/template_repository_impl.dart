@@ -1,16 +1,10 @@
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
-import 'package:either_dart/either.dart';
-import 'package:memogenerator/data/datasources/api_datasource.dart';
 import 'package:memogenerator/data/datasources/template_datasource.dart';
-import 'package:memogenerator/data/http/models/api_error.dart';
-import 'package:memogenerator/data/http/models/meme_data.dart';
-import 'package:memogenerator/domain/entities/message.dart';
 import 'package:memogenerator/domain/entities/template_full.dart';
 import 'package:memogenerator/domain/repositories/templates_repository.dart';
 import 'package:uuid/uuid.dart';
-import '../../domain/entities/message_status.dart';
 import '../../domain/entities/template.dart';
 import '../datasources/images_datasource.dart';
 import '../image_type_enum.dart';
@@ -19,18 +13,18 @@ import '../shared_pref/dto/template_model.dart';
 class TemplateRepositoryImp implements TemplatesRepository {
   final TemplateDatasource _templateDatasource;
   final ImagesDatasource _imagesDatasource;
-  final ApiDatasource _apiDatasource;
 
   final String _templatesPathName;
 
   TemplateRepositoryImp({
     required TemplateDatasource templateDatasource,
     required ImagesDatasource imageDatasource,
-    required ApiDatasource apiDatasource,
   }) : _templateDatasource = templateDatasource,
        _imagesDatasource = imageDatasource,
-       _apiDatasource = apiDatasource,
        _templatesPathName = ImageTypeEnum.template.path;
+
+  @override
+  String get templatePathName => _templatesPathName;
 
   @override
   Stream<List<TemplateFull>> observeTemplates() {
@@ -53,27 +47,6 @@ class TemplateRepositoryImp implements TemplatesRepository {
           }
           return templatesFullList;
         });
-
-    // return Rx.combineLatest2<List<Template>, Directory, List<TemplateFull>>(
-    //   _templatesRepository.observeItem().map(
-    //     (templateModels) => templateModels == null
-    //         ? []
-    //         : templateModels.templates
-    //               .map((templateModel) => templateModel.template)
-    //               .toList(),
-    //   ),
-    //   getApplicationDocumentsDirectory().asStream(),
-    //   (templates, docDirectory) {
-    //     return templates.map((template) {
-    //       final fullImagePath =
-    //           "${docDirectory.absolute.path}${Platform.pathSeparator}${TemplateInteractor.templatesPathName}${Platform.pathSeparator}${template.imageName}";
-    //       return TemplateFull(
-    //         id: template.id,
-    //         templateImageBytes: fullImagePath,
-    //       );
-    //     }).toList();
-    //   },
-    // );
   }
 
   @override
@@ -86,19 +59,20 @@ class TemplateRepositoryImp implements TemplatesRepository {
       fileFullName: fileName,
       fileBytesData: fileBytes,
     );
-    return await _insertTemplateOrReplaceById(
+    return await insertTemplateOrReplaceById(
       template: Template(id: Uuid().v4(), imageName: newFileName),
     );
   }
 
   @override
   Future<bool> saveTemplateFromNetwork({required String fileName}) async {
-    return await _insertTemplateOrReplaceById(
+    return await insertTemplateOrReplaceById(
       template: Template(id: Uuid().v4(), imageName: fileName),
     );
   }
 
-  Future<bool> _insertTemplateOrReplaceById({
+  @override
+  Future<bool> insertTemplateOrReplaceById({
     required final Template template,
   }) async {
     final savedData = await _templateDatasource.getTemplates();
@@ -136,51 +110,12 @@ class TemplateRepositoryImp implements TemplatesRepository {
   }
 
   @override
-  Future<Either<ApiError, List<MemeApiData>>> getMemeTemplates() =>
-      _apiDatasource.getMemeTemplates();
+  Future<int> getCacheSize() async {
+    return await _imagesDatasource.getCacheSize();
+  }
 
   @override
-  Future<Message> downloadTemplate({required MemeApiData memeData}) async {
-    if (!await _imagesDatasource.isImageExists(
-      fileName: memeData.fileName,
-      filePath: _templatesPathName,
-    )) {
-      final downloadTemplatesResult = await _apiDatasource.downloadTemplate(
-        url: memeData.url,
-      );
-      if (downloadTemplatesResult.isLeft) {
-        return Message(
-          status: MessageStatus.error,
-          message: 'Ошибка загрузки шаблона "${memeData.name}".',
-        );
-      }
-      final savingResult = await saveTemplate(
-        fileBytes: downloadTemplatesResult.right,
-        fileName: memeData.fileName,
-      );
-      if (!savingResult) {
-        return Message(
-          status: MessageStatus.error,
-          message: 'Ошибка загрузки шаблона "${memeData.name}".',
-        );
-      }
-    } else {
-      if (await _templateDatasource.isTemplateContains(
-        fileName: memeData.fileName,
-      )) {
-        return Message(
-          status: MessageStatus.error,
-          message:
-              'Загрузка не требуется. Шаблон "${memeData.name}" уже сохранен в галерее.',
-        );
-      }
-      await _insertTemplateOrReplaceById(
-        template: Template(id: Uuid().v4(), imageName: memeData.fileName),
-      );
-    }
-    return Message(
-      status: MessageStatus.success,
-      message: 'Шаблон "${memeData.name}" успешно загружен и сохранен.',
-    );
+  Future<void> clearCache() async {
+    await _imagesDatasource.clearCache();
   }
 }

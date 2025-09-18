@@ -2,6 +2,51 @@
   "@@locale": "en",
   "meme_generator": "Meme generator",
   "memes": "Memes",
+  "theme": "Theme",
+  "theme_system": "System",
+  "theme_light": "Light",
+  "theme_dark": "Dark",
+  "auth": "Repeat",
+  "lang": "Language",
+  "lang_system": "System",
+  "lang_rus": "Русский",
+  "lang_eng": "English",
+  "settings_select_theme": "Select theme",
+  "settings_select_lang": "Select language",
+  "settings_bio": "Use biometric login",
+  "settings_cache": "Clear cache",
+  "settings_b": "{count} b",
+  "@settings_b": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "settings_Kb": "{count} Kb",
+  "@settings_Kb": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "settings_Mb": "{count} Mb",
+  "@settings_Mb": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "settings_Gb": "{count} Gb",
+  "@settings_Gb": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
   "meme": "Meme",
   "templates": "Templates",
   "template": "Template",

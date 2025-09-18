@@ -10,6 +10,7 @@ class ThemeColors extends ThemeExtension<ThemeColors> {
   final Color textPrimaryColor;
   final Color textSecondaryColor;
   final Color accentColor;
+  final Color primaryColor;
 
   const ThemeColors({
     required this.iconSelectedColor,
@@ -20,6 +21,7 @@ class ThemeColors extends ThemeExtension<ThemeColors> {
     required this.textPrimaryColor,
     required this.textSecondaryColor,
     required this.accentColor,
+    required this.primaryColor,
   });
 
   @override
@@ -32,6 +34,7 @@ class ThemeColors extends ThemeExtension<ThemeColors> {
     Color? textPrimaryColor,
     Color? textSecondaryColor,
     Color? accentColor,
+    Color? primaryColor,
   }) {
     return ThemeColors(
       iconSelectedColor: iconSelectedColor ?? this.iconSelectedColor,
@@ -42,6 +45,7 @@ class ThemeColors extends ThemeExtension<ThemeColors> {
       textPrimaryColor: textPrimaryColor ?? this.textPrimaryColor,
       textSecondaryColor: textSecondaryColor ?? this.textSecondaryColor,
       accentColor: accentColor ?? this.accentColor,
+      primaryColor: primaryColor ?? this.primaryColor,
     );
   }
 
@@ -74,6 +78,7 @@ class ThemeColors extends ThemeExtension<ThemeColors> {
       textPrimaryColor: Color.lerp(textPrimaryColor, other.textPrimaryColor, t)!,
       textSecondaryColor: Color.lerp(textSecondaryColor, other.textSecondaryColor, t)!,
       accentColor: Color.lerp(accentColor, other.accentColor, t)!,
+      primaryColor: Color.lerp(primaryColor, other.primaryColor, t)!,
     );
   }
 
@@ -86,6 +91,7 @@ class ThemeColors extends ThemeExtension<ThemeColors> {
     textPrimaryColor: AppColors.dayTextColor,
     textSecondaryColor: AppColors.dayTextTertiaryColor,
     accentColor: AppColors.dayAccentColor,
+    primaryColor: AppColors.dayPrimaryColor,
   );
 
   static ThemeColors get dark => const ThemeColors(
@@ -97,5 +103,6 @@ class ThemeColors extends ThemeExtension<ThemeColors> {
     textPrimaryColor: AppColors.nightTextColor,
     textSecondaryColor: AppColors.nightTextTertiaryColor,
     accentColor: AppColors.nightAccentColor,
+    primaryColor: AppColors.nightPrimaryColor,
   );
 }

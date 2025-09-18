@@ -182,7 +182,7 @@ class CreateMemeStateManager extends StateManager<CreateMemeState> {
         final currentMemeOffsets = [..._memeTextOffsetSubject];
         currentMemeOffsets.removeWhere((element) => element.id == memeId);
         _memeTextOffsetSubject = [...currentMemeOffsets];
-        await deselectMemeText();
+        deselectMemeText();
       });
 
   Future<void> saveImageFile() => handle((emit) async {

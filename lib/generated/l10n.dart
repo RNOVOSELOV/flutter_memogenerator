@@ -70,6 +70,131 @@ class S {
     return Intl.message('Memes', name: 'memes', desc: '', args: []);
   }
 
+  /// `Theme`
+  String get theme {
+    return Intl.message('Theme', name: 'theme', desc: '', args: []);
+  }
+
+  /// `System`
+  String get theme_system {
+    return Intl.message('System', name: 'theme_system', desc: '', args: []);
+  }
+
+  /// `Light`
+  String get theme_light {
+    return Intl.message('Light', name: 'theme_light', desc: '', args: []);
+  }
+
+  /// `Dark`
+  String get theme_dark {
+    return Intl.message('Dark', name: 'theme_dark', desc: '', args: []);
+  }
+
+  /// `Repeat`
+  String get auth {
+    return Intl.message('Repeat', name: 'auth', desc: '', args: []);
+  }
+
+  /// `Language`
+  String get lang {
+    return Intl.message('Language', name: 'lang', desc: '', args: []);
+  }
+
+  /// `System`
+  String get lang_system {
+    return Intl.message('System', name: 'lang_system', desc: '', args: []);
+  }
+
+  /// `Русский`
+  String get lang_rus {
+    return Intl.message('Русский', name: 'lang_rus', desc: '', args: []);
+  }
+
+  /// `English`
+  String get lang_eng {
+    return Intl.message('English', name: 'lang_eng', desc: '', args: []);
+  }
+
+  /// `Select theme`
+  String get settings_select_theme {
+    return Intl.message(
+      'Select theme',
+      name: 'settings_select_theme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select language`
+  String get settings_select_lang {
+    return Intl.message(
+      'Select language',
+      name: 'settings_select_lang',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Use biometric login`
+  String get settings_bio {
+    return Intl.message(
+      'Use biometric login',
+      name: 'settings_bio',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear cache`
+  String get settings_cache {
+    return Intl.message(
+      'Clear cache',
+      name: 'settings_cache',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} b`
+  String settings_b(String count) {
+    return Intl.message(
+      '$count b',
+      name: 'settings_b',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count} Kb`
+  String settings_Kb(String count) {
+    return Intl.message(
+      '$count Kb',
+      name: 'settings_Kb',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count} Mb`
+  String settings_Mb(String count) {
+    return Intl.message(
+      '$count Mb',
+      name: 'settings_Mb',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count} Gb`
+  String settings_Gb(String count) {
+    return Intl.message(
+      '$count Gb',
+      name: 'settings_Gb',
+      desc: '',
+      args: [count],
+    );
+  }
+
   /// `Meme`
   String get meme {
     return Intl.message('Meme', name: 'meme', desc: '', args: []);
