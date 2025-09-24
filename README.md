@@ -15,6 +15,8 @@
 
 Web версия опубликована на  [gh_pages](https://rnovoselov.github.io/flutter_memogenerator/). 
 
+[Скачать Android APK](https://github.com/RNOVOSELOV/flutter_memogenerator/blob/main/resources/app-release.apk?raw=true). 
+
 ## Развитие проекта
 
 ### Версия 1.1
