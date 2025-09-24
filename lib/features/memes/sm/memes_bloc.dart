@@ -9,14 +9,14 @@ import 'package:memogenerator/domain/usecases/meme_get.dart';
 import 'package:memogenerator/features/memes/use_cases/meme_thumbnails_get_stream.dart';
 import 'package:memogenerator/features/memes/use_cases/template_save.dart';
 
-class MemesBloc {
+class MemesSm {
   final MemeThumbnailsGetStream _getMemesThumbnailStream;
   final MemeGet _getMeme;
   final MemeUploadFile _uploadMemeFile;
   final MemeDelete _deleteMeme;
   final TemplateSave _saveTemplate;
 
-  MemesBloc({
+  MemesSm({
     required MemeThumbnailsGetStream getMemeThumbnailsStream,
     required MemeGet getMeme,
     required MemeUploadFile uploadMemeFile,

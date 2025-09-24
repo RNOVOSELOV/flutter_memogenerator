@@ -46,33 +46,18 @@ class _CreateMemePageState extends State<CreateMemePage> {
   @override
   void initState() {
     super.initState();
-    final appScopeHolder = ScopeProvider.scopeHolderOf<AppScopeContainer>(
+    final userScopeHolder = ScopeProvider.scopeHolderOf<AppScopeContainer>(
       context,
       listen: false,
-    );
+    ).scope!.authStateHolderDep.get;
     manager = CreateMemeStateManager(
       CreateMemeInitialState(),
       meme: widget.meme,
-      getBinary: MemeGetBinary(
-        memeRepository:
-            appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
-      ),
-      getMeme: MemeGet(
-        memeRepository:
-            appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
-      ),
-      saveMeme: MemeSave(
-        memeRepository:
-            appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
-      ),
-      saveMemeThumbnail: MemeSaveThumbnail(
-        memeRepository:
-            appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
-      ),
-      saveMemeToGallery: MemeSaveGallery(
-        memeRepository:
-            appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
-      ),
+      getBinary: userScopeHolder.getMemeBinary,
+      getMeme: userScopeHolder.getMeme,
+      saveMeme: userScopeHolder.saveMeme,
+      saveMemeThumbnail: userScopeHolder.saveMemeThumbnail,
+      saveMemeToGallery: userScopeHolder.saveMemeToGallery,
     )..getMemeData();
   }
 

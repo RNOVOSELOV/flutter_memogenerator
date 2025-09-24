@@ -1,6 +1,6 @@
+import 'package:memogenerator/di_sm/auth_scope.dart';
 import 'package:yx_scope/yx_scope.dart';
 
-import '../../di_sm/app_scope.dart';
 import '../../di_sm/download_scope.dart';
 import '../../di_sm/scope_observer.dart';
 import '../repositories/download_repository.dart';
@@ -13,7 +13,11 @@ abstract class ApiStateHolder {
 
 class ApiScopeHolder
     extends
-        BaseChildScopeHolder<ApiDataScope, ApiScopeContainer, AppScopeContainer>
+        BaseChildScopeHolder<
+          ApiDataScope,
+          ApiScopeContainer,
+          UserScopeContainer
+        >
     implements ApiStateHolder {
   ApiScopeHolder(super.parent)
     : super(
@@ -23,7 +27,7 @@ class ApiScopeHolder
       );
 
   @override
-  ApiScopeContainer createContainer(AppScopeContainer parent) =>
+  ApiScopeContainer createContainer(UserScopeContainer parent) =>
       ApiScopeContainer(parent: parent);
 
   @override
