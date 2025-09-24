@@ -18,7 +18,6 @@ import '../use_cases/meme_get_binary.dart';
 import '../use_cases/meme_save.dart';
 import '../use_cases/meme_save_thumbnail.dart';
 import 'create_meme_state.dart';
-import '../../../data/repositories/image_saver.dart';
 
 class CreateMemeStateManager extends StateManager<CreateMemeState> {
   final Meme _meme;

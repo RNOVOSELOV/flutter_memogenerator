@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
-import 'package:intl/intl.dart';
 import 'package:memogenerator/data/datasources/meme_datasource.dart';
 import 'package:memogenerator/data/image_type_enum.dart';
 import 'package:memogenerator/data/repositories/image_saver.dart';

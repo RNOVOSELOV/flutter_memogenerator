@@ -65,10 +65,7 @@ class CustomNavigationHelper {
           name: NavigationPagePath.authPage.name,
           path: NavigationPagePath.authPage.path,
           pageBuilder: (context, state) {
-            return getPage(
-              child: AuthPage(),
-              state: state,
-            );
+            return getPage(child: AuthPage(), state: state);
           },
         ),
         StatefulShellRoute.indexedStack(

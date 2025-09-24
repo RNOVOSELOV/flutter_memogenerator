@@ -7,5 +7,6 @@ class MemeGet {
   MemeGet({required MemeRepository memeRepository})
     : _memeRepository = memeRepository;
 
-  Future<Meme?> call({required final String id}) async => await _memeRepository.getMeme(id: id);
+  Future<Meme?> call({required final String id}) async =>
+      await _memeRepository.getMeme(id: id);
 }

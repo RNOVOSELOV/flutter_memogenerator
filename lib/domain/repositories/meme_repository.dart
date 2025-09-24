@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import '../entities/meme.dart';
 import '../entities/meme_thumbnail.dart';
-import '../entities/text_with_position.dart';
 
 abstract interface class MemeRepository {
   Stream<List<MemeThumbnail>> observeMemesThumbnails();

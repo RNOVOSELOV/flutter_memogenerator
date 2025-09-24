@@ -1,4 +1,3 @@
-import '../../../domain/entities/meme_thumbnail.dart';
 import '../../../domain/repositories/meme_repository.dart';
 
 class MemeDelete {

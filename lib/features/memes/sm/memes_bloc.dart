@@ -35,9 +35,15 @@ class MemesBloc {
     final xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (xFile != null) {
       final data = await xFile.readAsBytes();
-      final result = await _saveTemplate(fileName: xFile.path, fileBytesData: data);
+      final result = await _saveTemplate(
+        fileName: xFile.path,
+        fileBytesData: data,
+      );
       if (result) {
-        final newFileName = await _uploadMemeFile  (fileName: xFile.path, binaryData: data);
+        final newFileName = await _uploadMemeFile(
+          fileName: xFile.path,
+          binaryData: data,
+        );
         return newFileName;
       }
     }

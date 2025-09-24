@@ -10,7 +10,6 @@ class UniversalImageSaver {
     String? fileName,
     String? format,
   }) async {
-
     try {
       if (kIsWeb) {
         return await _saveImageWeb(

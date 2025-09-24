@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 
-import '../resources/app_colors.dart';
-
 class SwitchWidget extends StatefulWidget {
   const SwitchWidget({
     super.key,

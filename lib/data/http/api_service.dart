@@ -64,7 +64,7 @@ class ApiService extends BaseApiService implements ApiDataProvider {
           ApiError.fromErrorType(errorType: ApiErrorType.downloadFileError),
         );
       }
-    } on DioException catch (e) {
+    } on DioException {
       return Left(
         ApiError.fromErrorType(errorType: ApiErrorType.downloadFileError),
       );

@@ -75,8 +75,16 @@ class ThemeColors extends ThemeExtension<ThemeColors> {
       )!,
       cardBorderColor: Color.lerp(cardBorderColor, other.cardBorderColor, t)!,
       textIconColor: Color.lerp(textIconColor, other.textIconColor, t)!,
-      textPrimaryColor: Color.lerp(textPrimaryColor, other.textPrimaryColor, t)!,
-      textSecondaryColor: Color.lerp(textSecondaryColor, other.textSecondaryColor, t)!,
+      textPrimaryColor: Color.lerp(
+        textPrimaryColor,
+        other.textPrimaryColor,
+        t,
+      )!,
+      textSecondaryColor: Color.lerp(
+        textSecondaryColor,
+        other.textSecondaryColor,
+        t,
+      )!,
       accentColor: Color.lerp(accentColor, other.accentColor, t)!,
       primaryColor: Color.lerp(primaryColor, other.primaryColor, t)!,
     );

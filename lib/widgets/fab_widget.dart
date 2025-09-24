@@ -18,7 +18,9 @@ class CreateFab extends StatelessWidget {
       icon: const Icon(Icons.add),
       label: Text(
         text,
-        style: context.theme.memeSemiBold16.copyWith(color: AppColors.daySurfacesColor),
+        style: context.theme.memeSemiBold16.copyWith(
+          color: AppColors.daySurfacesColor,
+        ),
       ),
     );
   }
