@@ -4,12 +4,12 @@ import 'package:memogenerator/domain/usecases/template_upload.dart';
 import '../use_cases/template_delete.dart';
 import '../use_cases/templates_get_stream.dart';
 
-class TemplatesBloc {
+class TemplatesSm {
   final TemplatesGetStream _getTemplatesStream;
   final TemplateDelete _deleteTemplate;
   final TemplateToMemeUpload _uploadTemplateToMeme;
 
-  TemplatesBloc({
+  TemplatesSm({
     required TemplatesGetStream getTemplatesStream,
     required TemplateToMemeUpload uploadTemplateToMeme,
     required TemplateDelete deleteTemplate,

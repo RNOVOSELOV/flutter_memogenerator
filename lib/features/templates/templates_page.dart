@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:memogenerator/domain/usecases/template_upload.dart';
-import 'package:memogenerator/features/templates/use_cases/template_delete.dart';
-import 'package:memogenerator/features/templates/use_cases/templates_get_stream.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:memogenerator/widgets/confirmation_dialog.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +27,7 @@ class TemplatesPage extends StatefulWidget {
 }
 
 class _TemplatesPageState extends State<TemplatesPage> {
-  late TemplatesBloc bloc;
+  late TemplatesSm sm;
 
   @override
   void initState() {
@@ -38,36 +35,14 @@ class _TemplatesPageState extends State<TemplatesPage> {
     final appScopeHolder = ScopeProvider.scopeHolderOf<AppScopeContainer>(
       context,
       listen: false,
-    );
-    bloc = TemplatesBloc(
-      getTemplatesStream: TemplatesGetStream(
-        templatesRepository: appScopeHolder
-            .scope!
-            .templateScopeModule
-            .templateRepositoryImpl
-            .get,
-      ),
-      deleteTemplate: TemplateDelete(
-        templatesRepository: appScopeHolder
-            .scope!
-            .templateScopeModule
-            .templateRepositoryImpl
-            .get,
-      ),
-      uploadTemplateToMeme: TemplateToMemeUpload(
-        templateRepository: appScopeHolder
-            .scope!
-            .templateScopeModule
-            .templateRepositoryImpl
-            .get,
-      ),
-    );
+    ).scope!.authStateHolderDep.get;
+    sm = appScopeHolder.templatesSm;
   }
 
   @override
   Widget build(BuildContext context) {
     return Provider.value(
-      value: bloc,
+      value: sm,
       child: Scaffold(
         backgroundColor: context.theme.scaffoldBackgroundColor,
         floatingActionButton: CreateFab(
@@ -85,7 +60,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
 
   @override
   void dispose() {
-    bloc.dispose();
+    sm.dispose();
     super.dispose();
   }
 }
@@ -95,12 +70,9 @@ class TemplatesPageBodyContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TemplatesBloc bloc = Provider.of<TemplatesBloc>(
-      context,
-      listen: false,
-    );
+    final TemplatesSm sm = Provider.of<TemplatesSm>(context, listen: false);
     return StreamBuilder<List<TemplateFull>>(
-      stream: bloc.observeTemplates(),
+      stream: sm.observeTemplates(),
       initialData: [],
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -128,7 +100,7 @@ class TemplatesPageBodyContent extends StatelessWidget {
                     if (!context.mounted) {
                       return;
                     }
-                    final fileName = await bloc.uploadTemplateToMeme(
+                    final fileName = await sm.uploadTemplateToMeme(
                       templateId: items.elementAt(index).id,
                     );
                     if (fileName != null) {
@@ -156,7 +128,7 @@ class TemplatesPageBodyContent extends StatelessWidget {
                       actionButtonText: S.of(context).remove,
                     );
                     if ((removeTemplateDialog ?? false) == true) {
-                      final result = await bloc.deleteTemplate(
+                      final result = await sm.deleteTemplate(
                         items.elementAt(index).id,
                       );
                       final message = Message(

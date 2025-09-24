@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:memogenerator/data/repositories/download_repository_impl.dart';
-import 'package:memogenerator/di_sm/app_scope.dart';
+import 'package:memogenerator/di_sm/auth_scope.dart';
 import 'package:memogenerator/domain/repositories/download_repository.dart';
 import 'package:yx_scope/yx_scope.dart';
 
@@ -12,16 +12,16 @@ abstract class ApiDataScope implements Scope {
   DownloadRepository get downloadRepository;
 }
 
-class ApiScopeContainer extends ChildScopeContainer<AppScopeContainer>
+class ApiScopeContainer extends ChildScopeContainer<UserScopeContainer>
     implements ApiDataScope {
   ApiScopeContainer({required super.parent});
 
   late final _apiServiceDep = dep(
     () => ApiService(
       dio: DioBuilder(
-        talker: parent.talkerDep.get,
+        talker: parent.parent.talkerDep.get,
       ).addHeaderParameters().addAuthorizationInterceptor().build(),
-      talker: parent.talkerDep.get,
+      talker: parent.parent.talkerDep.get,
     ),
   );
 

@@ -5,14 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:memogenerator/domain/entities/message.dart';
 import 'package:memogenerator/domain/entities/message_status.dart';
-import 'package:memogenerator/domain/usecases/meme_get.dart';
 import 'package:memogenerator/features/create_meme/sm/create_meme_state.dart';
 import 'package:memogenerator/features/create_meme/sm/create_meme_state_manager.dart';
-import 'package:memogenerator/features/create_meme/use_cases/meme_save_gallery.dart';
 import 'package:memogenerator/features/create_meme/widgets/meme_text_on_canvas.dart';
-import 'package:memogenerator/features/create_meme/use_cases/meme_get_binary.dart';
-import 'package:memogenerator/features/create_meme/use_cases/meme_save.dart';
-import 'package:memogenerator/features/create_meme/use_cases/meme_save_thumbnail.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
 import 'package:memogenerator/widgets/snackbar_widget.dart';
 import 'package:provider/provider.dart';
@@ -46,33 +41,18 @@ class _CreateMemePageState extends State<CreateMemePage> {
   @override
   void initState() {
     super.initState();
-    final appScopeHolder = ScopeProvider.scopeHolderOf<AppScopeContainer>(
+    final userScopeHolder = ScopeProvider.scopeHolderOf<AppScopeContainer>(
       context,
       listen: false,
-    );
+    ).scope!.authStateHolderDep.get;
     manager = CreateMemeStateManager(
       CreateMemeInitialState(),
       meme: widget.meme,
-      getBinary: MemeGetBinary(
-        memeRepository:
-            appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
-      ),
-      getMeme: MemeGet(
-        memeRepository:
-            appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
-      ),
-      saveMeme: MemeSave(
-        memeRepository:
-            appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
-      ),
-      saveMemeThumbnail: MemeSaveThumbnail(
-        memeRepository:
-            appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
-      ),
-      saveMemeToGallery: MemeSaveGallery(
-        memeRepository:
-            appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
-      ),
+      getBinary: userScopeHolder.getMemeBinary,
+      getMeme: userScopeHolder.getMeme,
+      saveMeme: userScopeHolder.saveMeme,
+      saveMemeThumbnail: userScopeHolder.saveMemeThumbnail,
+      saveMemeToGallery: userScopeHolder.saveMemeToGallery,
     )..getMemeData();
   }
 

@@ -5,17 +5,21 @@ import 'package:talker/talker.dart';
 import 'package:yx_state/yx_state.dart';
 
 import '../../../data/datasources/settings_datasource.dart';
+import '../../../domain/di/user_scope_holder.dart';
 
 class AuthStateManager extends StateManager<AuthState> {
   final SettingsDatasource _settingsDatasource;
+  final UserStateHolder _authZoneScopeHolder;
   final Talker _talker;
   late final bool _useBio;
 
   AuthStateManager(
     super.state, {
     required final SettingsDatasource settingsDatasource,
+    required final UserStateHolder authZoneScopeHolder,
     required final Talker talker,
   }) : _settingsDatasource = settingsDatasource,
+       _authZoneScopeHolder = authZoneScopeHolder,
        _talker = talker;
 
   Future<void> init() async {
@@ -27,9 +31,14 @@ class AuthStateManager extends StateManager<AuthState> {
     if (_useBio) {
       await _authenticate(emit);
     } else {
-      emit(OpenApplicationState());
+      await openAuthZone(emit);
     }
   });
+
+  Future<void> openAuthZone(Emitter<AuthState> emit) async {
+    await _authZoneScopeHolder.toggle();
+    emit(OpenApplicationState());
+  }
 
   Future<void> repeatAuth() =>
       handle((emit) async => await _authenticate(emit));
@@ -53,7 +62,7 @@ class AuthStateManager extends StateManager<AuthState> {
           ),
         );
         if (didAuthenticate) {
-          emit(OpenApplicationState());
+          openAuthZone(emit);
         } else {
           emit(AuthFailedState());
         }
@@ -68,7 +77,7 @@ class AuthStateManager extends StateManager<AuthState> {
         emit(AuthFailedState());
       }
     } else {
-      emit(OpenApplicationState());
+      openAuthZone(emit);
     }
   }
 }

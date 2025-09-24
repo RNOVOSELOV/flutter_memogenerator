@@ -35,15 +35,11 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
-    final appScopeHolder = ScopeProvider.scopeHolderOf<AppScopeContainer>(
+    final userScopeHolder = ScopeProvider.scopeHolderOf<AppScopeContainer>(
       context,
       listen: false,
-    );
-    _manager = SettingsStateManager(
-      SettingsInitialState(),
-      templateRepository:
-          appScopeHolder.scope!.templateScopeModule.templateRepositoryImpl.get,
-    );
+    ).scope!.authStateHolderDep.get;
+    _manager = userScopeHolder.settingsSm;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;

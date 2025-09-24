@@ -1,4 +1,3 @@
-import 'package:memogenerator/di_sm/app_scope.dart';
 import 'package:memogenerator/domain/di/download_scope_holder.dart';
 import 'package:memogenerator/features/template_download/sm/template_download_state.dart';
 import 'package:yx_state/yx_state.dart';
@@ -14,8 +13,8 @@ class TemplateDownloadStateManager extends StateManager<TemplateDownloadState> {
 
   TemplateDownloadStateManager(
     super.state, {
-    required final AppScopeContainer appScopeContainer,
-  }) : _apiStateHolder = ApiScopeHolder(appScopeContainer) {
+    required final ApiStateHolder apiStateHolder,
+  }) : _apiStateHolder = apiStateHolder {
     _apiStateHolder.toggle().then((value) {
       _getTemplatesFromApi = TemplatesGetFromApi(
         downloadRepository: _apiStateHolder.downloadRepository,
