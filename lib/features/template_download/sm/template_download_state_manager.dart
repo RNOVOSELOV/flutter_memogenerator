@@ -1,11 +1,8 @@
-import 'package:memogenerator/di_sm/app_scope.dart';
 import 'package:memogenerator/domain/di/download_scope_holder.dart';
 import 'package:memogenerator/features/template_download/sm/template_download_state.dart';
 import 'package:yx_state/yx_state.dart';
 
 import '../../../data/http/models/meme_data.dart';
-import '../../../di_sm/auth_scope.dart';
-import '../../../domain/di/user_scope_holder.dart';
 import '../use_cases/template_download.dart';
 import '../use_cases/templates_get_from_api.dart';
 

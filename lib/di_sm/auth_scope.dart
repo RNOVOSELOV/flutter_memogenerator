@@ -1,8 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:memogenerator/data/repositories/download_repository_impl.dart';
 import 'package:memogenerator/di_sm/app_scope.dart';
-import 'package:memogenerator/di_sm/scope_observer.dart';
-import 'package:memogenerator/domain/repositories/download_repository.dart';
 import 'package:memogenerator/domain/usecases/meme_get.dart';
 import 'package:memogenerator/domain/usecases/meme_upload.dart';
 import 'package:memogenerator/domain/usecases/template_upload.dart';
@@ -21,9 +18,6 @@ import 'package:yx_scope/yx_scope.dart';
 import '../data/browser/sp_images_datasource.dart';
 import '../data/browser/sp_images_datasource_impl.dart';
 import '../data/filesystem/fs_images_datasource_impl.dart';
-import '../data/http/api_datasource_impl.dart';
-import '../data/http/api_service.dart';
-import '../data/http/dio_builder.dart';
 import '../data/repositories/meme_repository_impl.dart';
 import '../data/repositories/template_repository_impl.dart';
 import '../data/shared_pref/datasources/memes/meme_datasource_impl.dart';
@@ -89,10 +83,12 @@ class UserScopeContainer extends ChildScopeContainer<AppScopeContainer>
   MemeSave get saveMeme => memeScopeModule.memeSaveDep.get;
 
   @override
-  MemeSaveThumbnail get saveMemeThumbnail => memeScopeModule.memeSaveThumbnailDep.get;
+  MemeSaveThumbnail get saveMemeThumbnail =>
+      memeScopeModule.memeSaveThumbnailDep.get;
 
   @override
-  MemeSaveGallery get saveMemeToGallery => memeScopeModule.memeSaveGalleryDep.get;
+  MemeSaveGallery get saveMemeToGallery =>
+      memeScopeModule.memeSaveGalleryDep.get;
 
   @override
   ApiStateHolder get apiStateHolder => apiStateHolderDep.get;
