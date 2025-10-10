@@ -3,11 +3,6 @@ import 'package:memogenerator/di_sm/app_scope.dart';
 import 'package:memogenerator/domain/entities/meme.dart';
 import 'package:memogenerator/domain/entities/message.dart';
 import 'package:memogenerator/domain/entities/message_status.dart';
-import 'package:memogenerator/domain/usecases/meme_upload.dart';
-import 'package:memogenerator/features/memes/use_cases/meme_delete.dart';
-import 'package:memogenerator/domain/usecases/meme_get.dart';
-import 'package:memogenerator/features/memes/use_cases/meme_thumbnails_get_stream.dart';
-import 'package:memogenerator/features/memes/use_cases/template_save.dart';
 import 'package:memogenerator/navigation/navigation_helper.dart';
 import 'package:memogenerator/navigation/navigation_path.dart';
 import 'package:memogenerator/theme/extensions/theme_extensions.dart';
@@ -32,52 +27,28 @@ class MemesPage extends StatefulWidget {
 }
 
 class _MemesPageState extends State<MemesPage> {
-  late MemesBloc bloc;
+  late MemesSm sm;
 
   @override
   void initState() {
     super.initState();
-    final appScopeHolder = ScopeProvider.scopeHolderOf<AppScopeContainer>(
+    final userScopeHolder = ScopeProvider.scopeHolderOf<AppScopeContainer>(
       context,
       listen: false,
-    );
-    bloc = MemesBloc(
-      getMemeThumbnailsStream: MemeThumbnailsGetStream(
-        memeRepository:
-            appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
-      ),
-      getMeme: MemeGet(
-        memeRepository:
-            appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
-      ),
-      uploadMemeFile: MemeUploadFile(
-        memeRepository:
-            appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
-      ),
-      deleteMeme: MemeDelete(
-        memeRepository:
-            appScopeHolder.scope!.memeScopeModule.memeRepositoryImpl.get,
-      ),
-      saveTemplate: TemplateSave(
-        templateRepository: appScopeHolder
-            .scope!
-            .templateScopeModule
-            .templateRepositoryImpl
-            .get,
-      ),
-    );
+    ).scope!.authStateHolderDep.get;
+    sm = userScopeHolder.memesSm;
   }
 
   @override
   Widget build(BuildContext context) {
     return Provider.value(
-      value: bloc,
+      value: sm,
       child: Scaffold(
         backgroundColor: context.theme.scaffoldBackgroundColor,
         floatingActionButton: CreateFab(
           text: S.of(context).meme,
           onTap: () async {
-            final fileName = await bloc.selectImageInGallery();
+            final fileName = await sm.selectImageInGallery();
             if (fileName != null) {
               CustomNavigationHelper.instance.router.pushNamed(
                 NavigationPagePath.editMemePage.name,
@@ -97,7 +68,7 @@ class _MemesPageState extends State<MemesPage> {
 
   @override
   void dispose() {
-    bloc.dispose();
+    sm.dispose();
     super.dispose();
   }
 }
@@ -107,7 +78,7 @@ class MemePageBodyContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final MemesBloc bloc = Provider.of<MemesBloc>(context, listen: false);
+    final MemesSm bloc = Provider.of<MemesSm>(context, listen: false);
     return StreamBuilder<List<MemeThumbnail>>(
       stream: bloc.observeMemesThumbnails(),
       initialData: [],
@@ -151,7 +122,7 @@ class _MemeItem extends StatelessWidget {
       fileId: memeThumbnail.memeId,
       fileBytes: memeThumbnail.imageBytes,
       onPress: () async {
-        final MemesBloc bloc = Provider.of<MemesBloc>(context, listen: false);
+        final MemesSm bloc = Provider.of<MemesSm>(context, listen: false);
         await Future.delayed(Duration(milliseconds: 200), () {});
         if (!context.mounted) {
           return;
@@ -165,7 +136,7 @@ class _MemeItem extends StatelessWidget {
         }
       },
       onDelete: () async {
-        final MemesBloc bloc = Provider.of<MemesBloc>(context, listen: false);
+        final MemesSm bloc = Provider.of<MemesSm>(context, listen: false);
         final successString = S.of(context).meme_remove_success;
         final errorString = S.of(context).meme_remove_error;
         await Future.delayed(Duration(milliseconds: 200), () {});

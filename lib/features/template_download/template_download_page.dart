@@ -30,13 +30,13 @@ class _TemplateDownloadPageState extends State<TemplateDownloadPage> {
   @override
   void initState() {
     super.initState();
-    final appScopeHolder = ScopeProvider.scopeHolderOf<AppScopeContainer>(
+    final userScopeHolder = ScopeProvider.scopeHolderOf<AppScopeContainer>(
       context,
       listen: false,
-    );
+    ).scope!.authStateHolderDep.get;
     manager = TemplateDownloadStateManager(
       DownloadProgressState(),
-      appScopeContainer: appScopeHolder.scope!,
+      apiStateHolder: userScopeHolder.apiStateHolder,
     );
   }
 
